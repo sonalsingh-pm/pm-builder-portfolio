@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampSpark: Case Study by Sonal Singh</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #faf7f2;
+    --ink: #1a1a18;
+    --sage: #5c7a5e;
+    --sage-light: #e8f0e8;
+    --amber: #c17d3c;
+    --amber-light: #fdf3e7;
+    --muted: #6b6b62;
+    --rule: #e0ddd6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    font-size: 17px;
+  }
+
+  /* HEADER */
+  header {
+    border-bottom: 1px solid var(--rule);
+    padding: 28px 0;
+    position: sticky;
+    top: 0;
+    background: var(--cream);
+    z-index: 100;
+  }
+  .header-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .back-link {
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .back-link:hover { color: var(--ink); }
+  .header-tag {
+    font-size: 12px;
+    color: var(--sage);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* HERO */
+  .hero {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 80px 40px 64px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .label {
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--amber);
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(42px, 6vw, 64px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+  }
+  .hero-sub {
+    font-size: 20px;
+    color: var(--muted);
+    max-width: 580px;
+    line-height: 1.6;
+    font-weight: 300;
+  }
+  .meta-row {
+    display: flex;
+    gap: 40px;
+    margin-top: 48px;
+    flex-wrap: wrap;
+  }
+  .meta-item { }
+  .meta-label {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+  .meta-value {
+    font-size: 15px;
+    color: var(--ink);
+    font-weight: 400;
+  }
+
+  /* CONTENT */
+  .content {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  /* SECTIONS */
+  .section {
+    padding: 64px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .section:last-child { border-bottom: none; }
+
+  .section-num {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--amber);
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 28px;
+    line-height: 1.2;
+  }
+  p {
+    color: #3a3a35;
+    margin-bottom: 20px;
+  }
+  p:last-child { margin-bottom: 0; }
+
+  /* PULL QUOTE */
+  .pull-quote {
+    border-left: 3px solid var(--sage);
+    padding: 20px 0 20px 28px;
+    margin: 36px 0;
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+
+  /* HIGHLIGHT BOX */
+  .highlight-box {
+    background: var(--sage-light);
+    border-radius: 4px;
+    padding: 28px 32px;
+    margin: 32px 0;
+  }
+  .highlight-box p { color: var(--ink); margin-bottom: 12px; }
+  .highlight-box p:last-child { margin-bottom: 0; }
+
+  /* AMBER BOX */
+  .amber-box {
+    background: var(--amber-light);
+    border-radius: 4px;
+    padding: 28px 32px;
+    margin: 32px 0;
+  }
+
+  /* PAIN POINTS */
+  .pain-list {
+    list-style: none;
+    margin: 24px 0;
+  }
+  .pain-list li {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+    padding-left: 20px;
+    position: relative;
+    color: #3a3a35;
+  }
+  .pain-list li::before {
+    content: '+';
+    position: absolute;
+    left: 0;
+    color: var(--amber);
+  }
+  .pain-list li:first-child { border-top: 1px solid var(--rule); }
+
+  /* DECISIONS GRID */
+  .decisions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 32px 0;
+  }
+  @media (max-width: 600px) { .decisions { grid-template-columns: 1fr; } }
+  .decision-card {
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 24px;
+  }
+  .decision-label {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+  .decision-title {
+    font-weight: 500;
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: var(--ink);
+  }
+  .decision-body {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* OUTCOMES */
+  .outcomes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin: 32px 0;
+  }
+  @media (max-width: 600px) { .outcomes { grid-template-columns: 1fr; } }
+  .outcome-card {
+    text-align: center;
+    padding: 32px 20px;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+  }
+  .outcome-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--sage);
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+  .outcome-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--rule);
+    padding: 48px 40px;
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: gap;
+  }
+  .footer-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+  }
+  .footer-links {
+    display: flex;
+    gap: 24px;
+  }
+  .footer-links a {
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+  }
+  .footer-links a:hover { color: var(--ink); }
+
+  /* PROTOTYPE BUTTON */
+  .proto-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 32px;
+    padding: 14px 28px;
+    background: var(--sage);
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    border-radius: 4px;
+    transition: background 0.15s ease;
+  }
+  .proto-btn:hover { background: #4a6550; }
+  .proto-btn svg { flex-shrink: 0; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero { animation: fadeUp 0.6s ease both; }
+  .section { animation: fadeUp 0.5s ease both; animation-delay: 0.1s; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="back-link">← Sonal Singh</a>
+    <span class="header-tag">Case Study</span>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="label">Product Case Study · 2025</div>
+  <h1>CampSpark</h1>
+  <p class="hero-sub">A summer camp discovery and planning tool built from a personal frustration, validated by my own daughter, and shipped without an engineering team.</p>
+  <div class="meta-row">
+    <div class="meta-item">
+      <div class="meta-label">Role</div>
+      <div class="meta-value">Solo PM + Builder</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">Type</div>
+      <div class="meta-value">Zero-to-One / Consumer</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">Tools</div>
+      <div class="meta-value">Claude Code · HTML/JS · Netlify</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">Status</div>
+      <div class="meta-value">Live Prototype</div>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- SECTION 1 -->
+  <div class="section">
+    <div class="section-num">01 · The Problem</div>
+    <h2>Every summer, the same chaos</h2>
+    <p>Every spring, I found myself drowning in the same annual ritual: dozens of browser tabs open across camp websites, a half-finished spreadsheet, a WhatsApp thread with other parents, and a creeping sense that the good camps were already full.</p>
+    <p>I'm a working parent with a demanding job. My daughter has specific interests, a specific schedule, and (like most kids) strong opinions about which friends she wants to be with. None of the tools I found helped me solve all of this at once.</p>
+
+    <div class="pull-quote">"The problem isn't that camp information doesn't exist. It's that it's everywhere, and none of it talks to each other."</div>
+
+    <p>The pain wasn't just mine. When I talked to other parents in my network, the pattern was identical: hours of manual research, coordination over text, and decisions made under deadline pressure because registration windows close fast.</p>
+
+    <ul class="pain-list">
+      <li>Camp info scattered across dozens of individual websites and PDFs</li>
+      <li>No way to filter by age, interest, schedule, and budget simultaneously</li>
+      <li>No visibility into which camps friends were attending</li>
+      <li>Coordination happening in WhatsApp groups and spreadsheets</li>
+      <li>Registration anxiety: good camps fill up weeks before most parents start looking</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section">
+    <div class="section-num">02 · The Insight</div>
+    <h2>This is a coordination problem, not a search problem</h2>
+    <p>Existing solutions treated this as a directory problem: build a better list of camps. But that missed the real issue. Parents don't just need to find camps. They need to <em>decide</em> with incomplete information, <em>coordinate</em> with other parents, and <em>plan</em> across an entire summer at once.</p>
+
+    <div class="highlight-box">
+      <p><strong>The real job to be done:</strong> Give me confidence that my child will have a great summer, with the right activities, the right friends, and no scheduling gaps I'll panic about in June.</p>
+    </div>
+
+    <p>The strategic differentiator wasn't better data. It was reducing cognitive load by combining discovery, planning, and social coordination in one place. Something no existing tool did.</p>
+    <p>I also noticed a macro tailwind: return-to-office mandates were making the summer childcare problem more acute for dual-income families. The pain was getting worse, not better.</p>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section">
+    <div class="section-num">03 · What I Built</div>
+    <h2>A prototype my daughter actually used</h2>
+    <p>I built a working desktop-first prototype using Claude Code. No engineering team, no design handoff, no backlog. Just a PM who knew what she wanted to test and built it herself.</p>
+    <p>The prototype focused on three things:</p>
+
+    <div class="decisions">
+      <div class="decision-card">
+        <div class="decision-label">Feature 01</div>
+        <div class="decision-title">Smart Filtering</div>
+        <div class="decision-body">Filter by age, interest, location radius, time window, and budget simultaneously, saving filter presets per child.</div>
+      </div>
+      <div class="decision-card">
+        <div class="decision-label">Feature 02</div>
+        <div class="decision-title">Camp Cards</div>
+        <div class="decision-body">Enough detail to make a decision without opening external tabs. Dates, times, price, location, activity type, and a direct link to register.</div>
+      </div>
+      <div class="decision-card">
+        <div class="decision-label">Feature 03</div>
+        <div class="decision-title">Summer Plan View</div>
+        <div class="decision-body">A consolidated week-by-week view of selected camps across the summer, shareable with other parents by link.</div>
+      </div>
+      <div class="decision-card">
+        <div class="decision-label">Feature 04</div>
+        <div class="decision-title">Friend Visibility</div>
+        <div class="decision-body">See which camps a child's friends are attending, surfacing social signals that matter most to kids (and parents).</div>
+      </div>
+    </div>
+
+    <p>I deliberately excluded registration and payment from the MVP. CampSpark is discovery-first. We send parents to camp websites to register. This kept the prototype lightweight and avoided liability without sacrificing core value.</p>
+
+    <div class="amber-box">
+      <p><strong>Real validation:</strong> My daughter used the prototype to browse and select her summer camps. She filtered by interest, checked which camps her friends were considering, and built her own wish list. Watching an 11-year-old use a tool you built, and having it actually work for her, is a different kind of signal than any survey.</p>
+    </div>
+
+    <a href="https://campspark-prototype.netlify.app" target="_blank" rel="noopener" class="proto-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      View Live Prototype
+    </a>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section">
+    <div class="section-num">04 · Key Decisions</div>
+    <h2>What I cut, and why</h2>
+    <p>Every zero-to-one project is defined as much by what you don't build as what you do. A few of the harder calls:</p>
+
+    <div class="decisions">
+      <div class="decision-card">
+        <div class="decision-label">Cut</div>
+        <div class="decision-title">Mobile app</div>
+        <div class="decision-body">Summer planning is a sit-down activity, not a daily habit. Desktop-first let me focus on the complex filtering and comparison workflows that matter most.</div>
+      </div>
+      <div class="decision-card">
+        <div class="decision-label">Cut</div>
+        <div class="decision-title">Registration & payment</div>
+        <div class="decision-body">Would have required legal, ops, and engineering complexity that would've sunk the MVP. Sending users to camp sites costs nothing and preserves focus.</div>
+      </div>
+      <div class="decision-card">
+        <div class="decision-label">Kept</div>
+        <div class="decision-title">Friend coordination</div>
+        <div class="decision-body">The most complex social feature, but also the most defensible differentiator. No directory does this. It's the reason parents would choose CampSpark over a Google search.</div>
+      </div>
+      <div class="decision-card">
+        <div class="decision-label">Kept</div>
+        <div class="decision-title">Curated camp data</div>
+        <div class="decision-body">Instead of real-time scraping (fragile, legal risk), I curated a local dataset. Good enough to validate the concept, manageable to maintain for a prototype.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section">
+    <div class="section-num">05 · Outcomes & Learnings</div>
+    <h2>What I took away</h2>
+
+    <div class="outcomes">
+      <div class="outcome-card">
+        <div class="outcome-num">0→1</div>
+        <div class="outcome-desc">Built end-to-end without engineering support using AI-assisted prototyping</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-num">1</div>
+        <div class="outcome-desc">Real user (my daughter) used it to plan her actual summer camps</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-num">∞</div>
+        <div class="outcome-desc">Confirmed the model: PM who can ship is a different kind of PM</div>
+      </div>
+    </div>
+
+    <p>The most important learning wasn't about the product. It was about my process. Building CampSpark in Claude Code forced me to think like an engineer just enough to make better product decisions. I understood the tradeoffs, could scope more precisely, and shipped faster than any traditional PM-to-engineering handoff would have allowed.</p>
+
+    <div class="pull-quote">"The best PM I can be is one who reduces uncertainty: for users, for engineers, for the business. Building prototypes myself is one of the highest-leverage ways I know to do that."</div>
+
+    <p>If I were to take CampSpark further, the next bets would be AI-powered recommendations ("given your child's age and past camps, here are 5 great options") and calendar integration and both natural extensions of the planning-and-coordination thesis.</p>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section">
+    <div class="section-num">06 · Why This Matters for My Work</div>
+    <h2>The through-line</h2>
+    <p>CampSpark is a consumer product, but the skills it demonstrates are the same ones that make me effective in B2B: identifying a real pain point, talking to users, making hard scope decisions, and shipping something people actually use.</p>
+    <p>At Walmart, I built tools for marketplace sellers. At SAP, I owned supplier experience for a platform processing $6 trillion in transactions. In both cases, the core job was the same: reduce cognitive load for busy operators so they can focus on what they're actually good at.</p>
+    <p>CampSpark is the same problem, different context, and building it myself is proof that I'm not just a person who writes PRDs. I'm a PM who ships.</p>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-name">Sonal Singh</div>
+  <div class="footer-links">
+    <a href="index.html">Portfolio</a>
+    <a href="https://linkedin.com/in/sonalsingh" target="_blank">LinkedIn</a>
+    <a href="mailto:sonal@example.com">Email</a>
+  </div>
+</footer>
+
+</body>
+</html>
