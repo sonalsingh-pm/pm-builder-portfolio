@@ -34,15 +34,7 @@ nav{
 .sec-wrap{max-width:1000px;width:100%;margin:0 auto}
 
 /* HERO */
-.hbg{position:absolute;inset:0;pointer-events:none;
-  background:
-    radial-gradient(ellipse 70% 80% at 85% 30%,rgba(99,91,255,0.11) 0%,transparent 55%),
-    radial-gradient(ellipse 50% 60% at 95% 70%,rgba(249,107,238,0.08) 0%,transparent 55%),
-    radial-gradient(ellipse 60% 50% at 70% 90%,rgba(14,165,233,0.07) 0%,transparent 55%),
-    radial-gradient(ellipse 40% 50% at 55% 10%,rgba(16,185,129,0.05) 0%,transparent 50%);
-  animation:mbg 16s ease-in-out infinite alternate;
-}
-@keyframes mbg{0%{opacity:0.7}50%{opacity:1}100%{opacity:0.8}}
+.hbg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 70% 65% at 85% 15%,rgba(99,91,255,0.13) 0%,transparent 55%),radial-gradient(ellipse 50% 45% at 98% 75%,rgba(139,92,246,0.09) 0%,transparent 55%),radial-gradient(ellipse 45% 55% at 15% 65%,rgba(99,91,255,0.06) 0%,transparent 50%)}
 .hero-grid{display:grid;grid-template-columns:1fr 300px;gap:5rem;align-items:center;position:relative;z-index:1;width:100%;max-width:1100px}
 
 /* LABEL — dot only between the two words, not before */
@@ -87,7 +79,7 @@ nav{
 .btn-ghost:hover{border-color:var(--purple);color:var(--purple);transform:translateY(-2px)}
 
 .hphoto{opacity:0;animation:fi 1s ease forwards 0.3s;flex-shrink:0}
-.pring{width:300px;height:300px;border-radius:50%;background:linear-gradient(135deg,#635bff,#f96bee,#0ea5e9,#10b981);padding:3px;box-shadow:rgba(99,91,255,0.25) 0 20px 60px -10px}
+.pring{width:300px;height:300px;border-radius:50%;background:linear-gradient(145deg,#635bff,#a78bfa);padding:3px;box-shadow:rgba(99,91,255,0.3) 0 20px 50px -10px}
 .pinner{width:100%;height:100%;border-radius:50%;overflow:hidden;border:3px solid white}
 .pinner img{width:100%;height:100%;object-fit:cover;object-position:center 10%}
 
@@ -122,13 +114,22 @@ nav{
 .st-c .st-name{color:#E8402A}.st-c .st-sep{background:#E8402A}.st-c .st-role{color:#E8402A}
 
 /* PROJECTS */
-.plist{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.prow{display:grid;grid-template-columns:220px 1fr auto auto;gap:2rem;align-items:center;padding:1.875rem 2rem;background:white;transition:background 0.2s;cursor:pointer}
-.prow:hover{background:#fafbff}
-.pname{font-family:var(--fd);font-size:1.1rem;font-weight:600;color:var(--navy);letter-spacing:-0.02em}
-.pdesc{font-size:0.875rem;color:var(--muted);font-weight:300;line-height:1.5}
-.ptags{display:flex;gap:0.375rem;flex-wrap:wrap}
+.plist{display:flex;flex-direction:column;gap:20px}
+.pcard{display:block;text-decoration:none;background:white;border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:box-shadow 0.2s,transform 0.2s;box-shadow:rgba(15,23,42,0.04) 0 2px 8px}
+.pcard:hover{box-shadow:rgba(15,23,42,0.1) 0 8px 24px;transform:translateY(-2px)}
+.pcard-accent{height:4px;background:linear-gradient(90deg,#635bff,#818cf8)}
+.pcard-body{padding:2rem 2.25rem 2rem}
+.pcard-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.875rem}
+.pname{font-family:var(--fd);font-size:1.25rem;font-weight:600;color:var(--navy);letter-spacing:-0.02em}
+.pdesc{font-size:0.9rem;color:var(--muted);font-weight:300;line-height:1.65;max-width:640px;margin-bottom:1.25rem}
+.ptags{display:flex;gap:0.375rem;flex-wrap:wrap;margin-bottom:1.5rem}
 .tag{font-size:0.7rem;padding:0.25rem 0.6rem;border-radius:100px;background:#f1f5f9;color:var(--muted);font-weight:500;border:1px solid var(--border);white-space:nowrap}
+.pcard-links{display:flex;gap:1rem;align-items:center}
+.pcard-link{font-size:0.8rem;font-weight:500;text-decoration:none;letter-spacing:0.02em}
+.pcard-link.primary{color:var(--purple)}
+.pcard-link.primary:hover{text-decoration:underline}
+.pcard-link.secondary{color:var(--muted);border:1px solid var(--border);padding:0.4rem 0.9rem;border-radius:6px;transition:background 0.15s}
+.pcard-link.secondary:hover{background:#f8fafc;color:var(--navy)}
 .badge{font-size:0.7rem;padding:0.3rem 0.7rem;border-radius:100px;font-weight:600;white-space:nowrap;display:flex;align-items:center;gap:0.35rem}
 .b-prog{background:#fefce8;color:#854d0e;border:1px solid #fde68a}
 .b-soon{background:#f0effe;color:#533afd;border:1px solid #b9b9f9}
@@ -167,15 +168,15 @@ nav{
 .contact-wrap{
   min-height:calc(100vh - 64px);display:flex;align-items:center;justify-content:center;
   padding:5rem 4rem;
-  background:linear-gradient(135deg,#0d0931,#1a0f6e 35%,#2d1b69 65%,#0d0931);
-  position:relative;overflow:hidden;border-top:1px solid var(--border);
+  background:linear-gradient(160deg,#2d1b8e 0%,#1a0b4b 100%);
+  position:relative;overflow:hidden;border-top:1px solid rgba(99,91,255,0.2);
 }
-.cg1{position:absolute;width:600px;height:400px;border-radius:50%;background:radial-gradient(ellipse,rgba(99,91,255,0.25),transparent 70%);top:50%;left:30%;transform:translate(-50%,-50%);pointer-events:none}
-.cg2{position:absolute;width:500px;height:350px;border-radius:50%;background:radial-gradient(ellipse,rgba(249,107,238,0.18),transparent 70%);top:50%;left:65%;transform:translate(-50%,-50%);pointer-events:none}
+.cg1{position:absolute;width:900px;height:600px;border-radius:50%;background:radial-gradient(ellipse,rgba(99,91,255,0.18),transparent 65%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.cg2{display:none}
 .cin{max-width:540px;margin:0 auto;position:relative;z-index:1;text-align:center;width:100%}
 /* No period after "connect" — use a different heading */
 .ctit{font-family:var(--fd);font-size:clamp(2.5rem,5vw,4rem);font-weight:700;letter-spacing:-0.04em;color:white;line-height:1;margin-bottom:1.25rem}
-.csub{font-size:1rem;color:rgba(255,255,255,0.55);font-weight:300;margin-bottom:2.5rem;line-height:1.65}
+.csub{font-size:1rem;color:rgba(255,255,255,0.82);font-weight:300;margin-bottom:2.5rem;line-height:1.65}
 .contact-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
 .cbtn-main{
   display:inline-flex;align-items:center;gap:0.625rem;
@@ -283,12 +284,21 @@ footer{padding:1.75rem 4rem;border-top:1px solid var(--border);display:flex;just
   <div class="sec-wrap">
     <h2 class="sec-title">Things I'm building</h2>
     <div class="plist">
-      <a class="prow" href="../campspark-case-study.html" style="text-decoration:none;color:inherit;display:block;">
-        <div class="pname">CampSpark</div>
-        <div class="pdesc">A summer camp discovery and planning tool for working parents, built from a personal pain point, validated by real users, and prototyped end-to-end without engineering support.</div>
-        <div class="ptags"><span class="tag">Consumer</span><span class="tag">AI-Powered</span><span class="tag">Zero-to-One</span></div>
-        <span class="badge b-live"><span class="bdot"></span>Live Prototype</span>
-      </a>
+      <div class="pcard">
+        <div class="pcard-accent"></div>
+        <div class="pcard-body">
+          <div class="pcard-header">
+            <div class="pname">CampSpark</div>
+            <span class="badge b-live"><span class="bdot"></span>Live Prototype</span>
+          </div>
+          <div class="pdesc">A summer camp discovery and planning tool for working parents, built from a personal pain point, validated by real users, and prototyped end-to-end without engineering support.</div>
+          <div class="ptags"><span class="tag">Consumer</span><span class="tag">AI-Powered</span><span class="tag">Zero-to-One</span></div>
+          <div class="pcard-links">
+            <a href="../campspark-case-study.html" class="pcard-link primary">Read case study →</a>
+            <a href="campspark/index.html" class="pcard-link secondary" target="_blank">Try the prototype ↗</a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -423,11 +433,11 @@ footer{padding:1.75rem 4rem;border-top:1px solid var(--border);display:flex;just
     <h2 class="ctit">Let's talk</h2>
     <p class="csub">Open to senior IC product roles in the Bay Area and remote. Currently leading WFS at Walmart, always open to the right conversation.</p>
     <div class="contact-btns">
-      <a href="mailto:sonalshankar06@gmail.com" class="cbtn-main">
+      <a href="mailto:sonalsingh.email@gmail.com" class="cbtn-main">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
         Say hello
       </a>
-      <a href="https://linkedin.com/in/sonalsingh444" target="_blank" class="cbtn-sec">
+      <a href="https://www.linkedin.com/in/sonalsingh444/" target="_blank" class="cbtn-sec">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
         Connect on LinkedIn
       </a>
@@ -438,8 +448,8 @@ footer{padding:1.75rem 4rem;border-top:1px solid var(--border);display:flex;just
 <footer>
   <div class="fn">Sonal Singh</div>
   <div class="fl">
-    <a href="https://linkedin.com/in/sonalsingh444">LinkedIn</a>
-    <a href="mailto:sonalshankar06@gmail.com">Email</a>
+    <a href="https://www.linkedin.com/in/sonalsingh444/">LinkedIn</a>
+    <a href="mailto:sonalsingh.email@gmail.com">Email</a>
   </div>
 </footer>
 
