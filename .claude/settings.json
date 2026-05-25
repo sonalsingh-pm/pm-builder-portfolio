@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node --check /Users/Sonal/pm-workspace/projects/pm-builder-portfolio/prototypes/campspark/index.html)",
+      "Bash(open /Users/Sonal/pm-workspace/projects/pm-builder-portfolio/prototypes/campspark/index.html)",
+      "WebSearch",
+      "WebFetch"
+    ]
+  }
+}

@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transformation Dashboard — Sonal Singh</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #080810;
+  --surface: #10101a;
+  --card: #14141e;
+  --border: #1e1e2e;
+  --text: #e8e8f0;
+  --muted: #5a5a7a;
+  --meditation: #c084fc;
+  --workout: #f5a623;
+  --job: #f56a6a;
+  --ai: #6af5c8;
+  --portfolio: #6ac8f5;
+  --interview: #7c6af5;
+  --family: #f5a6e0;
+  --rest: #555570;
+  --walk: #4ade80;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── HERO ── */
+.hero {
+  padding: 64px 24px 52px;
+  max-width: 920px;
+  margin: 0 auto;
+  text-align: center;
+}
+.hero-eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+.hero-headline {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(34px, 6vw, 62px);
+  font-weight: 800;
+  line-height: 1.08;
+  background: linear-gradient(135deg, #e8e8f0 0%, #9090b8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 18px;
+}
+.hero-sub {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--muted);
+  max-width: 480px;
+  margin: 0 auto 48px;
+}
+.manifesto-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+@media (max-width: 640px) {
+  .manifesto-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.manifesto-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px 14px 20px;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+.manifesto-card:hover { border-color: #2e2e48; }
+.manifesto-icon { font-size: 26px; margin-bottom: 10px; display: block; }
+.manifesto-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+.manifesto-tagline {
+  font-size: 12px;
+  font-weight: 400;
+  color: #9090b0;
+  line-height: 1.5;
+}
+
+/* ── PROGRESS BAR ── */
+.progress-section {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(12px);
+}
+.progress-inner {
+  max-width: 920px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.progress-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+  white-space: nowrap;
+  min-width: 90px;
+}
+.progress-track {
+  flex: 1;
+  height: 5px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--meditation), var(--portfolio));
+  border-radius: 99px;
+  transition: width 0.35s ease;
+}
+.progress-pct {
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  min-width: 36px;
+  text-align: right;
+}
+
+/* ── MAIN LAYOUT ── */
+.main {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 36px 24px 0;
+}
+
+/* ── TABS ── */
+.tabs-nav {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 36px;
+  flex-wrap: wrap;
+}
+.tab-btn {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 22px;
+  transition: all 0.2s;
+  letter-spacing: 0.2px;
+}
+.tab-btn:hover { border-color: #2e2e48; color: var(--text); }
+.tab-btn.active {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--bg);
+}
+
+/* ── DAY PANEL ── */
+.day-panel { display: none; }
+.day-panel.active {
+  display: block;
+  animation: fadeUp 0.35s ease forwards;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.day-header { margin-bottom: 22px; }
+.day-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.day-focus { font-size: 13px; color: var(--muted); font-weight: 400; }
+
+/* ── BLOCKS ── */
+.blocks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-bottom: 36px;
+}
+.block {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  display: flex;
+  align-items: stretch;
+  cursor: pointer;
+  transition: opacity 0.25s, transform 0.2s, border-color 0.2s;
+  overflow: hidden;
+  position: relative;
+  user-select: none;
+}
+.block:hover { border-color: #2a2a46; transform: translateY(-1px); }
+.block.done { opacity: 0.38; }
+.block.done .block-check { opacity: 1; transform: translateY(-50%) scale(1); }
+
+/* Left color stripe by type */
+.block[data-type="meditation"] { border-left: 3px solid var(--meditation); }
+.block[data-type="workout"]    { border-left: 3px solid var(--workout); }
+.block[data-type="job"]        { border-left: 3px solid var(--job); }
+.block[data-type="ai"]         { border-left: 3px solid var(--ai); }
+.block[data-type="portfolio"]  { border-left: 3px solid var(--portfolio); }
+.block[data-type="interview"]  { border-left: 3px solid var(--interview); }
+.block[data-type="family"]     { border-left: 3px solid var(--family); }
+.block[data-type="rest"]       { border-left: 3px solid var(--rest); }
+.block[data-type="walk"]       { border-left: 3px solid var(--walk); }
+
+.block-time-col {
+  min-width: 88px;
+  padding: 17px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-right: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.block-time {
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+}
+.block-duration {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 3px;
+  white-space: nowrap;
+}
+.block-content {
+  flex: 1;
+  padding: 15px 18px;
+  padding-right: 52px;
+}
+.category-tag {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 99px;
+  margin-bottom: 7px;
+}
+.tag-meditation { background: rgba(192,132,252,0.12); color: var(--meditation); }
+.tag-workout    { background: rgba(245,166,35,0.12);  color: var(--workout); }
+.tag-job        { background: rgba(245,106,106,0.12); color: var(--job); }
+.tag-ai         { background: rgba(106,245,200,0.12); color: var(--ai); }
+.tag-portfolio  { background: rgba(106,200,245,0.12); color: var(--portfolio); }
+.tag-interview  { background: rgba(124,106,245,0.12); color: var(--interview); }
+.tag-family     { background: rgba(245,166,224,0.12); color: var(--family); }
+.tag-rest       { background: rgba(85,85,112,0.22);   color: #7878a0; }
+.tag-walk       { background: rgba(74,222,128,0.12);  color: var(--walk); }
+
+.block-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+.block-desc {
+  font-size: 12px;
+  font-weight: 300;
+  color: #8888a8;
+  line-height: 1.55;
+}
+.block-links {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.link-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 11px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  color: #8888a8;
+  text-decoration: none;
+  transition: all 0.18s;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.link-pill:hover { background: #1e1e30; color: var(--text); border-color: #3a3a56; }
+.link-pill::before { content: '↗'; font-size: 9px; opacity: 0.7; }
+
+.block-check {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%) scale(0.4);
+  width: 26px;
+  height: 26px;
+  background: var(--walk);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #080810;
+  font-weight: 700;
+  opacity: 0;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  flex-shrink: 0;
+}
+
+/* ── COACH TIP ── */
+.coach-tip {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px 24px;
+  margin-bottom: 56px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.coach-avatar { font-size: 28px; flex-shrink: 0; line-height: 1; padding-top: 2px; }
+.coach-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.coach-text {
+  font-size: 13px;
+  font-weight: 300;
+  color: #a0a0c0;
+  line-height: 1.75;
+  font-style: italic;
+}
+
+/* ── LEGEND ── */
+.legend-section {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 0 24px 64px;
+}
+.legend-title {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+.legend-grid { display: flex; flex-wrap: wrap; gap: 12px 20px; }
+.legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #7878a0; font-weight: 400; }
+.legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 500px) {
+  .hero { padding: 48px 16px 40px; }
+  .main { padding: 28px 16px 0; }
+  .legend-section { padding: 0 16px 48px; }
+  .block-time-col { min-width: 70px; padding: 14px 10px; }
+  .block-content { padding: 14px 14px; padding-right: 46px; }
+  .block-time { font-size: 11px; }
+  .block-duration { font-size: 10px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-eyebrow">Personal Transformation Dashboard</p>
+  <h1 class="hero-headline">Build the life.<br>Land the role.</h1>
+  <p class="hero-sub">A daily operating system for getting fit, staying sharp, and making your next move — without burning out.</p>
+  <div class="manifesto-grid">
+    <div class="manifesto-card">
+      <span class="manifesto-icon">💪</span>
+      <div class="manifesto-label">Body</div>
+      <p class="manifesto-tagline">Move every morning. Feel the difference by week two.</p>
+    </div>
+    <div class="manifesto-card">
+      <span class="manifesto-icon">🧠</span>
+      <div class="manifesto-label">Mind</div>
+      <p class="manifesto-tagline">Learn AI as a builder, not a bystander.</p>
+    </div>
+    <div class="manifesto-card">
+      <span class="manifesto-icon">🎯</span>
+      <div class="manifesto-label">Career</div>
+      <p class="manifesto-tagline">Focused, deliberate. The right role is close.</p>
+    </div>
+    <div class="manifesto-card">
+      <span class="manifesto-icon">❤️</span>
+      <div class="manifesto-label">Family</div>
+      <p class="manifesto-tagline">Weekends belong to Ella, Aiden, and Toby.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRESS BAR -->
+<div class="progress-section">
+  <div class="progress-inner">
+    <span class="progress-label" id="progress-label">0 / 0 blocks</span>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <span class="progress-pct" id="progress-pct">0%</span>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+  <nav class="tabs-nav" id="tabs-nav"></nav>
+  <div id="day-panels"></div>
+</div>
+
+<!-- LEGEND -->
+<div class="legend-section">
+  <p class="legend-title">Block Types</p>
+  <div class="legend-grid">
+    <div class="legend-item"><span class="legend-dot" style="background:#c084fc"></span>Meditation</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#f5a623"></span>Workout</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#f56a6a"></span>Job Search</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#6af5c8"></span>AI Learning</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#6ac8f5"></span>Portfolio Build</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#7c6af5"></span>Interview Prep</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#f5a6e0"></span>Family</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#555570"></span>Break / Rest</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#4ade80"></span>Walk + Podcast</div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+
+const MORNING = [
+  {
+    time: '6:00am', duration: '2.5 hr', type: 'family', tag: 'Family',
+    title: 'Kids Ready + School Drop-off',
+    desc: 'Morning routine with Ella and Aiden. Drop off at school. Home by 8:30am.'
+  },
+  {
+    time: '8:30am', duration: '10 min', type: 'rest', tag: 'Break',
+    title: 'Coffee + Small Breakfast',
+    desc: 'Fuel up. Keep it light — your brain works better on a little, not a lot.'
+  },
+  {
+    time: '8:40am', duration: '15 min', type: 'meditation', tag: 'Meditation',
+    title: '🧘 Morning Meditation',
+    desc: '15-Minute Guided Meditation for Clarity and Focus. Close your eyes, clear the noise.',
+    links: [
+      { label: 'Primary Video', url: 'https://www.youtube.com/watch?v=LpAzmyrUswg' },
+      { label: 'Alternate Video', url: 'https://www.youtube.com/watch?v=itt6rLkyoCM' }
+    ]
+  }
+];
+
+const EVENING_PICKUP = {
+  time: '3:00pm', duration: 'Evening', type: 'family', tag: 'Family',
+  title: '👨‍👧 School Pickup + Kids + Dinner',
+  desc: 'Pick up the kids. Dinner. Be present. This is the real work.'
+};
+
+const WORKOUT_MON_TUE = {
+  time: '8:55am', duration: '20 min', type: 'workout', tag: 'Workout',
+  title: '💪 Full Body Workout — Sydney Cummings',
+  desc: 'Light dumbbells 3–5 lb, beginner-friendly, follow-along. No excuses.',
+  links: [
+    { label: '20 Min Full Body (All Weeks)', url: 'https://www.youtube.com/watch?v=PFGeohvbNq8' },
+    { label: "Sydney's Channel", url: 'https://www.youtube.com/@sydneycummingshoudyshell' }
+  ]
+};
+
+const WORKOUT_WED = {
+  time: '8:55am', duration: '20 min', type: 'workout', tag: 'Workout',
+  title: '💪 Workout — Sydney Cummings',
+  desc: 'Week 1–2: Full Body. Week 3+: Lower Body with Dumbbells.',
+  links: [
+    { label: 'Wk 1–2: Full Body', url: 'https://www.youtube.com/watch?v=PFGeohvbNq8' },
+    { label: 'Wk 3+: Lower Body', url: 'https://www.youtube.com/watch?v=cc1Z4djWSUI' },
+    { label: "Sydney's Channel", url: 'https://www.youtube.com/@sydneycummingshoudyshell' }
+  ]
+};
+
+const WORKOUT_THU = {
+  time: '8:55am', duration: '20 min', type: 'workout', tag: 'Workout',
+  title: '💪 Workout — Sydney Cummings',
+  desc: 'Week 1–2: Full Body. Week 3+: Lower Body + Abs.',
+  links: [
+    { label: 'Wk 1–2: Full Body', url: 'https://www.youtube.com/watch?v=PFGeohvbNq8' },
+    { label: 'Wk 3+: Lower Body + Abs', url: 'https://www.youtube.com/watch?v=FeUGuTwg_7U' },
+    { label: "Sydney's Channel", url: 'https://www.youtube.com/@sydneycummingshoudyshell' }
+  ]
+};
+
+const WORKOUT_FRI = {
+  time: '8:55am', duration: '20 min', type: 'workout', tag: 'Workout',
+  title: '💪 Workout — Sydney Cummings',
+  desc: "Week 1–2: Full Body. Week 3+: Pick from Sydney's channel for variety.",
+  links: [
+    { label: 'Wk 1–2: Full Body', url: 'https://www.youtube.com/watch?v=PFGeohvbNq8' },
+    { label: "Wk 3+: Sydney's Channel", url: 'https://www.youtube.com/@sydneycummingshoudyshell' }
+  ]
+};
+
+const SHOWER = {
+  time: '9:15am', duration: '20 min', type: 'rest', tag: 'Break',
+  title: 'Shower + Get Ready',
+  desc: 'At your desk by 9:35am. No lingering.'
+};
+
+const DAYS = {
+  mon: {
+    label: 'Monday',
+    focus: 'Job Search + LinkedIn Post Day',
+    coachTip: 'Mondays set the tone for the whole week. The meditation clears anxiety. The workout burns cortisol. The job search happens when your brain is freshest. The LinkedIn post goes out when reach is highest. This is the day that matters most. Show up fully.',
+    blocks: [
+      ...MORNING, WORKOUT_MON_TUE, SHOWER,
+      {
+        time: '9:35am', duration: '45 min', type: 'job', tag: 'Job Search',
+        title: 'Inbox + Recruiter Messages',
+        desc: 'Check all inboxes and reply to recruiter messages. LinkedIn, email, True Search, Redfish, Talentfoot.'
+      },
+      {
+        time: '10:20am', duration: '60 min', type: 'job', tag: 'Job Search',
+        title: '🎯 Apply to Target Roles',
+        desc: 'Check 5 target company career pages directly. Apply to specific remote Principal PM roles.',
+        links: [
+          { label: 'Shopify', url: 'https://shopify.com/careers' },
+          { label: 'Salesforce', url: 'https://careers.salesforce.com/en/jobs' },
+          { label: 'Oro Labs', url: 'https://orolabs.ai/careers' },
+          { label: 'Pactum', url: 'https://pactum.com/careers' },
+          { label: 'JAGGAER', url: 'https://jaggaer.com/company/careers' }
+        ]
+      },
+      {
+        time: '11:20am', duration: '45 min', type: 'job', tag: 'Job Search',
+        title: '✍️ Write + Publish LinkedIn Post',
+        desc: '150 words. Monday = highest visibility. This is your public signal that you are in the game.'
+      },
+      {
+        time: '12:05pm', duration: '45 min', type: 'rest', tag: 'Break',
+        title: 'Lunch Break',
+        desc: 'Away from the desk. Eat something real. Recharge.'
+      },
+      {
+        time: '12:50pm', duration: '60 min', type: 'ai', tag: 'AI Learning',
+        title: '🎓 Intro to Large Language Models — Andrej Karpathy',
+        desc: 'The best 1-hour deep dive into how LLMs actually work. Take notes. Watch once, rewatch the confusing parts.',
+        links: [
+          { label: 'Watch on YouTube (1 hr)', url: 'https://www.youtube.com/watch?v=zjkBMFhNj_g' }
+        ]
+      },
+      {
+        time: '1:50pm', duration: '30 min', type: 'rest', tag: 'Wrap Up',
+        title: 'Daily Review',
+        desc: 'Note 3 wins from today + 1 follow-up for tomorrow. Small habit, compounding impact.'
+      },
+      EVENING_PICKUP,
+      {
+        time: 'After Dinner', duration: '30–45 min', type: 'walk', tag: 'Walk + Podcast',
+        title: "🎧 Walk — Lenny's Podcast",
+        desc: '"Not All AI Agents Are Created Equal" — April 2026. Put on your shoes. Go.',
+        links: [
+          { label: "Lenny's Podcast", url: 'https://podcasts.apple.com/us/podcast/lennys-podcast-product-career-growth/id1627920305' }
+        ]
+      }
+    ]
+  },
+
+  tue: {
+    label: 'Tuesday',
+    focus: 'Portfolio Build Day',
+    coachTip: 'The 90-minute build session is sacred. This is what changes how every interviewer sees you — from PM who talks about AI to PM who builds with AI. Protect it like a meeting you cannot cancel.',
+    blocks: [
+      ...MORNING, WORKOUT_MON_TUE, SHOWER,
+      {
+        time: '9:35am', duration: '30 min', type: 'job', tag: 'Job Search',
+        title: 'Check Messages + Reply Urgent Only',
+        desc: '30 minutes max. Urgent items only. Today belongs to building.'
+      },
+      {
+        time: '10:05am', duration: '90 min', type: 'portfolio', tag: 'Portfolio Build',
+        title: '🛠 Portfolio Build — Watch then Build',
+        desc: 'Watch Cole Medin for inspiration, then build your prototype in Lovable.dev. No overthinking. Ship something.',
+        links: [
+          { label: 'Cole Medin YouTube', url: 'https://www.youtube.com/@ColeMedin' },
+          { label: 'Build in Lovable', url: 'https://lovable.dev' },
+          { label: 'Or try Bolt.new', url: 'https://bolt.new' }
+        ]
+      },
+      {
+        time: '11:35am', duration: '45 min', type: 'rest', tag: 'Break',
+        title: 'Lunch',
+        desc: 'Step away. Real food. Rest the creative brain.'
+      },
+      {
+        time: '12:20pm', duration: '60 min', type: 'ai', tag: 'AI Learning',
+        title: '🎓 How I Use LLMs — Karpathy Part 1',
+        desc: 'First hour of the 2-hour video. Practical AI literacy from someone who built the things.',
+        links: [
+          { label: 'Watch on YouTube (first hour)', url: 'https://www.youtube.com/watch?v=EWvNQjAaOHw' }
+        ]
+      },
+      {
+        time: '1:20pm', duration: '45 min', type: 'interview', tag: 'Interview Prep',
+        title: '🎯 STAR Story — SAP 73% Drop-off',
+        desc: 'Write the SAP 73% drop-off story in STAR format. Say it out loud, timed. 90 seconds. Repeat until it flows.'
+      },
+      {
+        time: '2:05pm', duration: '30 min', type: 'rest', tag: 'Wrap Up',
+        title: 'Wrap Up',
+        desc: 'Close loops. Note what to continue tomorrow.'
+      },
+      EVENING_PICKUP,
+      {
+        time: 'After Dinner', duration: '30–45 min', type: 'walk', tag: 'Walk + Podcast',
+        title: "🎧 Walk — Lenny's Podcast",
+        desc: '"How AI is reshaping the product role" — Oji and Ezinne Udezue.',
+        links: [
+          { label: 'Listen Now', url: 'https://podcasts.apple.com/us/podcast/how-ai-is-reshaping-the-product-role-oji-and-ezinne-udezue/id1627920305?i=1000725371988' }
+        ]
+      }
+    ]
+  },
+
+  wed: {
+    label: 'Wednesday',
+    focus: 'Deep Learning + Company Research',
+    coachTip: "Andrew Ng's course is a turning point. After Karpathy (what LLMs are), Ng shows you how to think about them as a product leader. By end of Wednesday you will discuss AI in a way that makes interviewers lean forward.",
+    blocks: [
+      ...MORNING, WORKOUT_WED, SHOWER,
+      {
+        time: '9:35am', duration: '90 min', type: 'ai', tag: 'AI Learning',
+        title: '🎓 Generative AI for Everyone — Andrew Ng',
+        desc: 'Free audit on Coursera. The product leader\'s guide to AI. After Karpathy (what LLMs are), this teaches you how to think with them. Supplement with IBM Technology quick explainers.',
+        links: [
+          { label: 'Coursera (Free Audit)', url: 'https://www.coursera.org/learn/generative-ai-for-everyone' },
+          { label: 'IBM Technology YouTube', url: 'https://www.youtube.com/@IBMTechnology' }
+        ]
+      },
+      {
+        time: '11:05am', duration: '45 min', type: 'job', tag: 'Job Search',
+        title: '🔍 Research 2 Target Companies',
+        desc: 'Funding stage, team size, leadership, SAP alumni connections. Know them before you apply.'
+      },
+      {
+        time: '11:50am', duration: '45 min', type: 'rest', tag: 'Break',
+        title: 'Lunch — Get Outside',
+        desc: 'Daylight. Fresh air. Your brain needs it mid-week.'
+      },
+      {
+        time: '12:35pm', duration: '60 min', type: 'portfolio', tag: 'Portfolio Build',
+        title: '🛠 Extend Prototype OR Start LinkedIn Article',
+        desc: 'Either push the Lovable build forward, or draft a LinkedIn case study article.',
+        links: [
+          { label: 'Lovable.dev', url: 'https://lovable.dev' },
+          { label: 'New LinkedIn Article', url: 'https://www.linkedin.com/article/new/' }
+        ]
+      },
+      {
+        time: '1:35pm', duration: '30 min', type: 'job', tag: 'Job Search',
+        title: '💬 LinkedIn Engagement',
+        desc: 'Comment thoughtfully on 3 posts from procurement / marketplace / AI domain PMs or founders. Visibility compounds.'
+      },
+      {
+        time: '2:05pm', duration: '30 min', type: 'rest', tag: 'Wrap Up',
+        title: 'Wrap Up',
+        desc: 'Close loops. Note what to continue tomorrow.'
+      },
+      EVENING_PICKUP,
+      {
+        time: 'After Dinner', duration: '30–45 min', type: 'walk', tag: 'Walk + Podcast',
+        title: '🎧 Walk — The AI Daily Brief',
+        desc: 'Stay current on what is happening in AI. Fast, dense, worth it.',
+        links: [
+          { label: 'The AI Daily Brief', url: 'https://podcasts.apple.com/us/podcast/the-ai-daily-brief-formerly-the-ai-breakdown-artificial/id1680633614' }
+        ]
+      }
+    ]
+  },
+
+  thu: {
+    label: 'Thursday',
+    focus: 'Interview Prep + Outreach',
+    coachTip: 'Saying your answers out loud is the most underrated interview prep technique. Thinking and speaking are different cognitive tasks. Record yourself. Watch it. Fix what sounds weak. Do it again. This 90 minutes on Thursday is worth more than any other hour in your week.',
+    blocks: [
+      ...MORNING, WORKOUT_THU, SHOWER,
+      {
+        time: '9:35am', duration: '45 min', type: 'job', tag: 'Job Search',
+        title: '✉️ Warm Outreach — 1 Thoughtful Message',
+        desc: 'One warm, thoughtful message to a target company contact. No cold applications. Research first, personalize every word.'
+      },
+      {
+        time: '10:20am', duration: '90 min', type: 'interview', tag: 'Interview Prep',
+        title: '🎯 Record + Review — 2 Questions Out Loud',
+        desc: 'Q1: "Zero to one product launch" — the Dell APEX PC as a Service story. Q2: "AI role in B2B marketplace products." Record on your phone. Watch back once. Fix what sounds weak. Repeat.',
+      },
+      {
+        time: '11:50am', duration: '45 min', type: 'rest', tag: 'Break',
+        title: 'Lunch',
+        desc: 'Away from the desk. Real food. Recharge for the afternoon.'
+      },
+      {
+        time: '12:35pm', duration: '60 min', type: 'ai', tag: 'AI Learning',
+        title: '🎓 How I Use LLMs — Karpathy Part 2',
+        desc: 'Second hour of the video. Complete the picture of practical LLM literacy.',
+        links: [
+          { label: 'Watch on YouTube (second hour)', url: 'https://www.youtube.com/watch?v=EWvNQjAaOHw' }
+        ]
+      },
+      {
+        time: '1:35pm', duration: '30 min', type: 'job', tag: 'Job Search',
+        title: '📋 Check Career Pages',
+        desc: 'Thursday is when new roles often post. Spend 30 minutes and act immediately if you find something strong.'
+      },
+      {
+        time: '2:05pm', duration: '30 min', type: 'rest', tag: 'Wrap Up',
+        title: 'Wrap Up',
+        desc: 'Close loops. Note what to continue tomorrow.'
+      },
+      EVENING_PICKUP,
+      {
+        time: 'After Dinner', duration: '30–45 min', type: 'walk', tag: 'Walk + Podcast',
+        title: "🎧 Walk — Lenny's Podcast",
+        desc: '"State of the product job market in early 2026" — March 2026. Know the market you are in.',
+        links: [
+          { label: "Lenny's Podcast", url: 'https://podcasts.apple.com/us/podcast/lennys-podcast-product-career-growth/id1627920305' }
+        ]
+      }
+    ]
+  },
+
+  fri: {
+    label: 'Friday',
+    focus: 'Review + Learn + Rest',
+    coachTip: 'Review and plan, then stop. A rested mind on Monday is worth more than burning out Friday afternoon when nothing is happening anyway.',
+    blocks: [
+      ...MORNING, WORKOUT_FRI, SHOWER,
+      {
+        time: '9:35am', duration: '45 min', type: 'job', tag: 'Job Search',
+        title: '📊 Honest Weekly Review',
+        desc: 'Did I hear back from anyone? Complete the learning? Build something? Post on LinkedIn? No spin. Just truth.'
+      },
+      {
+        time: '10:20am', duration: '60 min', type: 'ai', tag: 'AI Learning',
+        title: '🎓 HelloPM Free AI Course — Module 1',
+        desc: 'PM-focused AI literacy. Practical, not theoretical.',
+        links: [
+          { label: 'HelloPM Free Course', url: 'https://hellopm.co/free/' }
+        ]
+      },
+      {
+        time: '11:20am', duration: '30 min', type: 'job', tag: 'Job Search',
+        title: '📅 Plan Next Week',
+        desc: 'Write: 3 companies to check Monday. 1 person to reach out to. 1 role to apply to. Then close the laptop deliberately.'
+      },
+      {
+        time: '11:50am', duration: 'Afternoon', type: 'rest', tag: 'Rest',
+        title: '☀️ Afternoon Off — Truly Done',
+        desc: "Recruiters don't respond Friday afternoon. Rest is not a reward. Rest is the work."
+      },
+      {
+        time: '3:00pm', duration: 'Weekend', type: 'family', tag: 'Family',
+        title: '👨‍👧 School Pickup — Weekend Begins',
+        desc: 'Pick up the kids. The weekend starts now. You earned it.'
+      }
+    ]
+  },
+
+  weekend: {
+    label: 'Weekend',
+    focus: 'Family + Rest. Zero job search. Zero guilt.',
+    coachTip: 'The only job-related thing worth doing on weekends is podcasts on walks — it costs nothing and compounds quietly. Everything else waits for Monday. Be present with your kids. Rest is not a reward. Rest is the work.',
+    blocks: [
+      {
+        time: 'Morning', duration: 'Optional', type: 'meditation', tag: 'Meditation',
+        title: '🧘 Morning Meditation (Optional)',
+        desc: 'Recommended but not required. 15 minutes to start the weekend with clarity rather than noise.',
+        links: [
+          { label: 'Guided Meditation', url: 'https://www.youtube.com/watch?v=LpAzmyrUswg' }
+        ]
+      },
+      {
+        time: 'Morning', duration: '20 min', type: 'workout', tag: 'Workout',
+        title: '💪 Morning Workout — Sydney Cummings',
+        desc: 'Keep the streak alive. Light, fun, follow-along. No pressure.',
+        links: [
+          { label: '20 Min Full Body', url: 'https://www.youtube.com/watch?v=PFGeohvbNq8' },
+          { label: 'Lower Body Variety', url: 'https://www.youtube.com/watch?v=cc1Z4djWSUI' },
+          { label: "Sydney's Channel", url: 'https://www.youtube.com/@sydneycummingshoudyshell' }
+        ]
+      },
+      {
+        time: 'Anytime', duration: '30–45 min', type: 'walk', tag: 'Walk + Podcast',
+        title: "🎧 Walk — Lenny's Podcast",
+        desc: '"The AI-Native Startup: 5 Products, 7-Figure Revenue, 100 Customers" — Dan Shipper, July 2025.',
+        links: [
+          { label: 'Listen Now', url: 'https://podcasts.apple.com/us/podcast/the-ai-native-startup-5-products-7-figure-revenue-100/id1627920305?i=1000717696338' }
+        ]
+      },
+      {
+        time: 'Optional', duration: '30 min', type: 'ai', tag: 'AI Learning',
+        title: '📺 IBM Technology — 3 Quick Explainers',
+        desc: 'Optional AI upskilling. Short videos, big concepts. No pressure.',
+        links: [
+          { label: 'IBM Technology YouTube', url: 'https://www.youtube.com/@IBMTechnology' }
+        ]
+      },
+      {
+        time: 'All Day', duration: 'All Day', type: 'family', tag: 'Family',
+        title: '❤️ Family — Zero Job Search. Zero Guilt.',
+        desc: 'This is the work too. Be present with Ella and Aiden. Play with Toby. Rest. Laugh. Recharge completely.'
+      }
+    ]
+  }
+};
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function renderBlock(block, dayId, idx) {
+  const id = dayId + '-' + idx;
+  const linksHTML = (block.links && block.links.length)
+    ? '<div class="block-links">' +
+        block.links.map(function(l) {
+          return '<a href="' + escapeHtml(l.url) + '" target="_blank" rel="noopener" class="link-pill" onclick="event.stopPropagation()">' + escapeHtml(l.label) + '</a>';
+        }).join('') +
+      '</div>'
+    : '';
+
+  return '<div class="block" data-type="' + block.type + '" data-id="' + id + '" onclick="toggleBlock(this)">' +
+    '<div class="block-time-col">' +
+      '<span class="block-time">' + escapeHtml(block.time) + '</span>' +
+      '<span class="block-duration">' + escapeHtml(block.duration) + '</span>' +
+    '</div>' +
+    '<div class="block-content">' +
+      '<span class="category-tag tag-' + block.type + '">' + escapeHtml(block.tag) + '</span>' +
+      '<h3 class="block-title">' + escapeHtml(block.title) + '</h3>' +
+      '<p class="block-desc">' + escapeHtml(block.desc) + '</p>' +
+      linksHTML +
+    '</div>' +
+    '<div class="block-check">✓</div>' +
+  '</div>';
+}
+
+function renderDay(dayId, dayData) {
+  var blocksHTML = dayData.blocks.map(function(b, i) {
+    return renderBlock(b, dayId, i);
+  }).join('');
+
+  return '<div class="day-panel" id="panel-' + dayId + '">' +
+    '<div class="day-header">' +
+      '<h2 class="day-title">' + escapeHtml(dayData.label) + '</h2>' +
+      '<p class="day-focus">' + escapeHtml(dayData.focus) + '</p>' +
+    '</div>' +
+    '<div class="blocks-list">' + blocksHTML + '</div>' +
+    '<div class="coach-tip">' +
+      '<span class="coach-avatar">🧑&#x200d;💼</span>' +
+      '<div>' +
+        '<div class="coach-label">Coach Note</div>' +
+        '<p class="coach-text">&ldquo;' + escapeHtml(dayData.coachTip) + '&rdquo;</p>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+// ── TABS ──────────────────────────────────────────────────────────────────────
+
+var activeDay = 'mon';
+
+function switchTab(dayId) {
+  document.querySelectorAll('.day-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById('panel-' + dayId).classList.add('active');
+  document.getElementById('tab-' + dayId).classList.add('active');
+  activeDay = dayId;
+  updateProgress();
+}
+
+function toggleBlock(el) {
+  el.classList.toggle('done');
+  updateProgress();
+}
+
+function updateProgress() {
+  var panel = document.getElementById('panel-' + activeDay);
+  var allBlocks = panel.querySelectorAll('.block');
+  var doneBlocks = panel.querySelectorAll('.block.done');
+  var total = allBlocks.length;
+  var done = doneBlocks.length;
+  var pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('progress-label').textContent = done + ' / ' + total + ' blocks';
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+
+(function init() {
+  var TAB_LABELS = { mon: 'Mon', tue: 'Tue', wed: 'Wed', thu: 'Thu', fri: 'Fri', weekend: 'Weekend' };
+  var tabsNav = document.getElementById('tabs-nav');
+  var panelsContainer = document.getElementById('day-panels');
+
+  Object.keys(DAYS).forEach(function(dayId) {
+    // Tab button
+    var btn = document.createElement('button');
+    btn.className = 'tab-btn';
+    btn.id = 'tab-' + dayId;
+    btn.textContent = TAB_LABELS[dayId];
+    btn.setAttribute('onclick', 'switchTab("' + dayId + '")');
+    tabsNav.appendChild(btn);
+
+    // Day panel
+    panelsContainer.innerHTML += renderDay(dayId, DAYS[dayId]);
+  });
+
+  // Activate Monday
+  switchTab('mon');
+})();
+</script>
+</body>
+</html>
