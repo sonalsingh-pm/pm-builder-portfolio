@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sonal Singh -- Staff PM, Team Foundations -- Dropbox</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* -- VARIABLES --------------------------------------------------------------- */
+:root {
+  --blue:     #0061FF;
+  --blue-lt:  #E8F0FF;
+  --blue-md:  #C5D8FF;
+  --blue-dk:  #004EC7;
+  --dark:     #1E1E1E;
+  --mid:      #666;
+  --muted:    #999;
+  --bg:       #F7F7F7;
+  --border:   #E5E5E5;
+  --white:    #fff;
+  --green:    #059669;
+  --green-lt: #ECFDF5;
+  --amber:    #D97706;
+  --amber-lt: #FFFBEB;
+  --amber-bd: #FCD34D;
+  --red-lt:   #FEF2F2;
+  --red:      #DC2626;
+  --shadow-xs: 0 1px 3px rgba(0,0,0,.07);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,.08), 0 1px 3px rgba(0,0,0,.05);
+  --shadow:    0 4px 16px rgba(0,0,0,.10), 0 1px 4px rgba(0,0,0,.06);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,.13), 0 2px 8px rgba(0,0,0,.07);
+  --r:    12px;
+  --r-sm:  8px;
+  --r-lg: 16px;
+}
+
+/* -- RESET ------------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--dark);
+  background: var(--white);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* -- LAYOUT ------------------------------------------------------------------ */
+.container { max-width: 1040px; margin: 0 auto; padding: 0 28px; }
+.container-narrow { max-width: 760px; margin: 0 auto; padding: 0 28px; }
+.section { padding: 72px 0; }
+.section-white { background: var(--white); }
+.section-gray  { background: var(--bg); }
+
+/* -- TYPOGRAPHY UTILITIES ---------------------------------------------------- */
+.eyebrow {
+  font-size: 11px; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--blue); margin-bottom: 10px;
+}
+.section-title {
+  font-size: clamp(26px, 4vw, 36px); font-weight: 800; line-height: 1.15;
+  margin-bottom: 10px; color: var(--dark); letter-spacing: -.5px;
+}
+.section-sub {
+  font-size: 16px; color: var(--mid); max-width: 600px;
+  margin-bottom: 44px; line-height: 1.65;
+}
+
+/* -- APP NOTE ---------------------------------------------------------------- */
+.app-note {
+  background: var(--blue-lt);
+  border-bottom: 1px solid rgba(0,97,255,.2);
+  text-align: center; padding: 10px 24px;
+  font-size: 13px; font-weight: 500; color: var(--blue);
+}
+
+/* -- HEADER ------------------------------------------------------------------ */
+.site-header {
+  background: var(--white);
+  border-top: 4px solid var(--blue);
+  border-bottom: 1px solid var(--border);
+  padding: 52px 0;
+}
+.header-inner {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 40px; flex-wrap: wrap;
+}
+.header-name {
+  font-size: clamp(28px,5vw,40px); font-weight: 800;
+  color: var(--dark); margin-bottom: 6px; letter-spacing: -.5px;
+}
+.header-role {
+  font-size: 18px; font-weight: 600; color: var(--blue); margin-bottom: 6px;
+}
+.header-sub {
+  font-size: 15px; color: var(--mid); font-style: italic; margin-bottom: 22px;
+}
+.header-links { display: flex; gap: 12px; flex-wrap: wrap; }
+.hlink {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 13px; font-weight: 600; color: var(--blue);
+  padding: 8px 18px; border: 1.5px solid var(--blue-md);
+  border-radius: var(--r-sm); transition: all .2s; text-decoration: none;
+}
+.hlink:hover { background: var(--blue-lt); text-decoration: none; }
+
+/* Header metrics box */
+.header-metrics {
+  min-width: 240px; background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 18px 20px; flex-shrink: 0;
+}
+.hm-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .12em; color: var(--muted); margin-bottom: 14px;
+}
+.hm-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 12px;
+}
+.hm-stat-label {
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .08em; color: var(--muted); margin-bottom: 3px;
+}
+.hm-stat-value {
+  font-size: 15px; font-weight: 800; color: var(--dark); letter-spacing: -.3px;
+}
+.hm-source { font-size: 10px; color: var(--muted); font-style: italic; line-height: 1.5; }
+
+/* -- HOOK SECTION ------------------------------------------------------------ */
+.hook-section {
+  background: linear-gradient(160deg, #0A0A0A 0%, #0D1F3C 100%);
+  padding: 72px 0;
+}
+.hook-first {
+  font-size: 22px; font-weight: 600; color: #fff;
+}
+.hook-para {
+  font-size: 20px; line-height: 1.85; color: rgba(255,255,255,.88);
+  font-weight: 400; margin-bottom: 28px;
+}
+.hook-para:last-of-type { margin-bottom: 0; }
+.hook-rule {
+  border: none; border-top: 1px solid rgba(255,255,255,.1); margin: 32px 0 28px;
+}
+.hook-arrow-wrap { text-align: center; margin-top: 28px; }
+.hook-arrow { animation: bounce 1.6s ease-in-out infinite; display: inline-block; }
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(9px); }
+}
+
+/* -- STAT ROW ---------------------------------------------------------------- */
+.stat-row {
+  display: flex; margin-top: 44px;
+  background: var(--bg); border-radius: var(--r-lg);
+  border: 1px solid var(--border); overflow: hidden;
+}
+.stat-item {
+  flex: 1; padding: 32px 24px; text-align: center;
+}
+.stat-item + .stat-item { border-left: 1px solid var(--border); }
+.stat-qlabel {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .1em; color: var(--muted); margin-bottom: 10px;
+}
+.stat-num {
+  font-size: 52px; font-weight: 800; color: var(--dark);
+  line-height: 1; margin-bottom: 10px; letter-spacing: -2px;
+  font-variant-numeric: tabular-nums;
+}
+.stat-num .unit { font-size: 20px; font-weight: 600; letter-spacing: 0; }
+.stat-chip {
+  font-size: 12px; font-weight: 600; padding: 3px 11px;
+  border-radius: 99px; display: inline-block;
+}
+.chip-gray { background: var(--bg); border: 1px solid var(--border); color: var(--mid); }
+.chip-red  { background: var(--red-lt); color: var(--red); }
+.chip-grn  { background: var(--green-lt); color: var(--green); }
+.stat-bar-track {
+  height: 4px; background: var(--border); border-radius: 2px; margin-top: 20px;
+}
+.stat-bar-fill {
+  height: 100%; border-radius: 2px;
+  transition: width 1.6s cubic-bezier(.4,0,.2,1) .3s; width: 0%;
+}
+.stat-footnote {
+  font-size: 11px; color: var(--muted); font-style: italic;
+  margin-top: 18px; line-height: 1.55;
+}
+
+/* -- PROBLEM CARDS ----------------------------------------------------------- */
+.problem-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.problem-card {
+  background: var(--white); border-radius: var(--r); padding: 28px;
+  box-shadow: var(--shadow); border-top: 3px solid var(--blue);
+  transition: transform .2s, box-shadow .2s; position: relative;
+}
+.problem-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+.problem-card:first-child { border-top-width: 4px; }
+.primary-badge {
+  position: absolute; top: 16px; right: 16px;
+  background: var(--blue); color: #fff;
+  font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 99px;
+}
+.pcard-icon {
+  width: 48px; height: 48px; background: var(--blue-lt);
+  border-radius: var(--r-sm); display: flex; align-items: center;
+  justify-content: center; margin-bottom: 18px;
+}
+.pcard-icon svg {
+  width: 24px; height: 24px; stroke: var(--blue); fill: none;
+  stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+}
+.pcard-title { font-size: 15px; font-weight: 700; margin-bottom: 10px; line-height: 1.35; }
+.pcard-desc  { font-size: 13px; color: #444; line-height: 1.75; margin-bottom: 16px; }
+.pcard-impact {
+  background: var(--blue-lt); border-left: 3px solid var(--blue);
+  padding: 10px 14px; border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  font-size: 12.5px; font-weight: 500; color: var(--blue-dk);
+  font-style: italic; line-height: 1.5;
+}
+
+/* -- BUILD CARDS ------------------------------------------------------------- */
+.build-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+}
+.build-card {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 26px;
+  transition: transform .2s, box-shadow .2s;
+}
+.build-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+.build-num {
+  width: 36px; height: 36px; background: var(--blue); color: #fff;
+  border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 15px; font-weight: 700;
+  flex-shrink: 0; margin-bottom: 16px;
+}
+.build-title { font-size: 15px; font-weight: 700; margin-bottom: 10px; line-height: 1.35; }
+.build-body  { font-size: 13px; color: var(--mid); line-height: 1.75; }
+
+/* -- PROOF BLOCKS ------------------------------------------------------------ */
+.proof-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+}
+.proof-block {
+  background: var(--white); border-radius: var(--r); padding: 32px;
+  box-shadow: var(--shadow); border-left: 4px solid var(--blue);
+}
+.proof-company {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .12em; color: var(--blue); margin-bottom: 8px;
+}
+.proof-metric {
+  font-size: 36px; font-weight: 800; color: var(--dark);
+  line-height: 1; margin-bottom: 4px; letter-spacing: -1px;
+}
+.proof-metric-label { font-size: 13px; color: var(--mid); }
+.proof-divider { height: 1px; background: var(--border); margin: 18px 0; border: none; }
+.proof-body { font-size: 14px; color: #444; line-height: 1.85; }
+.proof-body p { font-size: 14px; color: #444; line-height: 1.85; margin-bottom: 14px; }
+.proof-body p:last-child { margin-bottom: 0; }
+
+/* -- PROTO CAPTION ----------------------------------------------------------- */
+.proto-caption {
+  font-size: 13px; color: var(--mid); text-align: center;
+  margin-bottom: 28px; max-width: 400px; margin-left: auto; margin-right: auto;
+  line-height: 1.6;
+}
+
+/* -- PHONE FRAME ------------------------------------------------------------- */
+.proto-wrap { display: flex; justify-content: center; }
+.phone-outer {
+  width: 375px; max-width: 100%;
+  background: #1C1C1E; border-radius: 54px; padding: 14px;
+  box-shadow: 0 28px 70px rgba(0,0,0,.30), 0 0 0 1px rgba(255,255,255,.07) inset;
+}
+.phone-notch {
+  width: 108px; height: 28px; background: #1C1C1E;
+  border-radius: 14px; margin: 0 auto 8px; position: relative; z-index: 2;
+}
+.phone-screen {
+  background: #FAFAFA; border-radius: 42px; overflow: hidden;
+  height: 680px; position: relative;
+}
+.steps-wrap { position: relative; height: 100%; overflow: hidden; }
+.pstep {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: #fff; display: flex; flex-direction: column;
+  transition: transform .42s cubic-bezier(.4,0,.2,1), opacity .4s ease;
+  overflow-y: auto;
+}
+.pstep.active   { transform: translateX(0);     opacity: 1;  pointer-events: all; }
+.pstep.go-left  { transform: translateX(-100%); opacity: 0;  pointer-events: none; }
+.pstep.go-right { transform: translateX(100%);  opacity: 0;  pointer-events: none; }
+
+.pstep-header {
+  background: #fff; border-bottom: 1px solid var(--border);
+  padding: 16px 20px 12px;
+  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+}
+.pstep-logo { font-size: 18px; font-weight: 800; color: var(--blue); letter-spacing: -.5px; }
+.proto-dots { display: flex; gap: 5px; align-items: center; }
+.pdot {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--border);
+  transition: background .3s, transform .3s;
+}
+.pdot.active { background: var(--blue); transform: scale(1.3); }
+.pdot.done   { background: var(--green); }
+
+.pstep-body { flex: 1; padding: 22px 20px; display: flex; flex-direction: column; overflow-y: auto; }
+.pstep-nav {
+  padding: 14px 20px; display: flex; gap: 10px;
+  border-top: 1px solid var(--border); flex-shrink: 0;
+}
+.pbtn {
+  flex: 1; padding: 13px 12px; border-radius: var(--r-sm);
+  font-size: 14px; font-weight: 600; cursor: pointer; border: none;
+  font-family: inherit; transition: all .2s;
+}
+.pbtn-primary   { background: var(--blue); color: #fff; }
+.pbtn-primary:hover   { background: var(--blue-dk); }
+.pbtn-secondary { background: var(--bg); color: var(--dark); border: 1px solid var(--border); }
+.pbtn-secondary:hover { background: var(--border); }
+
+/* Step components */
+.invite-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 20px; margin-bottom: 18px; box-shadow: var(--shadow-xs);
+}
+.invite-from { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.invite-av {
+  width: 42px; height: 42px; border-radius: 50%; background: var(--blue);
+  color: #fff; display: flex; align-items: center;
+  justify-content: center; font-size: 16px; font-weight: 700; flex-shrink: 0;
+}
+.invite-by { font-size: 12px; color: var(--muted); }
+.invite-by strong { color: var(--dark); font-weight: 600; font-size: 13px; }
+.invite-title { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+.invite-sub   { font-size: 13px; color: var(--mid); line-height: 1.5; margin-bottom: 14px; }
+.reassurance {
+  display: flex; align-items: flex-start; gap: 8px;
+  background: var(--green-lt); border-radius: var(--r-sm);
+  padding: 12px 14px; font-size: 13px; color: var(--green);
+  font-weight: 500; line-height: 1.5;
+}
+.reassurance svg {
+  width: 16px; height: 16px; stroke: var(--green); fill: none;
+  stroke-width: 2; flex-shrink: 0; margin-top: 1px;
+}
+
+.clarity-h { font-size: 18px; font-weight: 800; margin-bottom: 16px; line-height: 1.25; }
+.clarity-cols { display: flex; gap: 12px; margin-bottom: 20px; }
+.clarity-col { flex: 1; background: var(--bg); border-radius: var(--r-sm); padding: 14px; }
+.clarity-col-h {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .09em; margin-bottom: 10px; display: flex; align-items: center; gap: 5px;
+}
+.c-green { color: var(--green); }
+.c-blue  { color: var(--blue); }
+.clarity-list { list-style: none; }
+.clarity-list li {
+  font-size: 12px; color: #444; padding: 7px 0;
+  border-bottom: 1px solid var(--border); line-height: 1.4;
+}
+.clarity-list li:last-child { border-bottom: none; }
+.skip-link {
+  text-align: center; font-size: 13px; color: var(--muted);
+  cursor: pointer; padding: 8px; display: block; font-weight: 500;
+  background: none; border: none; font-family: inherit; width: 100%;
+}
+.skip-link:hover { color: var(--dark); }
+
+.found-h   { font-size: 18px; font-weight: 800; margin-bottom: 6px; }
+.found-sub { font-size: 13px; color: var(--mid); margin-bottom: 18px; }
+.account-card {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 16px;
+  display: flex; align-items: center; gap: 12px; margin-bottom: 18px;
+}
+.account-av {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: linear-gradient(135deg,#7C3AED,#0061FF);
+  color: #fff; display: flex; align-items: center;
+  justify-content: center; font-size: 18px; font-weight: 700; flex-shrink: 0;
+}
+.account-name  { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+.account-teams { font-size: 11px; color: var(--mid); }
+.found-badge {
+  margin-left: auto; background: var(--blue-lt); color: var(--blue);
+  font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 99px; flex-shrink: 0;
+}
+.found-note {
+  background: var(--bg); border-radius: var(--r-sm); padding: 14px;
+  font-size: 13px; color: #444; line-height: 1.6;
+}
+
+.success-wrap {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; padding: 14px 0 10px;
+}
+.success-ring {
+  width: 68px; height: 68px; border-radius: 50%; background: var(--green);
+  display: flex; align-items: center; justify-content: center; margin-bottom: 18px;
+}
+.success-ring svg { width: 34px; height: 34px; stroke: #fff; stroke-width: 2.5; fill: none; }
+.success-title { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+.success-sub { font-size: 13px; color: var(--mid); margin-bottom: 22px; line-height: 1.5; }
+.team-switcher {
+  display: flex; gap: 6px; background: var(--bg);
+  border-radius: var(--r-sm); padding: 8px; width: 100%;
+  margin-bottom: 10px; justify-content: center; flex-wrap: wrap;
+}
+.sw-chip {
+  font-size: 12px; font-weight: 600; padding: 7px 13px; border-radius: 6px;
+  cursor: pointer; display: flex; align-items: center; gap: 4px; transition: all .2s;
+}
+.sw-chip.personal { background: #F3E8FF; color: #6D28D9; }
+.sw-chip.team1    { background: var(--blue-lt); color: var(--blue); }
+.sw-chip.team2    { background: var(--green-lt); color: var(--green); font-weight: 700; border: 1.5px solid var(--green); }
+.switcher-hint { font-size: 12px; color: var(--muted); text-align: center; }
+
+.mini-app { display: flex; flex-direction: column; height: 100%; }
+.mini-nav {
+  background: #fff; border-bottom: 1px solid var(--border);
+  padding: 10px 12px; display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+}
+.mini-nav-logo { font-size: 13px; font-weight: 800; color: var(--blue); letter-spacing: -.3px; }
+.mini-chips { display: flex; gap: 4px; flex: 1; overflow: hidden; }
+.m-chip {
+  font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 4px;
+  white-space: nowrap; display: flex; align-items: center; gap: 2px;
+}
+.m-chip.active   { background: var(--blue); color: #fff; }
+.m-chip.inactive { background: var(--bg); color: var(--mid); border: 1px solid var(--border); }
+.mini-body { display: flex; flex: 1; min-height: 0; }
+.mini-sidebar {
+  width: 128px; background: var(--bg); border-right: 1px solid var(--border);
+  padding: 10px 8px; flex-shrink: 0; overflow-y: auto;
+}
+.mini-sb-label {
+  font-size: 9px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .1em; color: var(--muted); padding: 0 4px; margin-bottom: 6px;
+}
+.mini-folder {
+  display: flex; align-items: center; gap: 5px; padding: 7px 8px;
+  border-radius: 6px; font-size: 11px; cursor: pointer; color: #333;
+  transition: background .15s; font-weight: 500;
+}
+.mini-folder.active { background: var(--blue-lt); color: var(--blue); font-weight: 700; }
+.mini-folder:hover:not(.active) { background: var(--border); }
+.mini-content { flex: 1; padding: 12px 14px; overflow: hidden; }
+.mini-ch { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+.mini-file {
+  display: flex; align-items: center; gap: 7px; padding: 7px 8px;
+  border-radius: 6px; font-size: 11px; color: #444; transition: background .15s;
+}
+.mini-file:hover { background: var(--bg); }
+.mini-file-name { font-weight: 500; }
+.mini-file-meta { font-size: 10px; color: var(--muted); }
+.mini-also {
+  background: var(--blue-lt); color: var(--blue);
+  font-size: 10px; font-weight: 700; padding: 4px 10px;
+  border-radius: 99px; margin-top: 10px; display: inline-block;
+}
+.mini-tagline {
+  text-align: center; font-size: 12px; color: var(--mid);
+  border-top: 1px solid var(--border); padding: 10px 14px;
+  font-weight: 500; font-style: italic;
+}
+
+/* -- BROWSER FRAME ----------------------------------------------------------- */
+.browser-outer {
+  max-width: 960px; margin: 0 auto;
+  background: #fff; border-radius: var(--r); box-shadow: var(--shadow-lg);
+  overflow: hidden; border: 1px solid var(--border);
+}
+.browser-chrome {
+  background: #F0F0F0; border-bottom: 1px solid #DCDCDC;
+  padding: 10px 16px; display: flex; align-items: center; gap: 10px;
+}
+.b-dots { display: flex; gap: 6px; }
+.b-dot { width: 11px; height: 11px; border-radius: 50%; }
+.b-dot.r { background: #FF5F57; }
+.b-dot.y { background: #FEBC2E; }
+.b-dot.g { background: #28C840; }
+.b-url {
+  flex: 1; background: #fff; border: 1px solid #DCDCDC; border-radius: 5px;
+  padding: 5px 12px; font-size: 12px; color: #888; font-family: inherit;
+}
+
+/* Admin panel */
+.admin-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 28px; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 12px;
+}
+.admin-topbar-l { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.admin-title { font-size: 20px; font-weight: 800; }
+.admin-team-badge {
+  font-size: 12px; font-weight: 700; background: var(--blue-lt);
+  color: var(--blue); padding: 4px 12px; border-radius: 99px;
+}
+.admin-count-badge {
+  font-size: 12px; font-weight: 500; background: var(--bg);
+  border: 1px solid var(--border); padding: 4px 12px; border-radius: 99px; color: var(--mid);
+}
+.invite-btn {
+  background: var(--blue); color: #fff; font-size: 13px; font-weight: 700;
+  padding: 9px 20px; border-radius: var(--r-sm); border: none;
+  cursor: pointer; transition: background .2s; font-family: inherit;
+  display: flex; align-items: center; gap: 6px;
+}
+.invite-btn:hover { background: var(--blue-dk); }
+
+.insight-banner {
+  margin: 18px 28px 0;
+  background: var(--amber-lt); border: 1px solid var(--amber-bd);
+  border-radius: var(--r-sm); padding: 12px 18px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 14px; flex-wrap: wrap;
+}
+.insight-text {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 14px; color: #92400E; font-weight: 500; flex: 1; line-height: 1.45;
+}
+.insight-icon { font-size: 18px; flex-shrink: 0; }
+.insight-btn {
+  background: var(--amber); color: #fff; font-size: 13px; font-weight: 700;
+  padding: 7px 16px; border-radius: var(--r-sm); border: none;
+  cursor: pointer; white-space: nowrap; font-family: inherit; transition: background .2s;
+}
+.insight-btn:hover { background: #B45309; }
+
+.admin-tabs {
+  display: flex; border-bottom: 1px solid var(--border);
+  padding: 0 28px; margin-top: 18px; overflow-x: auto;
+}
+.atab {
+  font-size: 14px; font-weight: 500; padding: 10px 18px;
+  cursor: pointer; border-bottom: 2.5px solid transparent;
+  color: var(--mid); transition: all .2s; background: none;
+  border-top: none; border-left: none; border-right: none;
+  font-family: inherit; white-space: nowrap;
+}
+.atab:hover { color: var(--dark); }
+.atab.active { color: var(--blue); border-bottom-color: var(--blue); font-weight: 700; }
+
+.tab-panel { display: none; padding: 22px 28px 28px; }
+.tab-panel.active { display: block; }
+
+.ext-note {
+  font-size: 13px; color: var(--mid); line-height: 1.55;
+  padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 6px;
+}
+.admin-tbl-wrap { overflow-x: auto; }
+.admin-tbl {
+  width: 100%; border-collapse: collapse; font-size: 13px; min-width: 560px;
+}
+.admin-tbl th {
+  text-align: left; font-size: 10.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .09em; color: var(--muted);
+  padding: 10px 12px; border-bottom: 1px solid var(--border);
+}
+.admin-tbl td {
+  padding: 13px 12px; border-bottom: 1px solid #F2F2F2; vertical-align: middle;
+}
+.admin-tbl tr:last-child td { border-bottom: none; }
+.admin-tbl tr:hover td { background: #FAFAFA; }
+.admin-tbl tr.row-inactive { background: #FFFBEB; }
+.admin-tbl tr.row-inactive:hover td { background: #FFF8E1; }
+.admin-tbl tr.row-hidden { display: none; }
+
+.mcell { display: flex; align-items: center; gap: 10px; }
+.mav {
+  width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.mname  { font-weight: 700; font-size: 13px; margin-bottom: 1px; }
+.memail { font-size: 11px; color: var(--muted); }
+.role-badge { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 99px; }
+.rb-admin  { background: #FEF3C7; color: #92400E; }
+.rb-member { background: var(--bg); color: var(--mid); }
+.act-btn {
+  font-size: 12px; font-weight: 600; color: var(--blue); cursor: pointer;
+  background: none; border: none; font-family: inherit; padding: 0; margin-right: 10px;
+  transition: opacity .2s;
+}
+.act-btn:hover { opacity: .65; }
+.act-btn.danger { color: var(--red); }
+.act-btn.green  { color: var(--green); }
+.status-pill { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 99px; }
+.sp-opened { background: #EFF6FF; color: #1D4ED8; }
+.sp-unopen { background: var(--bg); color: var(--muted); }
+.days-ago  { font-size: 12px; color: var(--mid); }
+
+/* -- METRICS GRID ------------------------------------------------------------ */
+.metrics-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+}
+.met-card {
+  background: var(--white); border-radius: var(--r); padding: 24px;
+  border: 1px solid var(--border); transition: transform .2s, box-shadow .2s;
+}
+.met-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.met-icon { font-size: 24px; margin-bottom: 12px; }
+.met-name { font-size: 15px; font-weight: 700; margin-bottom: 6px; line-height: 1.3; }
+.met-desc { font-size: 13px; color: var(--mid); line-height: 1.6; }
+
+/* -- FOOTER ------------------------------------------------------------------ */
+footer {
+  background: linear-gradient(135deg, #0A0A0A 0%, #0D1F3C 100%);
+  color: rgba(255,255,255,.65);
+  padding: 56px 0; text-align: center;
+}
+.ft-name { font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+.ft-role { font-size: 14px; margin-bottom: 20px; }
+.ft-cta  { font-size: 16px; font-weight: 500; color: rgba(255,255,255,.8); margin-bottom: 28px; }
+.ft-links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.flink {
+  color: rgba(255,255,255,.6); font-size: 13px; font-weight: 600;
+  padding: 8px 18px; border: 1px solid rgba(255,255,255,.15);
+  border-radius: var(--r-sm); transition: all .2s; text-decoration: none;
+}
+.flink:hover { background: rgba(255,255,255,.08); color: #fff; text-decoration: none; }
+
+/* -- SCROLL ANIMATIONS ------------------------------------------------------- */
+.fade-in {
+  opacity: 0; transform: translateY(22px);
+  transition: opacity .55s ease, transform .55s ease;
+}
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+
+/* -- RESPONSIVE -------------------------------------------------------------- */
+@media (max-width: 900px) {
+  .problem-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 760px) {
+  .section { padding: 52px 0; }
+  .container { padding: 0 18px; }
+  .container-narrow { padding: 0 18px; }
+  .header-metrics { display: none; }
+  .problem-grid { grid-template-columns: 1fr; }
+  .build-grid   { grid-template-columns: 1fr; }
+  .proof-grid   { grid-template-columns: 1fr; }
+  .metrics-grid { grid-template-columns: 1fr 1fr; }
+  .stat-row { flex-direction: column; }
+  .stat-item + .stat-item { border-left: none; border-top: 1px solid var(--border); }
+  .admin-topbar { padding: 14px 16px; }
+  .admin-tabs { padding: 0 16px; }
+  .tab-panel { padding: 16px; }
+  .insight-banner { margin: 14px 16px 0; }
+  .browser-outer { border-radius: var(--r-sm); }
+}
+@media (max-width: 480px) {
+  .metrics-grid { grid-template-columns: 1fr; }
+  .phone-outer  { border-radius: 0; }
+  .phone-screen { border-radius: 0; height: 620px; }
+}
+</style>
+</head>
+<body>
+
+<!-- 1. APP NOTE -->
+<div class="app-note">Built as part of my application for Staff PM, Team Foundations at Dropbox</div>
+
+<!-- 2. HEADER -->
+<header class="site-header">
+  <div class="container">
+    <div class="header-inner">
+      <div>
+        <h1 class="header-name">Sonal Singh</h1>
+        <p class="header-role">Staff PM Candidate -- Team Foundations</p>
+        <p class="header-sub">A product brief on restoring Dropbox Teams to growth</p>
+        <div class="header-links">
+          <a href="https://www.linkedin.com/in/sonalsingh444/" class="hlink" target="_blank" rel="noopener">LinkedIn &#x2197;</a>
+          <a href="https://sonalsingh-pm.netlify.app/prototypes/index.html" class="hlink" target="_blank" rel="noopener">Portfolio &#x2197;</a>
+        </div>
+      </div>
+      <div class="header-metrics">
+        <div class="hm-label">Dropbox Q1 2026</div>
+        <div class="hm-grid">
+          <div>
+            <div class="hm-stat-label">Revenue</div>
+            <div class="hm-stat-value">$629.5M</div>
+          </div>
+          <div>
+            <div class="hm-stat-label">Growth</div>
+            <div class="hm-stat-value">+0.8% YoY</div>
+          </div>
+          <div>
+            <div class="hm-stat-label">Paying Users</div>
+            <div class="hm-stat-value">18.09M</div>
+          </div>
+          <div>
+            <div class="hm-stat-label">ARPU</div>
+            <div class="hm-stat-value">$141.18</div>
+          </div>
+        </div>
+        <div class="hm-source">Source: Dropbox Q1 2026 Earnings, SEC Form 8-K</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- 3. HOOK -->
+<section class="hook-section">
+  <div class="container-narrow">
+    <p class="hook-para">
+      <span class="hook-first">A contractor gets invited to join a client's Dropbox team.</span>
+      She already has a Dropbox account from another client. Dropbox tells her she has to leave that team first. She closes the tab. That's a lost seat.
+    </p>
+    <p class="hook-para">
+      Dropbox named this problem themselves in this job description: joining a team should feel additive instead of risky, switching between teams should feel natural, admins should understand who has access and why, and licensing should match how teams actually work. None of those things are true today. This brief is about how to fix them.
+    </p>
+    <hr class="hook-rule">
+    <div class="hook-arrow-wrap">
+      <svg class="hook-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- 4. PAYING USERS TREND -->
+<section class="section section-white">
+  <div class="container">
+    <p class="eyebrow fade-in">Business Context</p>
+    <h2 class="section-title fade-in">Paying users have been declining year over year</h2>
+    <p class="section-sub fade-in">Dropbox reported Q1 2026 revenue of $629.5M, up 0.8% year over year, with 18.09M paying users. Teams is the most direct lever available to reverse the decline. Ashraf Alkarmi was appointed co-CEO on May 26, 2026, with a mandate to restore growth.</p>
+
+    <div class="stat-row fade-in" id="stat-row">
+      <div class="stat-item">
+        <div class="stat-qlabel">Q1 2025</div>
+        <div class="stat-num"><span id="cnt-0">18.16</span><span class="unit">M</span></div>
+        <div class="stat-chip chip-gray">Prior year</div>
+        <div class="stat-bar-track">
+          <div class="stat-bar-fill" data-w="96%" style="background:var(--blue);"></div>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-qlabel">Q3 2025</div>
+        <div class="stat-num"><span id="cnt-1">18.07</span><span class="unit">M</span></div>
+        <div class="stat-chip chip-red">Declining</div>
+        <div class="stat-bar-track">
+          <div class="stat-bar-fill" data-w="78%" style="background:#f56a6a;"></div>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-qlabel">Q1 2026</div>
+        <div class="stat-num"><span id="cnt-2">18.09</span><span class="unit">M</span></div>
+        <div class="stat-chip chip-grn">Stabilizing*</div>
+        <div class="stat-bar-track">
+          <div class="stat-bar-fill" data-w="82%" style="background:var(--green);"></div>
+        </div>
+      </div>
+    </div>
+    <p class="stat-footnote">* Author's interpretation based on publicly reported data. Sources: Dropbox Q1 2025, Q3 2025, Q1 2026 Earnings, SEC Form 8-K filings.</p>
+  </div>
+</section>
+
+<!-- 5. FIVE STRUCTURAL GAPS -->
+<section class="section section-gray">
+  <div class="container">
+    <p class="eyebrow fade-in">Five Structural Gaps</p>
+    <h2 class="section-title fade-in">Five moments where the product blocks its own growth</h2>
+    <p class="section-sub fade-in">Each one is named explicitly in the role description. Each one is a lost seat.</p>
+
+    <div class="problem-grid">
+      <div class="problem-card fade-in">
+        <span class="primary-badge">Primary gap</span>
+        <div class="pcard-icon">
+          <svg viewBox="0 0 24 24">
+            <circle cx="9" cy="8" r="4"/>
+            <path d="M3 20c0-3.3 2.7-6 6-6"/>
+            <circle cx="16" cy="8" r="4" stroke-dasharray="2 1"/>
+            <path d="M12 20c0-3.3 2.7-6 6-6" opacity=".5"/>
+          </svg>
+        </div>
+        <h3 class="pcard-title">One identity, one team -- forever</h3>
+        <p class="pcard-desc">Modern work crosses company lines. A freelancer works with three clients. A consultant is embedded in two companies. A contractor moves between projects. Today Dropbox forces a choice: be on one team, or leave it to join another. Every external collaboration invitation that fails to convert is a lost seat.</p>
+        <div class="pcard-impact">"Directly caps team expansion at the edges where growth happens most."</div>
+      </div>
+
+      <div class="problem-card fade-in">
+        <div class="pcard-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 9v4M12 17h.01"/>
+            <path d="M10.3 4.5L2.5 17.5A2 2 0 004.2 20.5h15.6a2 2 0 001.7-3L13.7 4.5a2 2 0 00-3.4 0z"/>
+          </svg>
+        </div>
+        <h3 class="pcard-title">Joining a team feels risky</h3>
+        <p class="pcard-desc">When an invitation arrives, the questions start immediately. What happens to my personal files? Does my existing account change? Will the company own my content? Those questions do not get answered, so people do not join. The anxiety is not about Dropbox -- it is about uncertainty.</p>
+        <div class="pcard-impact">"User anxiety at the join moment kills acceptance rates before a seat is ever activated."</div>
+      </div>
+
+      <div class="problem-card fade-in">
+        <div class="pcard-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 8v1M12 15v1" stroke-dasharray="1 1"/>
+          </svg>
+        </div>
+        <h3 class="pcard-title">Admins don't know who has access or why</h3>
+        <p class="pcard-desc">Admin visibility into members, external collaborators, pending invitations, and access levels is fragmented. Removing someone creates uncertainty about what they can still see. That uncertainty makes admins hesitant to invite people in the first place.</p>
+        <div class="pcard-impact">"Hesitant admins send fewer invitations. Fewer invitations means fewer seats."</div>
+      </div>
+
+      <div class="problem-card fade-in">
+        <div class="pcard-icon">
+          <svg viewBox="0 0 24 24">
+            <circle cx="7" cy="10" r="4"/><circle cx="17" cy="10" r="4"/>
+            <path d="M7 14c-2.2 0-4 1.8-4 4"/><path d="M17 14c2.2 0 4 1.8 4 4"/>
+            <path d="M12 12v5" stroke-dasharray="2 1"/>
+            <rect x="10" y="17" width="4" height="3" rx="1"/>
+          </svg>
+        </div>
+        <h3 class="pcard-title">Shared credentials are lost revenue</h3>
+        <p class="pcard-desc">Multiple users sharing one Dropbox account is a known pattern in small teams and creative studios. It hides behind a single login and goes undetected. Progressive interventions that surface this pattern and convert sharers into paying seats are a meaningful growth lever.</p>
+        <div class="pcard-impact">"Each converted sharing group is net new revenue -- often multiple seats at once."</div>
+      </div>
+
+      <div class="problem-card fade-in">
+        <div class="pcard-icon">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <path d="M16 2v4M8 2v4M3 10h18"/>
+            <path d="M8 14h8M8 18h5"/>
+          </svg>
+        </div>
+        <h3 class="pcard-title">Annual seats don't match project-based work</h3>
+        <p class="pcard-desc">Contractors join for a sprint. Clients need access for a project. Freelancers contribute for a few weeks. An annual seat model forces admins to either over-provision or leave collaborators out entirely. The result is seats that never get bought.</p>
+        <div class="pcard-impact">"Flexible licensing captures seats the current model structurally prevents."</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. WHAT I WOULD BUILD -->
+<section class="section section-white">
+  <div class="container">
+    <p class="eyebrow fade-in">What I Would Build</p>
+    <h2 class="section-title fade-in">Four fixes. Each one maps to a gap.</h2>
+    <p class="section-sub fade-in">Not a full roadmap. A direction.</p>
+
+    <div class="build-grid">
+      <div class="build-card fade-in">
+        <div class="build-num">1</div>
+        <h3 class="build-title">One identity, multiple teams</h3>
+        <p class="build-body">Let one person participate in multiple Dropbox teams without conflict. One account, clean separation between workspaces, a simple switcher in the nav. The same way you switch between Slack workspaces -- except your files stay where they belong.</p>
+      </div>
+
+      <div class="build-card fade-in">
+        <div class="build-num">2</div>
+        <h3 class="build-title">A join flow that answers the questions before they are asked</h3>
+        <p class="build-body">Before a user accepts an invitation, show them exactly what changes and what stays the same. Personal files: untouched. Existing teams: unaffected. What they gain: spelled out clearly. When people understand what they are committing to, they commit.</p>
+      </div>
+
+      <div class="build-card fade-in">
+        <div class="build-num">3</div>
+        <h3 class="build-title">An admin view that creates confidence</h3>
+        <p class="build-body">One screen showing every member, every external collaborator, every pending invitation, and exactly what each person can access. When admins trust what they see, they act on it. More invitations. More seats.</p>
+      </div>
+
+      <div class="build-card fade-in">
+        <div class="build-num">4</div>
+        <h3 class="build-title">Licensing that matches how teams actually work</h3>
+        <p class="build-body">At Dell, we made this same argument when we launched their first monthly device subscription for SMBs. Small businesses cannot sign a three-year contract when they do not know if they will exist in three years. They need flexibility. Dropbox has the same opportunity. Monthly licensing and simple upgrade paths for external collaborators would capture seats that currently go unbought.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. THE PROOF -->
+<section class="section section-gray">
+  <div class="container">
+    <p class="eyebrow fade-in">The Proof</p>
+    <h2 class="section-title fade-in">I have solved these problems before</h2>
+    <p class="section-sub fade-in">Different network. Same underlying challenges.</p>
+
+    <div class="proof-grid">
+      <div class="proof-block fade-in">
+        <div class="proof-company">SAP Business Network</div>
+        <div class="proof-metric">73%</div>
+        <div class="proof-metric-label">reduction in supplier drop-off</div>
+        <hr class="proof-divider">
+        <div class="proof-body">
+          <p>Suppliers were getting out-of-the-blue emails asking them to join a platform they had never heard of. A small business already doing business with Dell suddenly gets an email from SAP Business Network. It looked like spam. They ignored it.</p>
+          <p>We made the invitation buyer-branded. The supplier saw Dell's name, not SAP's. Suddenly the invitation made sense -- someone they already trusted was asking them to connect. Drop-off fell 73%.</p>
+          <p>Same problem as Dropbox's join flow. Same fix.</p>
+        </div>
+      </div>
+
+      <div class="proof-block fade-in">
+        <div class="proof-company">Dell Technologies</div>
+        <div class="proof-metric">First</div>
+        <div class="proof-metric-label">monthly device subscription for SMBs at Dell</div>
+        <hr class="proof-divider">
+        <div class="proof-body">
+          <p>Dell's standard contracts ran three to four years. We argued that SMBs could not commit to that -- they needed flexibility to survive the uncertainty of their own business. We launched Dell's first monthly subscription model for small businesses.</p>
+          <p>That is exactly the argument for Dropbox's monthly licensing. Match the product to how customers actually operate, not how the business prefers to bill.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8. PROTOTYPE SECTION HEADER -->
+<section style="background:var(--white);padding:48px 0 0;">
+  <div class="container">
+    <p class="eyebrow fade-in">Interactive Prototypes</p>
+    <h2 class="section-title fade-in">What the fixes would feel like</h2>
+    <p class="section-sub fade-in" style="margin-bottom:0;">Click through the join flow and explore the admin dashboard.</p>
+  </div>
+</section>
+
+<!-- 9. JOIN FLOW PROTOTYPE -->
+<section style="background:var(--bg);padding:40px 0 72px;">
+  <div class="container">
+    <p class="proto-caption">Today this flow does not exist in Dropbox. This is what I would build.</p>
+    <div class="proto-wrap">
+      <div class="phone-outer">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="steps-wrap">
+
+            <!-- STEP 0: Invitation -->
+            <div class="pstep" id="step-0">
+              <div class="pstep-header">
+                <span class="pstep-logo">Dropbox</span>
+                <div class="proto-dots">
+                  <div class="pdot" id="d0-0"></div><div class="pdot" id="d0-1"></div>
+                  <div class="pdot" id="d0-2"></div><div class="pdot" id="d0-3"></div>
+                  <div class="pdot" id="d0-4"></div>
+                </div>
+              </div>
+              <div class="pstep-body">
+                <div style="font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.09em;margin-bottom:14px;">Team Invitation</div>
+                <div class="invite-card">
+                  <div class="invite-from">
+                    <div class="invite-av">S</div>
+                    <div>
+                      <div class="invite-by"><strong>Sarah Chen</strong>, Admin</div>
+                      <div class="invite-by">Acme Studio -- 12 members</div>
+                    </div>
+                  </div>
+                  <div class="invite-title">Acme Studio</div>
+                  <div class="invite-sub">has invited you to join their Dropbox team</div>
+                  <div class="reassurance">
+                    <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    <span>You're already on My Company team. <strong>This won't change that.</strong></span>
+                  </div>
+                </div>
+              </div>
+              <div class="pstep-nav">
+                <button class="pbtn pbtn-primary" onclick="goStep(1)">Review what this means &#x2192;</button>
+              </div>
+            </div>
+
+            <!-- STEP 1: Clarity -->
+            <div class="pstep" id="step-1">
+              <div class="pstep-header">
+                <span class="pstep-logo">Dropbox</span>
+                <div class="proto-dots">
+                  <div class="pdot" id="d1-0"></div><div class="pdot" id="d1-1"></div>
+                  <div class="pdot" id="d1-2"></div><div class="pdot" id="d1-3"></div>
+                  <div class="pdot" id="d1-4"></div>
+                </div>
+              </div>
+              <div class="pstep-body">
+                <h3 class="clarity-h">What to expect when you join</h3>
+                <div class="clarity-cols">
+                  <div class="clarity-col">
+                    <div class="clarity-col-h c-green"><span>&#10003;</span> Stays the same</div>
+                    <ul class="clarity-list">
+                      <li>Your personal files and folders</li>
+                      <li>My Company team access</li>
+                      <li>Your password and login</li>
+                      <li>Personal sharing links</li>
+                    </ul>
+                  </div>
+                  <div class="clarity-col">
+                    <div class="clarity-col-h c-blue"><span>+</span> You're gaining</div>
+                    <ul class="clarity-list">
+                      <li>Acme Studio shared folders</li>
+                      <li>Team features and tools</li>
+                      <li>Instant team switching</li>
+                      <li>Separate Acme workspace</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="pstep-nav" style="flex-direction:column;gap:8px;">
+                <div style="display:flex;gap:10px;width:100%;">
+                  <button class="pbtn pbtn-secondary" style="flex:0 0 80px;" onclick="goStep(0)">&#x2190; Back</button>
+                  <button class="pbtn pbtn-primary" onclick="goStep(2)">Looks good -- join Acme &#x2192;</button>
+                </div>
+                <button class="skip-link" onclick="goStep(0)">Not now</button>
+              </div>
+            </div>
+
+            <!-- STEP 2: Account linking -->
+            <div class="pstep" id="step-2">
+              <div class="pstep-header">
+                <span class="pstep-logo">Dropbox</span>
+                <div class="proto-dots">
+                  <div class="pdot" id="d2-0"></div><div class="pdot" id="d2-1"></div>
+                  <div class="pdot" id="d2-2"></div><div class="pdot" id="d2-3"></div>
+                  <div class="pdot" id="d2-4"></div>
+                </div>
+              </div>
+              <div class="pstep-body">
+                <h3 class="found-h">We found your Dropbox account</h3>
+                <p class="found-sub">We'll add Acme Studio to your existing account. No new password needed.</p>
+                <div class="account-card">
+                  <div class="account-av">S</div>
+                  <div>
+                    <div class="account-name">sonal@gmail.com</div>
+                    <div class="account-teams">Personal + My Company team</div>
+                  </div>
+                  <div class="found-badge">Found</div>
+                </div>
+                <div class="found-note">Acme Studio will be added as a second team on this account. You'll switch between teams from the top of your screen -- your personal files stay completely separate.</div>
+              </div>
+              <div class="pstep-nav">
+                <button class="pbtn pbtn-secondary" style="flex:0 0 80px;" onclick="goStep(1)">&#x2190; Back</button>
+                <button class="pbtn pbtn-primary" onclick="goStep(3)">Add Acme Studio to my account &#x2192;</button>
+              </div>
+            </div>
+
+            <!-- STEP 3: Success -->
+            <div class="pstep" id="step-3">
+              <div class="pstep-header">
+                <span class="pstep-logo">Dropbox</span>
+                <div class="proto-dots">
+                  <div class="pdot" id="d3-0"></div><div class="pdot" id="d3-1"></div>
+                  <div class="pdot" id="d3-2"></div><div class="pdot" id="d3-3"></div>
+                  <div class="pdot" id="d3-4"></div>
+                </div>
+              </div>
+              <div class="pstep-body">
+                <div class="success-wrap">
+                  <div class="success-ring" id="success-ring">
+                    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <h3 class="success-title">You're now on two teams</h3>
+                  <p class="success-sub">Switch between your teams anytime from the top of your screen.</p>
+                  <div class="team-switcher">
+                    <div class="sw-chip personal">&#9679; Personal</div>
+                    <div class="sw-chip team1">My Company &#9660;</div>
+                    <div class="sw-chip team2">Acme Studio &#9660;</div>
+                  </div>
+                  <p class="switcher-hint">Your active team is shown in your header.</p>
+                </div>
+              </div>
+              <div class="pstep-nav">
+                <button class="pbtn pbtn-secondary" style="flex:0 0 80px;" onclick="goStep(2)">&#x2190; Back</button>
+                <button class="pbtn pbtn-primary" onclick="goStep(4)">Go to Acme Studio &#x2192;</button>
+              </div>
+            </div>
+
+            <!-- STEP 4: Switcher in action -->
+            <div class="pstep" id="step-4">
+              <div class="mini-app">
+                <div class="mini-nav">
+                  <span class="mini-nav-logo">&#10022; Dropbox</span>
+                  <div class="mini-chips">
+                    <div class="m-chip inactive">My Co &#9660;</div>
+                    <div class="m-chip active">Acme Studio &#9660;</div>
+                  </div>
+                </div>
+                <div class="mini-body">
+                  <div class="mini-sidebar">
+                    <div class="mini-sb-label">Acme Studio</div>
+                    <div class="mini-folder active"><span>&#128193;</span> Brand Assets</div>
+                    <div class="mini-folder"><span>&#128193;</span> Campaign Files</div>
+                    <div class="mini-folder"><span>&#128193;</span> Q2 Deliverables</div>
+                    <div class="mini-folder"><span>&#128193;</span> Shared with me</div>
+                    <div style="margin-top:12px;"><div class="mini-also">Also on: My Company</div></div>
+                  </div>
+                  <div class="mini-content">
+                    <div class="mini-ch">Brand Assets</div>
+                    <div class="mini-file">
+                      <span>&#128196;</span>
+                      <div><div class="mini-file-name">Logo Files.zip</div><div class="mini-file-meta">Sarah Chen -- 2 days ago</div></div>
+                    </div>
+                    <div class="mini-file">
+                      <span>&#128196;</span>
+                      <div><div class="mini-file-name">Style Guide v3.pdf</div><div class="mini-file-meta">Marcus Lee -- 1 week ago</div></div>
+                    </div>
+                    <div class="mini-file">
+                      <span>&#128196;</span>
+                      <div><div class="mini-file-name">Color Palettes.fig</div><div class="mini-file-meta">You -- just now</div></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="mini-tagline">One identity. Multiple teams. Clean separation.</div>
+              </div>
+              <div class="pstep-nav">
+                <button class="pbtn pbtn-secondary" style="flex:0 0 80px;" onclick="goStep(3)">&#x2190; Back</button>
+                <button class="pbtn pbtn-primary">Open in Dropbox &#x2197;</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10. ADMIN DASHBOARD PROTOTYPE -->
+<section style="background:var(--white);padding:40px 0 72px;">
+  <div class="container">
+    <p class="proto-caption">Admins who trust what they see send more invitations. Click the tabs to explore.</p>
+    <div class="browser-outer">
+      <div class="browser-chrome">
+        <div class="b-dots">
+          <div class="b-dot r"></div><div class="b-dot y"></div><div class="b-dot g"></div>
+        </div>
+        <div class="b-url">dropbox.com/admin/team/acme-studio/members</div>
+      </div>
+      <div>
+        <div class="admin-topbar">
+          <div class="admin-topbar-l">
+            <span class="admin-title">Team Members</span>
+            <span class="admin-team-badge">Acme Studio</span>
+            <span class="admin-count-badge">8 members</span>
+          </div>
+          <button class="invite-btn">+ Invite member</button>
+        </div>
+
+        <div class="insight-banner" id="insight-banner">
+          <div class="insight-text">
+            <span class="insight-icon">&#9888;&#65039;</span>
+            <span id="insight-msg">2 members haven't been active in 60+ days. Their access may no longer be needed.</span>
+          </div>
+          <button class="insight-btn" id="insight-btn" onclick="toggleReview()">Review access</button>
+        </div>
+
+        <div class="admin-tabs">
+          <button class="atab active" data-tab="members" onclick="showTab('members')">Members (8)</button>
+          <button class="atab" data-tab="external" onclick="showTab('external')">External collaborators (3)</button>
+          <button class="atab" data-tab="pending" onclick="showTab('pending')">Pending invitations (4)</button>
+        </div>
+
+        <!-- Tab: Members -->
+        <div class="tab-panel active" id="tab-members">
+          <div class="admin-tbl-wrap">
+            <table class="admin-tbl">
+              <thead>
+                <tr>
+                  <th>Name</th><th>Role</th><th>How they joined</th><th>Last active</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="member-row" data-inactive="false">
+                  <td><div class="mcell"><div class="mav" style="background:#0061FF;">S</div><div><div class="mname">Sarah Chen</div><div class="memail">sarah@acme.com</div></div></div></td>
+                  <td><span class="role-badge rb-admin">Admin</span></td>
+                  <td>Founder</td>
+                  <td>Today</td>
+                  <td><button class="act-btn">Change role</button></td>
+                </tr>
+                <tr class="member-row" data-inactive="false">
+                  <td><div class="mcell"><div class="mav" style="background:#7C3AED;">M</div><div><div class="mname">Marcus Lee</div><div class="memail">marcus@acme.com</div></div></div></td>
+                  <td><span class="role-badge rb-member">Member</span></td>
+                  <td>Invited by Sarah</td>
+                  <td>2 days ago</td>
+                  <td><button class="act-btn">Change role</button><button class="act-btn danger">Remove</button></td>
+                </tr>
+                <tr class="member-row" data-inactive="false">
+                  <td><div class="mcell"><div class="mav" style="background:#059669;">P</div><div><div class="mname">Priya Patel</div><div class="memail">priya@freelance.com</div></div></div></td>
+                  <td><span class="role-badge rb-member">Member</span></td>
+                  <td>Invited by Sarah</td>
+                  <td>1 week ago</td>
+                  <td><button class="act-btn">Change role</button><button class="act-btn danger">Remove</button></td>
+                </tr>
+                <tr class="member-row" data-inactive="true">
+                  <td><div class="mcell"><div class="mav" style="background:#D97706;">J</div><div><div class="mname">Jordan Kim</div><div class="memail">jordan@acme.com</div></div></div></td>
+                  <td><span class="role-badge rb-member">Member</span></td>
+                  <td>Joined via SSO</td>
+                  <td><span style="color:var(--amber);font-weight:600;">2 months ago</span></td>
+                  <td><button class="act-btn">Change role</button><button class="act-btn danger">Remove</button></td>
+                </tr>
+                <tr class="member-row" data-inactive="true">
+                  <td><div class="mcell"><div class="mav" style="background:#DC2626;">A</div><div><div class="mname">Alex Rivera</div><div class="memail">alex@contractor.io</div></div></div></td>
+                  <td><span class="role-badge rb-member">Member</span></td>
+                  <td>Invited by Marcus</td>
+                  <td><span style="color:var(--red);font-weight:600;">4 months ago</span></td>
+                  <td><button class="act-btn">Change role</button><button class="act-btn danger">Remove</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab: External Collaborators -->
+        <div class="tab-panel" id="tab-external">
+          <p class="ext-note">These people have access to specific folders but are not full team members. Upgrading them to member seats gives them full team access.</p>
+          <div class="admin-tbl-wrap">
+            <table class="admin-tbl">
+              <thead>
+                <tr><th>Name</th><th>Folders with access</th><th>Access expires</th><th>Actions</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="mcell"><div class="mav" style="background:#0891B2;">B</div><div><div class="mname">Ben Torres</div><div class="memail">ben@design.co</div></div></div></td>
+                  <td>Brand Assets</td>
+                  <td><span style="color:var(--amber);font-weight:600;">14 days</span></td>
+                  <td><button class="act-btn green">Upgrade to member</button><button class="act-btn danger">Revoke</button></td>
+                </tr>
+                <tr>
+                  <td><div class="mcell"><div class="mav" style="background:#7C3AED;">L</div><div><div class="mname">Lily Wang</div><div class="memail">lily@studio.io</div></div></div></td>
+                  <td>Campaign Files, Brand Assets</td>
+                  <td>30 days</td>
+                  <td><button class="act-btn green">Upgrade to member</button><button class="act-btn danger">Revoke</button></td>
+                </tr>
+                <tr>
+                  <td><div class="mcell"><div class="mav" style="background:#DC2626;">C</div><div><div class="mname">Chris Park</div><div class="memail">chris@partner.com</div></div></div></td>
+                  <td>Q2 Deliverables</td>
+                  <td><span style="color:var(--red);font-weight:600;">7 days</span></td>
+                  <td><button class="act-btn green">Upgrade to member</button><button class="act-btn danger">Revoke</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab: Pending Invitations -->
+        <div class="tab-panel" id="tab-pending">
+          <div class="admin-tbl-wrap">
+            <table class="admin-tbl">
+              <thead>
+                <tr><th>Invited person</th><th>Invited by</th><th>Sent</th><th>Status</th><th>Actions</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="mname">noah@acme.com</div></td>
+                  <td>Sarah Chen</td>
+                  <td class="days-ago">5 days ago</td>
+                  <td><span class="status-pill sp-opened">Opened, not joined</span></td>
+                  <td><button class="act-btn">Resend</button><button class="act-btn danger">Revoke</button></td>
+                </tr>
+                <tr>
+                  <td><div class="mname">maya@creative.co</div></td>
+                  <td>Marcus Lee</td>
+                  <td class="days-ago">8 days ago</td>
+                  <td><span class="status-pill sp-unopen">Not opened</span></td>
+                  <td><button class="act-btn">Resend</button><button class="act-btn danger">Revoke</button></td>
+                </tr>
+                <tr>
+                  <td><div class="mname">james@acme.com</div></td>
+                  <td>Sarah Chen</td>
+                  <td class="days-ago">12 days ago</td>
+                  <td><span class="status-pill sp-unopen">Not opened</span></td>
+                  <td><button class="act-btn">Resend</button><button class="act-btn danger">Revoke</button></td>
+                </tr>
+                <tr>
+                  <td><div class="mname">anna@agency.io</div></td>
+                  <td>Marcus Lee</td>
+                  <td class="days-ago">15 days ago</td>
+                  <td><span class="status-pill sp-opened">Opened, not joined</span></td>
+                  <td><button class="act-btn">Resend</button><button class="act-btn danger">Revoke</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11. METRICS -->
+<section class="section section-gray">
+  <div class="container">
+    <p class="eyebrow fade-in">Metrics</p>
+    <h2 class="section-title fade-in">How I would measure progress</h2>
+    <p class="section-sub fade-in">Six metrics tied directly to the structural gaps. Each one is a signal, not a vanity number.</p>
+
+    <div class="metrics-grid">
+      <div class="met-card fade-in">
+        <div class="met-icon">&#128232;</div>
+        <div class="met-name">Team Invitation Acceptance Rate</div>
+        <div class="met-desc">Invitations sent to seats activated within 7 days. The primary funnel metric -- every percentage point is real revenue.</div>
+      </div>
+      <div class="met-card fade-in">
+        <div class="met-icon">&#8987;</div>
+        <div class="met-name">Time-to-Join</div>
+        <div class="met-desc">Invitation sent to first active login. Measures join flow friction. Long gaps mean the join experience is creating doubt.</div>
+      </div>
+      <div class="met-card fade-in">
+        <div class="met-icon">&#128236;</div>
+        <div class="met-name">Admin Invitation Frequency</div>
+        <div class="met-desc">Invites sent per admin per month. An admin who trusts the system sends more invitations. Trust shows up in behavior.</div>
+      </div>
+      <div class="met-card fade-in">
+        <div class="met-icon">&#8646;</div>
+        <div class="met-name">Multi-Team Participation Rate</div>
+        <div class="met-desc">Percentage of users active on more than one team per week. Tracks adoption of the multi-team identity capability.</div>
+      </div>
+      <div class="met-card fade-in">
+        <div class="met-icon">&#11014;&#65039;</div>
+        <div class="met-name">External Collaborator Conversion Rate</div>
+        <div class="met-desc">External access holders who upgrade to full member seats within 90 days. Measures the external-to-paid upgrade path.</div>
+      </div>
+      <div class="met-card fade-in">
+        <div class="met-icon">&#128273;</div>
+        <div class="met-name">Password Sharing Intervention Conversion</div>
+        <div class="met-desc">Flagged shared-credential accounts that convert to separate paid seats. Each conversion is net new revenue.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 12. FOOTER -->
+<footer>
+  <div class="container">
+    <div class="ft-name">Sonal Singh</div>
+    <div class="ft-role">Staff PM candidate -- Team Foundations at Dropbox</div>
+    <p class="ft-cta">I would welcome the chance to discuss this further.</p>
+    <div class="ft-links">
+      <a href="https://www.linkedin.com/in/sonalsingh444/" class="flink" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://sonalsingh-pm.netlify.app/prototypes/index.html" class="flink" target="_blank" rel="noopener">Portfolio</a>
+      <a href="mailto:sonalsingh.email@gmail.com" class="flink">sonalsingh.email@gmail.com</a>
+      <a href="tel:6692969450" class="flink">669-296-9450</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// -- SCROLL FADE-IN -----------------------------------------------------------
+var io = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-in').forEach(function(el) { io.observe(el); });
+
+// Stagger card grids
+['problem-card','build-card','proof-block','met-card'].forEach(function(cls) {
+  document.querySelectorAll('.' + cls).forEach(function(el, i) {
+    el.style.transitionDelay = (i % 3) * 0.09 + 's';
+    el.classList.add('fade-in');
+    io.observe(el);
+  });
+});
+
+// -- STAT BAR + COUNT-UP ------------------------------------------------------
+function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+function countUp(el, target, duration) {
+  var start = null;
+  (function step(ts) {
+    if (!start) start = ts;
+    var p = Math.min((ts - start) / duration, 1);
+    el.textContent = (easeOutCubic(p) * target).toFixed(2);
+    if (p < 1) requestAnimationFrame(step);
+    else el.textContent = target.toFixed(2);
+  })(performance.now());
+}
+
+var statObserver = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.stat-bar-fill').forEach(function(b) { b.style.width = b.dataset.w; });
+      var targets = [18.16, 18.07, 18.09];
+      ['cnt-0','cnt-1','cnt-2'].forEach(function(id, i) {
+        var el = document.getElementById(id);
+        if (el) countUp(el, targets[i], 1800);
+      });
+      statObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+var sr = document.getElementById('stat-row');
+if (sr) statObserver.observe(sr);
+
+// -- JOIN FLOW PROTOTYPE ------------------------------------------------------
+var currentStep = 0;
+var allSteps = document.querySelectorAll('.pstep');
+var dotGroups = [
+  ['d0-0','d0-1','d0-2','d0-3','d0-4'],
+  ['d1-0','d1-1','d1-2','d1-3','d1-4'],
+  ['d2-0','d2-1','d2-2','d2-3','d2-4'],
+  ['d3-0','d3-1','d3-2','d3-3','d3-4']
+];
+
+function updateDots(n) {
+  dotGroups.forEach(function(group) {
+    group.forEach(function(id, i) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.classList.remove('active','done');
+      if (i === n) el.classList.add('active');
+      else if (i < n) el.classList.add('done');
+    });
+  });
+}
+
+function goStep(n) {
+  if (n < 0 || n >= allSteps.length) return;
+  allSteps.forEach(function(s, i) {
+    s.classList.remove('active','go-left','go-right');
+    if (i === n) s.classList.add('active');
+    else if (i < n) s.classList.add('go-left');
+    else s.classList.add('go-right');
+  });
+  updateDots(n);
+  currentStep = n;
+  if (n === 3) {
+    var ring = document.getElementById('success-ring');
+    if (ring) {
+      ring.style.animation = 'none';
+      ring.style.transform = 'scale(0.3)';
+      ring.style.opacity = '0';
+      setTimeout(function() {
+        ring.style.animation = '';
+        ring.style.transform = '';
+        ring.style.opacity = '';
+      }, 40);
+    }
+  }
+}
+
+var sStyle = document.createElement('style');
+sStyle.textContent = '@keyframes popIn{from{transform:scale(0.3);opacity:0}to{transform:scale(1);opacity:1}}#success-ring{animation:popIn .5s cubic-bezier(.34,1.56,.64,1) forwards;}';
+document.head.appendChild(sStyle);
+goStep(0);
+
+// -- ADMIN TABS ---------------------------------------------------------------
+function showTab(id) {
+  document.querySelectorAll('.atab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelector('[data-tab="' + id + '"]').classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+  var banner = document.getElementById('insight-banner');
+  if (banner) banner.style.display = (id === 'members') ? 'flex' : 'none';
+}
+
+// -- REVIEW ACCESS FILTER -----------------------------------------------------
+var reviewActive = false;
+function toggleReview() {
+  reviewActive = !reviewActive;
+  document.querySelectorAll('.member-row').forEach(function(row) {
+    var inactive = row.dataset.inactive === 'true';
+    row.classList.remove('row-inactive','row-hidden');
+    if (reviewActive) {
+      if (!inactive) row.classList.add('row-hidden');
+      else row.classList.add('row-inactive');
+    }
+  });
+  var btn = document.getElementById('insight-btn');
+  var msg = document.getElementById('insight-msg');
+  if (reviewActive) {
+    btn.textContent = 'Clear filter';
+    msg.textContent = 'Showing 2 members inactive for 60+ days. Review and remove if access is no longer needed.';
+  } else {
+    btn.textContent = 'Review access';
+    msg.textContent = "2 members haven't been active in 60+ days. Their access may no longer be needed.";
+  }
+}
+
+showTab('members');
+</script>
+</body>
+</html>

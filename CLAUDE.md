@@ -1,3 +1,55 @@
+# PM Builder Portfolio — CLAUDE.md
+
+## Purpose
+This is where I build my PM portfolio as a builder — not just a writer of PRDs.
+The goal is to identify real problems, write PRDs, build functional prototypes,
+test them, and publish them to GitHub. This demonstrates that I am an end-to-end
+product builder, not just someone who hands specs to engineers.
+
+Every project here should be something I'd be proud to show in a principal PM interview
+at LinkedIn, Yelp, Shopify, or a late-stage startup.
+
+---
+
+## Folder Structure
+PM-BUILDER-PORTFOLIO/
+├── CLAUDE.md                            ← you are here
+├── README.md
+├── _redirects                           ← Netlify routing, do not touch
+├── campspark-case-study.html            ← deployed to Netlify, do not move
+├── transformation_dashboard.html        ← personal file, ignore for portfolio work
+├── PRDs/
+│   └── campspark-prd.md
+├── prototypes/
+│   ├── index.html                       ← portfolio website, deployed to Netlify, do not move
+│   └── campspark/
+│       └── index.html                   ← CampSpark prototype, deployed to Netlify, do not move
+├── resources/
+│   ├── prd-template.md
+│   ├── prd-vendoriq.md
+│   ├── prd-shiftswap.md
+│   └── campspark-data.json
+├── skills/
+│   ├── skill_brief.md
+│   ├── skill_prd.md
+│   ├── skill_prototype.md
+│   ├── skill_discovery.md
+│   ├── skill_user_stories.md
+│   ├── skill_test_cases.md
+│   ├── skill_research_sync.md
+│   ├── skill_case_study.md
+│   └── skill_job_search.md
+├── memory/
+│   ├── rules.md
+│   ├── hypotheses.md
+│   └── rejected.md
+├── case_studies/
+├── test_cases/
+│   └── campspark-test-cases.md
+├── user_stories/
+│   └── campspark-user-stories.md
+└── research/
+
 ---
 
 ## Commands and Their Skills
@@ -139,4 +191,4 @@ All prototype links must always work before any commit.
 
 ## Author
 Sonal Singh | Principal Product Manager
-sonalsingh.email@gmail.com | linkedin.com/in/sonalsingh444
+sonalsingh.email@gmail.com | linkedin.com/in/sonalsingh444Sonnet 4.6Claude is AI and can make mis
