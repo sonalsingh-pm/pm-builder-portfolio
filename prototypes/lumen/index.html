@@ -1,0 +1,1690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumen — Customer Growth Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: #ffffff; color: #111827; font-size: 14px; line-height: 1.5; }
+
+  /* HEADER */
+  .header { background: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 14px 24px; display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; position: sticky; top: 0; z-index: 100; flex-wrap: wrap; }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .logo-diamond { width: 20px; height: 20px; background: #0071ce; transform: rotate(45deg); border-radius: 3px; flex-shrink: 0; }
+  .header-brand h1 { font-size: 22px; font-weight: 700; color: #111827; line-height: 1; }
+  .header-brand p { font-size: 12px; color: #6b7280; margin-top: 2px; }
+  .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+  .api-key-row { display: flex; align-items: center; gap: 8px; }
+  .api-key-input { width: 280px; border: 1px solid #d1d5db; border-radius: 8px; padding: 8px 12px; font-size: 13px; font-family: 'Inter', sans-serif; color: #111827; outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
+  .api-key-input:focus { border-color: #0071ce; box-shadow: 0 0 0 3px rgba(0,113,206,0.15); }
+  .btn-save { background: #0071ce; color: #ffffff; border: none; border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.15s; white-space: nowrap; }
+  .btn-save:hover { background: #005fa3; }
+  .api-key-note { font-size: 11px; color: #9ca3af; }
+  .disclaimer-badge { background: #fef3c7; color: #92400e; font-size: 11px; padding: 3px 8px; border-radius: 4px; font-weight: 500; }
+
+  /* BANNER */
+  .api-banner { background: #fffbeb; border-bottom: 1px solid #fde68a; padding: 10px 24px; display: flex; align-items: center; gap: 8px; font-size: 13px; color: #92400e; }
+  .api-banner.hidden { display: none; }
+  .api-banner strong { font-weight: 600; }
+
+  /* TABS */
+  .tab-nav { position: sticky; top: 73px; z-index: 10; background: #ffffff; border-bottom: 1px solid #e5e7eb; display: flex; overflow-x: auto; }
+  .tab-btn { padding: 14px 20px; font-size: 14px; font-weight: 500; color: #6b7280; border: none; border-bottom: 2px solid transparent; background: none; cursor: pointer; font-family: 'Inter', sans-serif; white-space: nowrap; transition: color 0.15s, border-color 0.15s; }
+  .tab-btn:hover { color: #374151; }
+  .tab-btn.active { color: #0071ce; border-bottom-color: #0071ce; }
+
+  /* MAIN CONTENT */
+  .tab-panel { display: none; padding: 28px 24px; }
+  .tab-panel.active { display: block; }
+
+  /* CARDS */
+  .card { background: #ffffff; border: 1px solid #e5e7eb; box-shadow: 0 1px 4px rgba(0,0,0,0.08); border-radius: 10px; padding: 20px; }
+
+  /* BUTTONS */
+  .btn-primary { background: #0071ce; color: #ffffff; border: none; border-radius: 8px; padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.15s; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-primary:hover:not(:disabled) { background: #005fa3; }
+  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+  .btn-secondary { background: #ffffff; color: #374151; border: 1px solid #e5e7eb; border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.15s, border-color 0.15s; }
+  .btn-secondary:hover { background: #f9fafb; border-color: #d1d5db; }
+  .btn-secondary.active { background: #f0f7ff; border-color: #0071ce; color: #0071ce; }
+  select, textarea { border: 1px solid #d1d5db; border-radius: 8px; padding: 10px 12px; font-size: 14px; font-family: 'Inter', sans-serif; color: #111827; outline: none; transition: border-color 0.15s, box-shadow 0.15s; background: #ffffff; width: 100%; }
+  select:focus, textarea:focus { border-color: #0071ce; box-shadow: 0 0 0 3px rgba(0,113,206,0.15); }
+
+  /* ===================== MODULE 1 ===================== */
+  .m1-layout { display: grid; grid-template-columns: 340px 1fr; gap: 24px; }
+  .scenario-cards { display: flex; flex-direction: column; gap: 10px; }
+  .scenario-card { background: #ffffff; border: 1px solid #e5e7eb; border-left: 3px solid transparent; border-radius: 10px; padding: 14px 16px; cursor: pointer; transition: background 0.15s, box-shadow 0.15s; }
+  .scenario-card:hover { background: #f9fafb; }
+  .scenario-card.active { background: #f0f7ff; box-shadow: 0 2px 8px rgba(0,113,206,0.12); }
+  .scenario-card-top { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .scenario-card-title { font-size: 13px; font-weight: 600; color: #111827; flex: 1; }
+  .badge { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .scenario-card-desc { font-size: 12px; color: #6b7280; line-height: 1.4; }
+
+  /* Signals grid */
+  .signals-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+  .signal-field label { display: block; font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 5px; }
+
+  /* Score bars */
+  .score-bars { display: flex; flex-direction: column; gap: 14px; }
+  .score-bar-item { }
+  .score-bar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+  .score-bar-label { font-size: 12px; font-weight: 500; color: #374151; }
+  .score-bar-value { font-size: 13px; font-weight: 700; }
+  .score-bar-track { background: #f3f4f6; height: 8px; border-radius: 4px; overflow: hidden; }
+  .score-bar-fill { height: 100%; border-radius: 4px; width: 0%; transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
+
+  /* Next best action */
+  .nba-grid { display: grid; grid-template-columns: 1fr 200px 240px; gap: 16px; align-items: start; }
+  .nba-action { font-size: 15px; font-weight: 500; color: #111827; line-height: 1.5; }
+  .nba-channel { font-size: 13px; color: #374151; }
+  .nba-channel-name { font-weight: 600; color: #0071ce; font-size: 14px; margin-bottom: 3px; }
+  .nba-timing { font-size: 12px; color: #6b7280; }
+  .nba-message { border-left: 3px solid #0071ce; padding-left: 12px; font-size: 13px; color: #374151; font-style: italic; line-height: 1.5; }
+
+  /* Channel toggle */
+  .channel-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .channel-pill { padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 500; cursor: pointer; border: 1px solid #e5e7eb; background: #ffffff; color: #6b7280; transition: all 0.15s; }
+  .channel-pill:hover { border-color: #0071ce; color: #0071ce; }
+  .channel-pill.active { background: #0071ce; color: #ffffff; border-color: #0071ce; }
+
+  /* Channel mockups */
+  .mockup-container { display: flex; justify-content: center; }
+
+  /* Push mockup */
+  .push-device { background: #1a1a1a; border-radius: 16px; padding: 20px; max-width: 360px; width: 100%; }
+  .push-notif { background: rgba(255,255,255,0.12); backdrop-filter: blur(10px); border-radius: 14px; padding: 12px 14px; display: flex; gap: 10px; align-items: flex-start; }
+  .push-app-icon { width: 36px; height: 36px; background: #0071ce; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; color: #ffffff; flex-shrink: 0; font-family: 'Inter', sans-serif; }
+  .push-content { flex: 1; }
+  .push-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
+  .push-app-name { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.7); }
+  .push-time { font-size: 10px; color: rgba(255,255,255,0.5); }
+  .push-title { font-size: 13px; font-weight: 600; color: #ffffff; margin-bottom: 2px; }
+  .push-body { font-size: 12px; color: rgba(255,255,255,0.75); line-height: 1.4; }
+
+  /* Email mockup */
+  .email-browser { max-width: 480px; width: 100%; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; }
+  .browser-chrome { background: #f3f4f6; padding: 8px 12px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #e5e7eb; }
+  .browser-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .browser-url { background: #e5e7eb; border-radius: 4px; padding: 3px 10px; font-size: 11px; color: #9ca3af; flex: 1; margin-left: 8px; }
+  .email-header-bar { background: #0071ce; padding: 16px 20px; }
+  .email-wordmark { font-size: 20px; font-weight: 800; color: #ffffff; letter-spacing: -0.5px; font-family: 'Inter', sans-serif; }
+  .email-body { padding: 20px; background: #ffffff; }
+  .email-subject-label { font-size: 10px; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+  .email-subject-text { font-size: 15px; font-weight: 600; color: #111827; margin-bottom: 14px; }
+  .email-preview-label { font-size: 10px; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+  .email-preview-text { font-size: 13px; color: #374151; margin-bottom: 16px; }
+  .email-content-block { background: #f3f4f6; border-radius: 6px; height: 80px; margin-bottom: 16px; }
+  .email-cta-btn { background: #0071ce; color: #ffffff; border: none; border-radius: 6px; padding: 10px 20px; font-size: 13px; font-weight: 600; font-family: 'Inter', sans-serif; cursor: default; display: inline-block; }
+  .email-footer { margin-top: 16px; font-size: 10px; color: #9ca3af; line-height: 1.4; }
+
+  /* In-app mockup */
+  .inapp-phone { width: 280px; border: 8px solid #1a1a1a; border-radius: 24px; overflow: hidden; background: #f3f4f6; }
+  .inapp-app-bar { background: #0071ce; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; }
+  .inapp-logo { font-size: 16px; font-weight: 800; color: #ffffff; font-family: 'Inter', sans-serif; }
+  .inapp-icons { display: flex; gap: 10px; color: #ffffff; font-size: 14px; }
+  .inapp-banner { background: linear-gradient(135deg, #0071ce, #005fa3); padding: 18px 14px; }
+  .inapp-banner-headline { font-size: 14px; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
+  .inapp-banner-sub { font-size: 11px; color: rgba(255,255,255,0.85); margin-bottom: 12px; }
+  .inapp-shop-pill { background: #ffc220; color: #111827; border-radius: 20px; padding: 6px 14px; font-size: 11px; font-weight: 700; display: inline-block; cursor: default; }
+  .inapp-products { padding: 12px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .inapp-product-tile { background: #ffffff; border-radius: 6px; padding: 8px; border: 1px solid #e5e7eb; }
+  .inapp-product-img { background: #e5e7eb; height: 48px; border-radius: 4px; margin-bottom: 6px; }
+  .inapp-product-name { background: #e5e7eb; height: 8px; border-radius: 3px; margin-bottom: 4px; }
+  .inapp-product-name2 { background: #e5e7eb; height: 8px; border-radius: 3px; width: 70%; }
+
+  /* SMS mockup */
+  .sms-phone { width: 280px; border: 8px solid #1a1a1a; border-radius: 24px; overflow: hidden; background: #f9fafb; }
+  .sms-header { background: #f3f4f6; padding: 12px 14px; border-bottom: 1px solid #e5e7eb; text-align: center; font-size: 13px; font-weight: 600; color: #111827; }
+  .sms-body { padding: 16px 14px; min-height: 120px; }
+  .sms-bubble { background: #e5e7eb; border-radius: 14px 14px 14px 4px; padding: 10px 14px; font-size: 12px; color: #374151; line-height: 1.5; max-width: 85%; margin-bottom: 4px; }
+  .sms-delivered { font-size: 10px; color: #9ca3af; }
+
+  /* Homepage mockup */
+  .homepage-browser { max-width: 500px; width: 100%; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; }
+  .homepage-body { padding: 16px; background: #ffffff; }
+  .homepage-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .homepage-section-title { font-size: 15px; font-weight: 700; color: #111827; }
+  .homepage-see-all { font-size: 12px; color: #0071ce; font-weight: 500; cursor: default; }
+  .homepage-products { display: flex; gap: 10px; }
+  .homepage-product { width: 140px; flex-shrink: 0; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; }
+  .homepage-product-img { background: #f3f4f6; height: 90px; }
+  .homepage-product-info { padding: 8px; }
+  .homepage-product-name { background: #e5e7eb; height: 8px; border-radius: 3px; margin-bottom: 5px; }
+  .homepage-product-name2 { background: #e5e7eb; height: 8px; border-radius: 3px; width: 60%; margin-bottom: 8px; }
+  .homepage-add-btn { background: #0071ce; color: #ffffff; border: none; border-radius: 4px; padding: 5px 8px; font-size: 10px; font-weight: 600; width: 100%; cursor: default; font-family: 'Inter', sans-serif; }
+
+  /* Why + Watch */
+  .why-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .why-list li { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: #374151; line-height: 1.5; }
+  .why-dot { width: 8px; height: 8px; background: #0071ce; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+  .watch-section { display: flex; flex-direction: column; gap: 12px; }
+  .watch-group-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #9ca3af; margin-bottom: 6px; }
+  .watch-item { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: #374151; line-height: 1.5; }
+  .watch-icon-up { color: #16a34a; font-size: 14px; flex-shrink: 0; }
+  .watch-icon-warn { color: #dc2626; font-size: 14px; flex-shrink: 0; }
+
+  /* Row layouts */
+  .output-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+  .output-row-1 { margin-bottom: 18px; }
+  .card-title { font-size: 13px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px; }
+
+  /* Skeleton */
+  .skeleton { background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 6px; }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+  .skeleton-line { height: 14px; margin-bottom: 8px; border-radius: 4px; }
+  .skeleton-block { height: 80px; border-radius: 8px; margin-bottom: 16px; }
+  .skeleton-card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 20px; }
+
+  /* Error card */
+  .error-card { background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; padding: 16px 20px; color: #dc2626; font-size: 14px; margin-top: 16px; display: flex; align-items: flex-start; gap: 10px; }
+  .error-card-message { flex: 1; }
+  .error-card-title { font-weight: 600; margin-bottom: 4px; }
+  .error-card-body { font-size: 13px; color: #7f1d1d; }
+
+  /* ===================== MODULE 2 ===================== */
+  .m2-wrap { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+  .hypothesis-summary { background: #f0f7ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 14px 16px; font-size: 14px; color: #1e40af; line-height: 1.5; }
+  .exp-table { width: 100%; border-collapse: collapse; }
+  .exp-table td { padding: 8px 0; border-bottom: 1px solid #f3f4f6; font-size: 13px; vertical-align: top; }
+  .exp-table td:first-child { color: #6b7280; font-weight: 500; width: 200px; padding-right: 16px; }
+  .exp-table td:last-child { color: #111827; font-weight: 500; }
+  .cv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .cv-box { border-radius: 8px; padding: 16px; }
+  .cv-control { background: #f3f4f6; border: 1px solid #e5e7eb; }
+  .cv-variant { background: #f0f7ff; border: 1px solid #bfdbfe; }
+  .cv-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+  .cv-control .cv-label { color: #6b7280; }
+  .cv-variant .cv-label { color: #0071ce; }
+  .cv-text { font-size: 13px; color: #374151; line-height: 1.5; }
+  .metric-cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .metric-card { border-radius: 8px; padding: 14px; border: 1px solid #e5e7eb; }
+  .metric-card.primary { background: #f0fdf4; border-color: #bbf7d0; }
+  .metric-card.secondary { background: #f0f7ff; border-color: #bfdbfe; }
+  .metric-card.guardrail { background: #fffbeb; border-color: #fde68a; }
+  .metric-card-type { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+  .metric-card.primary .metric-card-type { color: #16a34a; }
+  .metric-card.secondary .metric-card-type { color: #0071ce; }
+  .metric-card.guardrail .metric-card-type { color: #d97706; }
+  .metric-card-name { font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 8px; }
+  .metric-card-detail { font-size: 12px; color: #6b7280; line-height: 1.4; }
+  .metric-card-lift { font-size: 12px; font-weight: 600; color: #374151; margin-top: 6px; }
+  .risk-list { display: flex; flex-direction: column; gap: 10px; }
+  .risk-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #374151; line-height: 1.5; }
+  .risk-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .sanity-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #374151; line-height: 1.5; margin-top: 10px; padding-top: 10px; border-top: 1px solid #f3f4f6; }
+  /* Sample size calculator */
+  .calc-wrap { background: #f9fafb; border-radius: 8px; padding: 16px; margin-top: 14px; }
+  .calc-inputs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 14px; }
+  .calc-field label { display: block; font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 5px; }
+  .calc-field input, .calc-field select { padding: 8px 10px; font-size: 13px; }
+  .calc-result { text-align: center; padding: 16px; background: #ffffff; border-radius: 8px; border: 1px solid #e5e7eb; }
+  .calc-result-n { font-size: 24px; font-weight: 700; color: #0071ce; }
+  .calc-result-label { font-size: 13px; color: #6b7280; margin-top: 4px; }
+
+  /* ===================== MODULE 3 ===================== */
+  .m3-wrap { max-width: 900px; margin: 0 auto; }
+  .stage-cards-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 20px; }
+  .stage-card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.15s; }
+  .stage-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.10); }
+  .stage-card.selected { border-width: 2px; }
+  .stage-icon { font-size: 22px; margin-bottom: 8px; }
+  .stage-name { font-size: 12px; font-weight: 600; color: #374151; }
+  .leak-select-wrap { display: flex; gap: 12px; align-items: flex-end; margin-bottom: 22px; }
+  .leak-select-wrap > div { flex: 1; }
+  .leak-select-wrap label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px; }
+
+  /* Loop SVG */
+  .loop-svg-wrap { overflow-x: auto; margin-bottom: 20px; }
+
+  /* Interventions */
+  .interventions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+  .intervention-card { border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; }
+  .priority-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px; }
+  .priority-high { background: #fef2f2; color: #dc2626; }
+  .priority-medium { background: #fffbeb; color: #d97706; }
+  .priority-quick { background: #f0fdf4; color: #16a34a; }
+  .intervention-name { font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 6px; }
+  .intervention-desc { font-size: 12px; color: #6b7280; line-height: 1.5; margin-bottom: 10px; }
+  .intervention-meta { display: flex; gap: 10px; font-size: 11px; }
+  .meta-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+  .meta-low { color: #6b7280; }
+  .meta-high { color: #111827; }
+
+  /* Feedback loop steps */
+  .feedback-steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 16px; }
+  .feedback-step { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; text-align: center; }
+  .feedback-step-num { width: 20px; height: 20px; border-radius: 50%; background: #0071ce; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto 6px; }
+  .feedback-step-name { font-size: 11px; font-weight: 600; color: #374151; line-height: 1.3; }
+
+  /* Animated track */
+  .feedback-track { position: relative; height: 12px; background: #f3f4f6; border-radius: 6px; overflow: hidden; margin-bottom: 14px; }
+  .feedback-dot { position: absolute; top: 2px; width: 8px; height: 8px; border-radius: 50%; background: #0071ce; box-shadow: 0 0 8px rgba(0,113,206,0.6); animation: trackMove 3s linear infinite; }
+  @keyframes trackMove { 0% { left: 0%; } 100% { left: calc(100% - 8px); } }
+
+  /* Metrics grid */
+  .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .metric-m3-card { border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px; }
+  .metric-m3-name { font-size: 13px; font-weight: 600; color: #111827; margin-bottom: 6px; }
+  .metric-m3-detail { font-size: 12px; color: #6b7280; line-height: 1.4; }
+  .metric-m3-numbers { display: flex; gap: 12px; margin-top: 8px; }
+  .metric-m3-num { font-size: 11px; color: #374151; }
+  .metric-m3-num span { font-weight: 600; color: #0071ce; }
+
+  /* FOOTER */
+  .footer { border-top: 1px solid #e5e7eb; padding: 24px; text-align: center; background: #f9fafb; }
+  .footer p:first-child { font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 4px; }
+  .footer p:last-child { font-size: 12px; color: #9ca3af; }
+
+  /* Helpers */
+  .hidden { display: none !important; }
+  .section-title { font-size: 16px; font-weight: 700; color: #111827; margin-bottom: 4px; }
+  .section-sub { font-size: 13px; color: #6b7280; margin-bottom: 20px; }
+  .mt-4 { margin-top: 4px; }
+  .mt-8 { margin-top: 8px; }
+  .mt-12 { margin-top: 12px; }
+  .mt-16 { margin-top: 16px; }
+  .mt-20 { margin-top: 20px; }
+  .gap-text { font-size: 13px; color: #6b7280; font-style: italic; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .header { flex-direction: column; }
+    .header-right { align-items: flex-start; width: 100%; }
+    .api-key-input { width: 100%; }
+    .api-key-row { flex-wrap: wrap; }
+    .m1-layout { grid-template-columns: 1fr; }
+    .signals-grid { grid-template-columns: 1fr; }
+    .output-row-2 { grid-template-columns: 1fr; }
+    .nba-grid { grid-template-columns: 1fr; }
+    .stage-cards-row { grid-template-columns: repeat(2, 1fr); }
+    .metric-cards-grid { grid-template-columns: 1fr; }
+    .interventions-grid { grid-template-columns: 1fr; }
+    .feedback-steps { grid-template-columns: repeat(2, 1fr); }
+    .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+    .calc-inputs { grid-template-columns: 1fr; }
+    .tab-nav { overflow-x: auto; }
+    .homepage-products { overflow-x: auto; }
+    .cv-grid { grid-template-columns: 1fr; }
+    .leak-select-wrap { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-left">
+    <div class="logo-diamond"></div>
+    <div class="header-brand">
+      <h1>Lumen</h1>
+      <p>Customer Growth Intelligence</p>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="api-key-row">
+      <input type="password" class="api-key-input" id="apiKeyInput" placeholder="Enter Anthropic API key">
+      <button class="btn-save" onclick="saveApiKey()">Save</button>
+    </div>
+    <div class="api-key-note">Key is stored in memory only and never sent anywhere except Anthropic's API</div>
+    <span class="disclaimer-badge">Speculative work — not affiliated with Walmart</span>
+  </div>
+</header>
+
+<!-- API BANNER -->
+<div class="api-banner" id="apiBanner">
+  <span>⚠️</span>
+  <span><strong>No API key saved.</strong> Enter your Anthropic API key above to enable AI-powered analysis.</span>
+</div>
+
+<!-- TAB NAVIGATION -->
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('m1', this)">Segment Intelligence</button>
+  <button class="tab-btn" onclick="switchTab('m2', this)">Experiment Designer</button>
+  <button class="tab-btn" onclick="switchTab('m3', this)">Growth Loop Analyzer</button>
+</nav>
+
+<!-- ==================== MODULE 1 ==================== -->
+<div class="tab-panel active" id="tab-m1">
+
+  <div class="m1-layout">
+
+    <!-- Left: Scenario Cards -->
+    <div>
+      <div class="section-title" style="margin-bottom:6px;">Customer Scenarios</div>
+      <div class="section-sub">Select a segment to pre-fill signals</div>
+      <div class="scenario-cards" id="scenarioCards">
+
+        <div class="scenario-card" data-scenario="new" onclick="selectScenario('new', this)" style="border-left-color:#16a34a">
+          <div class="scenario-card-top">
+            <span class="scenario-card-title">New Customer</span>
+            <span class="badge" style="background:#dcfce7;color:#166534">New</span>
+          </div>
+          <div class="scenario-card-desc">First purchase within 30 days, habit not yet established</div>
+        </div>
+
+        <div class="scenario-card" data-scenario="atrisk" onclick="selectScenario('atrisk', this)" style="border-left-color:#dc2626">
+          <div class="scenario-card-top">
+            <span class="scenario-card-title">High Value, At-Risk</span>
+            <span class="badge" style="background:#fee2e2;color:#991b1b">Urgent</span>
+          </div>
+          <div class="scenario-card-desc">Top spender showing early disengagement signals</div>
+        </div>
+
+        <div class="scenario-card" data-scenario="lapsed" onclick="selectScenario('lapsed', this)" style="border-left-color:#d97706">
+          <div class="scenario-card-top">
+            <span class="scenario-card-title">Lapsed, High Value</span>
+            <span class="badge" style="background:#fef3c7;color:#92400e">Lapsed</span>
+          </div>
+          <div class="scenario-card-desc">Previously high-spending customer, gone quiet for 90+ days</div>
+        </div>
+
+        <div class="scenario-card" data-scenario="browser" onclick="selectScenario('browser', this)" style="border-left-color:#7c3aed">
+          <div class="scenario-card-top">
+            <span class="scenario-card-title">Heavy Browser, Low Converter</span>
+            <span class="badge" style="background:#ede9fe;color:#5b21b6">High Intent</span>
+          </div>
+          <div class="scenario-card-desc">Browsing frequently but rarely completing purchases</div>
+        </div>
+
+        <div class="scenario-card" data-scenario="renewal" onclick="selectScenario('renewal', this)" style="border-left-color:#0284c7">
+          <div class="scenario-card-top">
+            <span class="scenario-card-title">Walmart+ Renewal Risk</span>
+            <span class="badge" style="background:#e0f2fe;color:#075985">Subscription</span>
+          </div>
+          <div class="scenario-card-desc">Walmart+ member with declining engagement near renewal</div>
+        </div>
+
+        <div class="scenario-card" data-scenario="price" onclick="selectScenario('price', this)" style="border-left-color:#be185d">
+          <div class="scenario-card-top">
+            <span class="scenario-card-title">Price Sensitive</span>
+            <span class="badge" style="background:#fdf2f8;color:#831843">Promo Risk</span>
+          </div>
+          <div class="scenario-card-desc">Purchase behavior driven almost entirely by promotions</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Right: Signals + Output -->
+    <div>
+      <div class="card" style="margin-bottom:18px;">
+        <div class="card-title">Customer Signals</div>
+        <div class="signals-grid">
+          <div class="signal-field">
+            <label>Lifecycle Stage</label>
+            <select id="sig_lifecycle">
+              <option>New Customer</option>
+              <option>Active</option>
+              <option>At-Risk</option>
+              <option>Lapsed</option>
+            </select>
+          </div>
+          <div class="signal-field">
+            <label>Walmart+ Status</label>
+            <select id="sig_wplus">
+              <option>Not a member</option>
+              <option>Active member</option>
+              <option>Renewal within 30 days</option>
+              <option>Recently churned</option>
+            </select>
+          </div>
+          <div class="signal-field">
+            <label>Purchase Frequency</label>
+            <select id="sig_freq">
+              <option>First purchase</option>
+              <option>Weekly</option>
+              <option>Monthly</option>
+              <option>Quarterly</option>
+              <option>Not purchased in 90+ days</option>
+            </select>
+          </div>
+          <div class="signal-field">
+            <label>Average Order Value</label>
+            <select id="sig_aov">
+              <option>Under $30</option>
+              <option>$30–$75</option>
+              <option>$75–$150</option>
+              <option>$150+</option>
+            </select>
+          </div>
+          <div class="signal-field">
+            <label>Last Purchase Recency</label>
+            <select id="sig_recency">
+              <option>Within 7 days</option>
+              <option>8–30 days</option>
+              <option>31–90 days</option>
+              <option>90+ days</option>
+            </select>
+          </div>
+          <div class="signal-field">
+            <label>Primary Category</label>
+            <select id="sig_category">
+              <option>Grocery</option>
+              <option>Electronics</option>
+              <option>Apparel</option>
+              <option>Home &amp; Garden</option>
+              <option>Health &amp; Beauty</option>
+              <option>Multi-category</option>
+            </select>
+          </div>
+          <div class="signal-field">
+            <label>Browsing Behavior</label>
+            <select id="sig_browse">
+              <option>Low (under 5 sessions/week)</option>
+              <option>Medium (5–15 sessions/week)</option>
+              <option>High (15+ sessions/week)</option>
+              <option>Browse-heavy rarely purchases</option>
+            </select>
+          </div>
+          <div class="signal-field">
+            <label>Cart Behavior</label>
+            <select id="sig_cart">
+              <option>Rarely adds to cart</option>
+              <option>Adds but often abandons</option>
+              <option>High add-to-cart low checkout</option>
+              <option>Completes most purchases</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-primary" style="width:100%;justify-content:center;" id="m1GenBtn" onclick="generateM1()">Generate Growth Action →</button>
+      </div>
+
+      <!-- Loading skeleton -->
+      <div id="m1Loading" class="hidden">
+        <div class="skeleton-card" style="margin-bottom:18px;">
+          <div class="skeleton skeleton-line" style="width:60%;margin-bottom:16px;"></div>
+          <div class="skeleton skeleton-block"></div>
+          <div class="skeleton skeleton-line" style="width:80%;"></div>
+          <div class="skeleton skeleton-line" style="width:65%;"></div>
+        </div>
+        <div class="skeleton-card">
+          <div class="skeleton skeleton-line" style="width:50%;margin-bottom:16px;"></div>
+          <div class="skeleton skeleton-block"></div>
+        </div>
+      </div>
+
+      <!-- Error -->
+      <div id="m1Error" class="hidden"></div>
+
+      <!-- Output -->
+      <div id="m1Output" class="hidden">
+
+        <!-- Row 1: Insight + Scores -->
+        <div class="output-row-2">
+          <div class="card">
+            <div class="card-title">Segment Insight</div>
+            <p id="out_insight" style="font-size:14px;color:#374151;line-height:1.7;"></p>
+          </div>
+          <div class="card">
+            <div class="card-title">Propensity Scores</div>
+            <div class="score-bars">
+              <div class="score-bar-item">
+                <div class="score-bar-header">
+                  <span class="score-bar-label">Churn Risk</span>
+                  <span class="score-bar-value" id="scoreChurnVal">—</span>
+                </div>
+                <div class="score-bar-track"><div class="score-bar-fill" id="scoreChurnBar"></div></div>
+              </div>
+              <div class="score-bar-item">
+                <div class="score-bar-header">
+                  <span class="score-bar-label">W+ Upgrade Likelihood</span>
+                  <span class="score-bar-value" id="scoreUpgradeVal">—</span>
+                </div>
+                <div class="score-bar-track"><div class="score-bar-fill" id="scoreUpgradeBar"></div></div>
+              </div>
+              <div class="score-bar-item">
+                <div class="score-bar-header">
+                  <span class="score-bar-label">30-Day Repurchase</span>
+                  <span class="score-bar-value" id="scoreRepurchaseVal">—</span>
+                </div>
+                <div class="score-bar-track"><div class="score-bar-fill" id="scoreRepurchaseBar"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2: Next Best Action -->
+        <div class="output-row-1">
+          <div class="card">
+            <div class="card-title">Next Best Action</div>
+            <div class="nba-grid">
+              <div class="nba-action" id="out_nba"></div>
+              <div class="nba-channel">
+                <div class="nba-channel-name" id="out_channel"></div>
+                <div class="nba-timing" id="out_timing"></div>
+              </div>
+              <div class="nba-message" id="out_sample_msg"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 3: Channel mockup -->
+        <div class="output-row-1">
+          <div class="card">
+            <div class="card-title">How this reaches the customer</div>
+            <div class="channel-pills">
+              <button class="channel-pill" onclick="switchChannel('push_notification', this)">Push</button>
+              <button class="channel-pill" onclick="switchChannel('email', this)">Email</button>
+              <button class="channel-pill" onclick="switchChannel('in_app_banner', this)">In-App</button>
+              <button class="channel-pill" onclick="switchChannel('sms', this)">SMS</button>
+              <button class="channel-pill" onclick="switchChannel('homepage_module', this)">Homepage</button>
+            </div>
+            <div class="mockup-container" id="channelMockup"></div>
+          </div>
+        </div>
+
+        <!-- Row 4: Why + Watch -->
+        <div class="output-row-2">
+          <div class="card">
+            <div class="card-title">Why this recommendation</div>
+            <ul class="why-list" id="out_why"></ul>
+          </div>
+          <div class="card">
+            <div class="card-title">Signals to watch</div>
+            <div class="watch-section">
+              <div>
+                <div class="watch-group-title">If this works, expect:</div>
+                <div id="out_watch_pos"></div>
+              </div>
+              <div>
+                <div class="watch-group-title">Watch out for:</div>
+                <div id="out_watch_neg"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MODULE 2 ==================== -->
+<div class="tab-panel" id="tab-m2">
+  <div class="m2-wrap">
+    <div>
+      <div class="section-title">Experiment Designer</div>
+      <div class="section-sub">Turn a growth hypothesis into a rigorous, ready-to-run A/B experiment</div>
+    </div>
+
+    <div class="card">
+      <label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:8px;">Select a growth hypothesis:</label>
+      <select id="hypothesisSelect" onchange="onHypothesisChange()" style="margin-bottom:12px;">
+        <option value="">— Choose a hypothesis —</option>
+        <option value="h1">Showing personalized product recommendations at checkout will increase AOV by reducing decision fatigue</option>
+        <option value="h2">Offering a free Walmart+ trial to first-time grocery customers will accelerate second-purchase rate</option>
+        <option value="h3">Sending a browse-abandonment push notification within 2 hours will recover purchases from high-intent non-converters</option>
+        <option value="h4">Displaying social proof ("X neighbors bought this") on product pages will increase add-to-cart rate among new customers</option>
+        <option value="h5">A savings summary email sent weekly to Walmart+ members will reduce cancellation rate at renewal</option>
+        <option value="h6">Introducing a price-drop alert feature will convert price-sensitive browsers into buyers</option>
+        <option value="h7">Bundling free same-day delivery for first-time apparel purchases will increase category trial rate</option>
+        <option value="h8">A personalized "Your summer essentials" homepage module will increase session depth and cross-category conversion</option>
+        <option value="custom">Describe your own hypothesis...</option>
+      </select>
+
+      <div id="hypothesisSummaryBox" class="hypothesis-summary hidden"></div>
+      <div id="customHypothesisBox" class="hidden" style="margin-top:8px;">
+        <textarea id="customHypothesisText" rows="3" placeholder="e.g., Showing free shipping eligibility progress bars in cart will reduce cart abandonment among customers with AOV near $35..."></textarea>
+      </div>
+
+      <div style="margin-top:14px;">
+        <button class="btn-primary" id="m2GenBtn" onclick="generateM2()">Design this Experiment →</button>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div id="m2Loading" class="hidden">
+      <div class="skeleton-card">
+        <div class="skeleton skeleton-line" style="width:40%;margin-bottom:14px;"></div>
+        <div class="skeleton skeleton-block"></div>
+        <div class="skeleton skeleton-line" style="width:70%;"></div>
+        <div class="skeleton skeleton-line" style="width:55%;"></div>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div id="m2Error" class="hidden"></div>
+
+    <!-- Output -->
+    <div id="m2Output" class="hidden">
+
+      <!-- 1. Overview table -->
+      <div class="card">
+        <div class="card-title">Experiment Overview</div>
+        <table class="exp-table" id="m2OverviewTable"></table>
+      </div>
+
+      <!-- 2. Control vs Variant -->
+      <div class="card">
+        <div class="card-title">Control vs. Variant</div>
+        <div class="cv-grid">
+          <div class="cv-box cv-control">
+            <div class="cv-label">Control (Status Quo)</div>
+            <div class="cv-text" id="m2Control"></div>
+          </div>
+          <div class="cv-box cv-variant">
+            <div class="cv-label">Variant (What We're Testing)</div>
+            <div class="cv-text" id="m2Variant"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Success Metrics -->
+      <div class="card">
+        <div class="card-title">Success Metrics</div>
+        <div class="metric-cards-grid" id="m2MetricsGrid"></div>
+      </div>
+
+      <!-- 4. Risk Flags -->
+      <div class="card">
+        <div class="card-title">Risk Flags &amp; Sanity Checks</div>
+        <div class="risk-list" id="m2RiskList"></div>
+      </div>
+
+      <!-- 5. Sample Size Calculator -->
+      <div class="card">
+        <div class="card-title">Sample Size Calculator</div>
+        <div class="calc-wrap">
+          <div class="calc-inputs">
+            <div class="calc-field">
+              <label>Baseline conversion rate (%)</label>
+              <input type="number" id="calcBaseline" placeholder="e.g. 3.5" min="0.1" max="99" step="0.1" oninput="calcSampleSize()">
+            </div>
+            <div class="calc-field">
+              <label>Minimum detectable effect (%)</label>
+              <input type="number" id="calcMDE" placeholder="e.g. 10" min="1" max="100" step="0.5" oninput="calcSampleSize()">
+            </div>
+            <div class="calc-field">
+              <label>Statistical significance</label>
+              <select id="calcSig" onchange="calcSampleSize()">
+                <option value="90">90%</option>
+                <option value="95" selected>95%</option>
+                <option value="99">99%</option>
+              </select>
+            </div>
+          </div>
+          <div class="calc-result" id="calcResult">
+            <div class="calc-result-n" id="calcN">—</div>
+            <div class="calc-result-label" id="calcLabel">Enter values above to calculate sample size</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MODULE 3 ==================== -->
+<div class="tab-panel" id="tab-m3">
+  <div class="m3-wrap">
+    <div style="margin-bottom:20px;">
+      <div class="section-title">Growth Loop Analyzer</div>
+      <div class="section-sub">Diagnose where customers are falling out and design targeted interventions</div>
+    </div>
+
+    <!-- Stage cards -->
+    <div class="stage-cards-row" id="stageCards">
+      <div class="stage-card" data-stage="acquisition" onclick="selectStage('acquisition', this, '#7c3aed', '#f5f3ff')">
+        <div class="stage-icon">👤</div>
+        <div class="stage-name">Acquisition</div>
+      </div>
+      <div class="stage-card" data-stage="activation" onclick="selectStage('activation', this, '#0284c7', '#f0f9ff')">
+        <div class="stage-icon">⚡</div>
+        <div class="stage-name">Activation</div>
+      </div>
+      <div class="stage-card" data-stage="engagement" onclick="selectStage('engagement', this, '#16a34a', '#f0fdf4')">
+        <div class="stage-icon">📊</div>
+        <div class="stage-name">Engagement</div>
+      </div>
+      <div class="stage-card" data-stage="retention" onclick="selectStage('retention', this, '#d97706', '#fffbeb')">
+        <div class="stage-icon">🛡️</div>
+        <div class="stage-name">Retention</div>
+      </div>
+      <div class="stage-card" data-stage="monetization" onclick="selectStage('monetization', this, '#be185d', '#fdf2f8')">
+        <div class="stage-icon">💵</div>
+        <div class="stage-name">Monetization</div>
+      </div>
+    </div>
+
+    <!-- Leak select -->
+    <div class="leak-select-wrap">
+      <div>
+        <label id="leakLabel">Where do you think the biggest leak is?</label>
+        <select id="leakSelect" style="margin-top:6px;">
+          <option value="">— Select a stage first —</option>
+        </select>
+      </div>
+      <button class="btn-primary" id="m3GenBtn" onclick="generateM3()">Analyze this Stage →</button>
+    </div>
+
+    <!-- Loading -->
+    <div id="m3Loading" class="hidden">
+      <div class="skeleton-card">
+        <div class="skeleton skeleton-line" style="width:50%;margin-bottom:16px;"></div>
+        <div class="skeleton skeleton-block"></div>
+        <div class="skeleton skeleton-line" style="width:75%;"></div>
+        <div class="skeleton skeleton-line" style="width:60%;"></div>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div id="m3Error" class="hidden"></div>
+
+    <!-- Output -->
+    <div id="m3Output" class="hidden">
+
+      <!-- 1. Loop Diagram -->
+      <div class="card output-row-1" style="margin-bottom:18px;">
+        <div class="card-title">Growth Loop Diagram</div>
+        <div class="loop-svg-wrap" id="loopDiagramWrap"></div>
+      </div>
+
+      <!-- 2. Leak Analysis -->
+      <div class="card output-row-1" style="margin-bottom:18px;">
+        <div class="card-title">Leak Analysis</div>
+        <div id="m3LeakAnalysis"></div>
+      </div>
+
+      <!-- 3. Interventions -->
+      <div class="output-row-1" style="margin-bottom:18px;">
+        <div style="font-size:13px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px;">Recommended Interventions</div>
+        <div class="interventions-grid" id="m3Interventions"></div>
+      </div>
+
+      <!-- 4. Feedback Loop -->
+      <div class="card output-row-1" style="margin-bottom:18px;">
+        <div class="card-title">Feedback Loop</div>
+        <div class="feedback-steps">
+          <div class="feedback-step"><div class="feedback-step-num">1</div><div class="feedback-step-name">Signal Detected</div></div>
+          <div class="feedback-step"><div class="feedback-step-num">2</div><div class="feedback-step-name">Action Triggered</div></div>
+          <div class="feedback-step"><div class="feedback-step-num">3</div><div class="feedback-step-name">Customer Response</div></div>
+          <div class="feedback-step"><div class="feedback-step-num">4</div><div class="feedback-step-name">Outcome Recorded</div></div>
+          <div class="feedback-step"><div class="feedback-step-num">5</div><div class="feedback-step-name">Model Updated</div></div>
+        </div>
+        <div class="feedback-track"><div class="feedback-dot"></div></div>
+        <p id="m3FeedbackExplain" style="font-size:13px;color:#374151;line-height:1.6;"></p>
+      </div>
+
+      <!-- 5. Metrics Dashboard -->
+      <div class="card output-row-1">
+        <div class="card-title">Metrics Dashboard</div>
+        <div class="metrics-grid" id="m3Metrics"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>Lumen — Customer Growth Intelligence</p>
+  <p>A self-initiated product concept by Sonal Singh | Not affiliated with Walmart</p>
+</footer>
+
+<script>
+// ===== GLOBAL STATE =====
+let apiKey = '';
+let m1LastData = null;
+let m3SelectedStage = null;
+let m3StageAccent = '#7c3aed';
+
+// Hypothesis text map
+const hypothesisText = {
+  h1: 'Showing personalized product recommendations at checkout will increase AOV by reducing decision fatigue for returning customers who typically add one item per session.',
+  h2: 'Offering a free 30-day Walmart+ trial to first-time grocery customers will accelerate second-purchase rate within 14 days, as membership perks (free delivery, fuel savings) create a habit-forming incentive to return.',
+  h3: 'Sending a browse-abandonment push notification within 2 hours of a session ending will recover purchases from high-intent customers who viewed 3+ products but did not add to cart.',
+  h4: 'Displaying social proof ("47 people in your area bought this this week") on product detail pages will increase add-to-cart rate among new customers by reducing uncertainty about product quality.',
+  h5: 'Sending a personalized savings summary email to Walmart+ members 14 days before renewal — showing total savings, free deliveries used, and exclusive discounts accessed — will reduce cancellation rate at the renewal moment.',
+  h6: 'Introducing a price-drop alert feature that notifies customers when a wishlisted item drops in price will convert price-sensitive browsers who abandon at the payment step into buyers.',
+  h7: 'Bundling free same-day delivery for a first-time apparel purchase will increase apparel category trial rate among grocery-only Walmart customers who already trust the platform for essentials.',
+  h8: 'A personalized "Your summer essentials" homepage module surfaced to customers based on prior purchase patterns will increase session depth, cross-category discovery, and 30-day multi-category conversion.'
+};
+
+// Scenario signal maps
+const scenarioSignals = {
+  new: {
+    lifecycle: 'New Customer', wplus: 'Not a member', freq: 'First purchase',
+    aov: '$30–$75', recency: 'Within 7 days', category: 'Grocery',
+    browse: 'Medium (5–15 sessions/week)', cart: 'Adds but often abandons'
+  },
+  atrisk: {
+    lifecycle: 'At-Risk', wplus: 'Active member', freq: 'Monthly',
+    aov: '$150+', recency: '31–90 days', category: 'Multi-category',
+    browse: 'Low (under 5 sessions/week)', cart: 'Rarely adds to cart'
+  },
+  lapsed: {
+    lifecycle: 'Lapsed', wplus: 'Recently churned', freq: 'Not purchased in 90+ days',
+    aov: '$150+', recency: '90+ days', category: 'Grocery',
+    browse: 'Low (under 5 sessions/week)', cart: 'Rarely adds to cart'
+  },
+  browser: {
+    lifecycle: 'Active', wplus: 'Not a member', freq: 'Monthly',
+    aov: 'Under $30', recency: 'Within 7 days', category: 'Apparel',
+    browse: 'Browse-heavy rarely purchases', cart: 'High add-to-cart low checkout'
+  },
+  renewal: {
+    lifecycle: 'At-Risk', wplus: 'Renewal within 30 days', freq: 'Monthly',
+    aov: '$75–$150', recency: '8–30 days', category: 'Grocery',
+    browse: 'Medium (5–15 sessions/week)', cart: 'Adds but often abandons'
+  },
+  price: {
+    lifecycle: 'Active', wplus: 'Not a member', freq: 'Monthly',
+    aov: 'Under $30', recency: '8–30 days', category: 'Multi-category',
+    browse: 'Medium (5–15 sessions/week)', cart: 'High add-to-cart low checkout'
+  }
+};
+
+// Leak options by stage
+const leakOptions = {
+  acquisition: [
+    'Low awareness / hard to find on search',
+    'Homepage not compelling to first-time visitors',
+    'Signup or first-purchase friction',
+    'Price perception vs Amazon'
+  ],
+  activation: [
+    'First purchase doesn\'t lead to second',
+    'App not downloaded after web purchase',
+    'Category tried once but not re-engaged',
+    'No habit trigger established'
+  ],
+  engagement: [
+    'Customers stuck in single category',
+    'Low session frequency between purchases',
+    'Cart abandonment before checkout',
+    'Low Walmart+ conversion among active users'
+  ],
+  retention: [
+    'At-risk customers not identified early enough',
+    'Win-back messaging not resonating',
+    'Lapsed customers not being reached',
+    'Churn reason not understood'
+  ],
+  monetization: [
+    'Walmart+ value not clearly communicated',
+    'Free trial not converting to paid',
+    'Members not using enough benefits',
+    'High-value customers not identified'
+  ]
+};
+
+// ===== API KEY =====
+function saveApiKey() {
+  const val = document.getElementById('apiKeyInput').value.trim();
+  if (val) {
+    apiKey = val;
+    document.getElementById('apiBanner').classList.add('hidden');
+  } else {
+    showBannerFocus();
+  }
+}
+
+function showBannerFocus() {
+  document.getElementById('apiBanner').classList.remove('hidden');
+  document.getElementById('apiKeyInput').focus();
+}
+
+// Check on load
+window.addEventListener('load', () => {
+  if (!apiKey) {
+    document.getElementById('apiBanner').classList.remove('hidden');
+  }
+});
+
+// ===== TABS =====
+function switchTab(tabId, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tabId).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ===== MODULE 1 LOGIC =====
+function selectScenario(key, el) {
+  // Update card active states
+  document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+
+  const s = scenarioSignals[key];
+  setSelect('sig_lifecycle', s.lifecycle);
+  setSelect('sig_wplus', s.wplus);
+  setSelect('sig_freq', s.freq);
+  setSelect('sig_aov', s.aov);
+  setSelect('sig_recency', s.recency);
+  setSelect('sig_category', s.category);
+  setSelect('sig_browse', s.browse);
+  setSelect('sig_cart', s.cart);
+}
+
+function setSelect(id, val) {
+  const sel = document.getElementById(id);
+  for (let i = 0; i < sel.options.length; i++) {
+    if (sel.options[i].value === val || sel.options[i].text === val) {
+      sel.selectedIndex = i;
+      return;
+    }
+  }
+}
+
+async function generateM1() {
+  if (!apiKey) { showBannerFocus(); return; }
+
+  const signals = {
+    lifecycle: document.getElementById('sig_lifecycle').value,
+    wplus: document.getElementById('sig_wplus').value,
+    freq: document.getElementById('sig_freq').value,
+    aov: document.getElementById('sig_aov').value,
+    recency: document.getElementById('sig_recency').value,
+    category: document.getElementById('sig_category').value,
+    browse: document.getElementById('sig_browse').value,
+    cart: document.getElementById('sig_cart').value
+  };
+
+  const btn = document.getElementById('m1GenBtn');
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
+  document.getElementById('m1Output').classList.add('hidden');
+  document.getElementById('m1Error').classList.add('hidden');
+  document.getElementById('m1Loading').classList.remove('hidden');
+
+  const systemPrompt = `You are a senior growth PM at a large retail company. Given customer signals, return ONLY a valid JSON object with these exact keys:
+- segment_insight: string (2-3 sentence paragraph about this customer's situation and what it means for growth)
+- churn_risk_score: integer 0-100
+- upgrade_likelihood_score: integer 0-100
+- repurchase_score: integer 0-100
+- next_best_action: string (specific action to take, 1-2 sentences)
+- recommended_channel: one of: push_notification, email, in_app_banner, sms, homepage_module
+- channel_reasoning: string (why this channel for this customer)
+- timing: string (specific timing recommendation, e.g. "Send Tuesday 10–11am, within 24 hrs of browse session")
+- sample_message: string (under 40 words, the actual message to send)
+- email_subject: string (compelling email subject line)
+- email_preview: string (email preview / preheader text, 1 sentence)
+- email_cta: string (CTA button text, 2-4 words)
+- why_bullets: array of 2-3 strings explaining why this recommendation fits this customer
+- watch_positive: array of 2-3 strings — positive signals to watch for (start with a metric or behavior)
+- watch_negative: array of 2-3 strings — negative signals that would indicate this isn't working
+
+Respond with JSON only. No markdown, no explanation.`;
+
+  const userMsg = `Customer signals:
+- Lifecycle Stage: ${signals.lifecycle}
+- Walmart+ Status: ${signals.wplus}
+- Purchase Frequency: ${signals.freq}
+- Average Order Value: ${signals.aov}
+- Last Purchase Recency: ${signals.recency}
+- Primary Category: ${signals.category}
+- Browsing Behavior: ${signals.browse}
+- Cart Behavior: ${signals.cart}
+
+Analyze this customer and return the JSON.`;
+
+  try {
+    const data = await callClaude(systemPrompt, userMsg, 1100);
+    m1LastData = data;
+    renderM1Output(data);
+  } catch (err) {
+    showError('m1Error', err.message);
+  } finally {
+    document.getElementById('m1Loading').classList.add('hidden');
+    btn.disabled = false;
+    btn.textContent = 'Generate Growth Action →';
+  }
+}
+
+function renderM1Output(data) {
+  document.getElementById('m1Output').classList.remove('hidden');
+
+  // Insight
+  document.getElementById('out_insight').textContent = data.segment_insight || '';
+
+  // Score bars
+  animateScore('scoreChurnBar', 'scoreChurnVal', data.churn_risk_score, (v) => {
+    if (v > 65) return '#dc2626';
+    if (v >= 35) return '#d97706';
+    return '#16a34a';
+  });
+  animateScore('scoreUpgradeBar', 'scoreUpgradeVal', data.upgrade_likelihood_score, (v) => {
+    return v >= 60 ? '#16a34a' : '#d97706';
+  });
+  animateScore('scoreRepurchaseBar', 'scoreRepurchaseVal', data.repurchase_score, (v) => {
+    return v >= 60 ? '#16a34a' : '#d97706';
+  });
+
+  // NBA
+  document.getElementById('out_nba').textContent = data.next_best_action || '';
+  document.getElementById('out_channel').textContent = formatChannelName(data.recommended_channel || '');
+  document.getElementById('out_timing').textContent = data.timing || '';
+  document.getElementById('out_sample_msg').textContent = '"' + (data.sample_message || '') + '"';
+
+  // Channel pills
+  const pills = document.querySelectorAll('.channel-pill');
+  pills.forEach(p => p.classList.remove('active'));
+  const channelKey = data.recommended_channel || 'push_notification';
+  const channelMap = {
+    push_notification: 0, email: 1, in_app_banner: 2, sms: 3, homepage_module: 4
+  };
+  const idx = channelMap[channelKey];
+  if (idx !== undefined) pills[idx].classList.add('active');
+
+  // Render default channel mockup
+  renderChannelMockup(channelKey, data);
+
+  // Why
+  const whyList = document.getElementById('out_why');
+  whyList.innerHTML = '';
+  (data.why_bullets || []).forEach(b => {
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="why-dot"></span><span>${b}</span>`;
+    whyList.appendChild(li);
+  });
+
+  // Watch
+  const posEl = document.getElementById('out_watch_pos');
+  posEl.innerHTML = '';
+  (data.watch_positive || []).forEach(w => {
+    const d = document.createElement('div');
+    d.className = 'watch-item';
+    d.innerHTML = `<span class="watch-icon-up">↑</span><span>${w}</span>`;
+    posEl.appendChild(d);
+  });
+
+  const negEl = document.getElementById('out_watch_neg');
+  negEl.innerHTML = '';
+  (data.watch_negative || []).forEach(w => {
+    const d = document.createElement('div');
+    d.className = 'watch-item';
+    d.innerHTML = `<span class="watch-icon-warn">⚠</span><span>${w}</span>`;
+    negEl.appendChild(d);
+  });
+}
+
+function animateScore(barId, valId, value, colorFn) {
+  const bar = document.getElementById(barId);
+  const val = document.getElementById(valId);
+  const v = Math.min(100, Math.max(0, parseInt(value) || 0));
+  const color = colorFn(v);
+  bar.style.background = color;
+  val.style.color = color;
+  val.textContent = v + '%';
+  // Animate
+  bar.style.width = '0%';
+  setTimeout(() => { bar.style.width = v + '%'; }, 50);
+}
+
+function formatChannelName(ch) {
+  const map = {
+    push_notification: 'Push Notification',
+    email: 'Email',
+    in_app_banner: 'In-App Banner',
+    sms: 'SMS',
+    homepage_module: 'Homepage Module'
+  };
+  return map[ch] || ch;
+}
+
+function switchChannel(channelKey, btn) {
+  document.querySelectorAll('.channel-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  if (m1LastData) renderChannelMockup(channelKey, m1LastData);
+}
+
+function renderChannelMockup(channel, data) {
+  const container = document.getElementById('channelMockup');
+  container.innerHTML = '';
+
+  const msg = data.sample_message || 'Your personalized offer is ready.';
+  const emailSubject = data.email_subject || 'A special offer for you';
+  const emailPreview = data.email_preview || 'We thought you\'d love this.';
+  const emailCTA = data.email_cta || 'Shop Now';
+
+  if (channel === 'push_notification') {
+    container.innerHTML = `
+      <div class="push-device">
+        <div class="push-notif">
+          <div class="push-app-icon">W</div>
+          <div class="push-content">
+            <div class="push-meta">
+              <span class="push-app-name">Walmart</span>
+              <span class="push-time">now</span>
+            </div>
+            <div class="push-title">Picked for you</div>
+            <div class="push-body">${escHtml(msg)}</div>
+          </div>
+        </div>
+      </div>`;
+  } else if (channel === 'email') {
+    container.innerHTML = `
+      <div class="email-browser">
+        <div class="browser-chrome">
+          <div class="browser-dot" style="background:#ef4444;"></div>
+          <div class="browser-dot" style="background:#fbbf24;"></div>
+          <div class="browser-dot" style="background:#22c55e;"></div>
+          <div class="browser-url">mail.google.com</div>
+        </div>
+        <div class="email-header-bar">
+          <div class="email-wordmark">Walmart</div>
+        </div>
+        <div class="email-body">
+          <div class="email-subject-label">Subject</div>
+          <div class="email-subject-text">${escHtml(emailSubject)}</div>
+          <div class="email-preview-label">Preview</div>
+          <div class="email-preview-text">${escHtml(emailPreview)}</div>
+          <div class="email-content-block"></div>
+          <div><span class="email-cta-btn">${escHtml(emailCTA)}</span></div>
+          <div class="email-footer">Walmart Inc. 702 SW 8th St, Bentonville, AR 72716<br>You're receiving this because you're a Walmart customer. Unsubscribe.</div>
+        </div>
+      </div>`;
+  } else if (channel === 'in_app_banner') {
+    container.innerHTML = `
+      <div class="inapp-phone">
+        <div class="inapp-app-bar">
+          <div class="inapp-logo">walmart</div>
+          <div class="inapp-icons">🔍 🛒</div>
+        </div>
+        <div class="inapp-banner">
+          <div class="inapp-banner-headline">Picked just for you</div>
+          <div class="inapp-banner-sub">${escHtml(msg)}</div>
+          <div class="inapp-shop-pill">Shop Now</div>
+        </div>
+        <div class="inapp-products">
+          <div class="inapp-product-tile"><div class="inapp-product-img"></div><div class="inapp-product-name"></div><div class="inapp-product-name2"></div></div>
+          <div class="inapp-product-tile"><div class="inapp-product-img"></div><div class="inapp-product-name"></div><div class="inapp-product-name2"></div></div>
+          <div class="inapp-product-tile"><div class="inapp-product-img"></div><div class="inapp-product-name"></div><div class="inapp-product-name2"></div></div>
+        </div>
+      </div>`;
+  } else if (channel === 'sms') {
+    container.innerHTML = `
+      <div class="sms-phone">
+        <div class="sms-header">Walmart Deals</div>
+        <div class="sms-body">
+          <div class="sms-bubble">${escHtml(msg)}</div>
+          <div class="sms-delivered">Delivered</div>
+        </div>
+      </div>`;
+  } else if (channel === 'homepage_module') {
+    container.innerHTML = `
+      <div class="homepage-browser">
+        <div class="browser-chrome">
+          <div class="browser-dot" style="background:#ef4444;"></div>
+          <div class="browser-dot" style="background:#fbbf24;"></div>
+          <div class="browser-dot" style="background:#22c55e;"></div>
+          <div class="browser-url">walmart.com</div>
+        </div>
+        <div class="homepage-body">
+          <div class="homepage-section-header">
+            <div class="homepage-section-title">Picked for you</div>
+            <div class="homepage-see-all">See all →</div>
+          </div>
+          <div class="homepage-products">
+            <div class="homepage-product"><div class="homepage-product-img"></div><div class="homepage-product-info"><div class="homepage-product-name"></div><div class="homepage-product-name2"></div><button class="homepage-add-btn">Add to cart</button></div></div>
+            <div class="homepage-product"><div class="homepage-product-img"></div><div class="homepage-product-info"><div class="homepage-product-name"></div><div class="homepage-product-name2"></div><button class="homepage-add-btn">Add to cart</button></div></div>
+            <div class="homepage-product"><div class="homepage-product-img"></div><div class="homepage-product-info"><div class="homepage-product-name"></div><div class="homepage-product-name2"></div><button class="homepage-add-btn">Add to cart</button></div></div>
+          </div>
+        </div>
+      </div>`;
+  }
+}
+
+// ===== MODULE 2 LOGIC =====
+function onHypothesisChange() {
+  const val = document.getElementById('hypothesisSelect').value;
+  const summaryBox = document.getElementById('hypothesisSummaryBox');
+  const customBox = document.getElementById('customHypothesisBox');
+
+  summaryBox.classList.add('hidden');
+  customBox.classList.add('hidden');
+
+  if (val === 'custom') {
+    customBox.classList.remove('hidden');
+  } else if (val && hypothesisText[val]) {
+    summaryBox.textContent = hypothesisText[val];
+    summaryBox.classList.remove('hidden');
+  }
+}
+
+async function generateM2() {
+  if (!apiKey) { showBannerFocus(); return; }
+
+  const val = document.getElementById('hypothesisSelect').value;
+  let hypothesis = '';
+  if (val === 'custom') {
+    hypothesis = document.getElementById('customHypothesisText').value.trim();
+    if (!hypothesis) { alert('Please enter your hypothesis.'); return; }
+  } else if (val && hypothesisText[val]) {
+    hypothesis = hypothesisText[val];
+  } else {
+    alert('Please select a hypothesis.'); return;
+  }
+
+  const btn = document.getElementById('m2GenBtn');
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
+  document.getElementById('m2Output').classList.add('hidden');
+  document.getElementById('m2Error').classList.add('hidden');
+  document.getElementById('m2Loading').classList.remove('hidden');
+
+  const systemPrompt = `You are a rigorous growth PM and experimentation expert. Given a growth hypothesis, return ONLY a valid JSON object with these exact keys:
+- experiment_type: string (e.g. "A/B test", "Holdout test", "Multi-variate test")
+- target_segment: string
+- primary_metric: string
+- secondary_metrics: array of 2-3 strings
+- guardrail_metrics: array of 2-3 strings
+- minimum_detectable_effect: string (e.g. "10% relative lift")
+- sample_size_per_variant: string (e.g. "~12,400 customers")
+- recommended_duration_days: integer
+- confidence_threshold: string (e.g. "95%")
+- baseline_conversion_rate: number (realistic percentage, e.g. 3.5)
+- control_description: string (what the control group experiences)
+- variant_description: string (what the test group experiences)
+- metric_cards: array of exactly 3 objects, each with: name, type ("primary"/"secondary"/"guardrail"), why_it_matters, how_to_measure, meaningful_lift
+- risk_flags: array of 2-4 objects, each with: name, explanation
+- sanity_check: object with: name, explanation
+
+Respond with JSON only. No markdown, no explanation.`;
+
+  const userMsg = `Hypothesis: ${hypothesis}\n\nDesign a rigorous A/B experiment for this hypothesis. Be specific and realistic.`;
+
+  try {
+    const data = await callClaude(systemPrompt, userMsg, 1200);
+    renderM2Output(data);
+
+    // Pre-fill calculator with AI values
+    if (data.baseline_conversion_rate) {
+      document.getElementById('calcBaseline').value = data.baseline_conversion_rate;
+    }
+    if (data.minimum_detectable_effect) {
+      const mdeNum = parseFloat(data.minimum_detectable_effect.replace(/[^0-9.]/g, ''));
+      if (!isNaN(mdeNum)) document.getElementById('calcMDE').value = mdeNum;
+    }
+    calcSampleSize();
+
+  } catch (err) {
+    showError('m2Error', err.message);
+  } finally {
+    document.getElementById('m2Loading').classList.add('hidden');
+    btn.disabled = false;
+    btn.textContent = 'Design this Experiment →';
+  }
+}
+
+function renderM2Output(data) {
+  document.getElementById('m2Output').classList.remove('hidden');
+
+  // Overview table
+  const rows = [
+    ['Hypothesis type', data.experiment_type || ''],
+    ['Target segment', data.target_segment || ''],
+    ['Primary metric', data.primary_metric || ''],
+    ['Secondary metrics', (data.secondary_metrics || []).join(', ')],
+    ['Guardrail metrics', (data.guardrail_metrics || []).join(', ')],
+    ['Minimum detectable effect', data.minimum_detectable_effect || ''],
+    ['Sample size per variant', data.sample_size_per_variant || ''],
+    ['Recommended duration', (data.recommended_duration_days || '') + ' days'],
+    ['Confidence threshold', data.confidence_threshold || ''],
+  ];
+  const table = document.getElementById('m2OverviewTable');
+  table.innerHTML = rows.map(([k, v]) =>
+    `<tr><td>${k}</td><td>${escHtml(v)}</td></tr>`
+  ).join('');
+
+  // Control vs Variant
+  document.getElementById('m2Control').textContent = data.control_description || '';
+  document.getElementById('m2Variant').textContent = data.variant_description || '';
+
+  // Metric cards
+  const grid = document.getElementById('m2MetricsGrid');
+  grid.innerHTML = '';
+  (data.metric_cards || []).forEach(m => {
+    const typeClass = m.type === 'primary' ? 'primary' : m.type === 'secondary' ? 'secondary' : 'guardrail';
+    const typeLabel = m.type === 'primary' ? 'Primary Metric' : m.type === 'secondary' ? 'Secondary Metric' : 'Guardrail Metric';
+    const div = document.createElement('div');
+    div.className = `metric-card ${typeClass}`;
+    div.innerHTML = `
+      <div class="metric-card-type">${typeLabel}</div>
+      <div class="metric-card-name">${escHtml(m.name || '')}</div>
+      <div class="metric-card-detail"><strong>Why:</strong> ${escHtml(m.why_it_matters || '')}</div>
+      <div class="metric-card-detail mt-4"><strong>How:</strong> ${escHtml(m.how_to_measure || '')}</div>
+      <div class="metric-card-lift">Meaningful lift: ${escHtml(m.meaningful_lift || '')}</div>`;
+    grid.appendChild(div);
+  });
+
+  // Risk flags
+  const riskList = document.getElementById('m2RiskList');
+  riskList.innerHTML = '';
+  (data.risk_flags || []).forEach(r => {
+    const div = document.createElement('div');
+    div.className = 'risk-item';
+    div.innerHTML = `<span class="risk-icon" style="color:#dc2626">⚠</span><div><strong style="color:#111827">${escHtml(r.name || '')}</strong><br><span style="color:#6b7280">${escHtml(r.explanation || '')}</span></div>`;
+    riskList.appendChild(div);
+  });
+
+  if (data.sanity_check) {
+    const div = document.createElement('div');
+    div.className = 'sanity-item';
+    div.innerHTML = `<span class="risk-icon" style="color:#d97706">✓</span><div><strong style="color:#111827">Sanity check: ${escHtml(data.sanity_check.name || '')}</strong><br><span style="color:#6b7280">${escHtml(data.sanity_check.explanation || '')}</span></div>`;
+    riskList.appendChild(div);
+  }
+}
+
+// Sample size calculator (two-proportion z-test approximation)
+function calcSampleSize() {
+  const baseline = parseFloat(document.getElementById('calcBaseline').value);
+  const mde = parseFloat(document.getElementById('calcMDE').value);
+  const sig = parseInt(document.getElementById('calcSig').value);
+
+  const nEl = document.getElementById('calcN');
+  const labelEl = document.getElementById('calcLabel');
+
+  if (isNaN(baseline) || isNaN(mde) || baseline <= 0 || mde <= 0) {
+    nEl.textContent = '—';
+    labelEl.textContent = 'Enter values above to calculate sample size';
+    return;
+  }
+
+  // Z-scores for significance levels
+  const zAlpha = { 90: 1.645, 95: 1.96, 99: 2.576 }[sig] || 1.96;
+  const zBeta = 0.842; // 80% power
+
+  const p1 = baseline / 100;
+  const p2 = p1 * (1 + mde / 100);
+
+  if (p2 >= 1) {
+    nEl.textContent = '—';
+    labelEl.textContent = 'MDE too large for this baseline rate';
+    return;
+  }
+
+  const pBar = (p1 + p2) / 2;
+  const n = Math.ceil(
+    Math.pow(zAlpha * Math.sqrt(2 * pBar * (1 - pBar)) + zBeta * Math.sqrt(p1 * (1 - p1) + p2 * (1 - p2)), 2)
+    / Math.pow(p2 - p1, 2)
+  );
+
+  nEl.textContent = n.toLocaleString();
+  labelEl.textContent = `customers per variant needed (${sig}% significance, 80% power, ${mde}% relative lift from ${baseline}% baseline)`;
+}
+
+// ===== MODULE 3 LOGIC =====
+function selectStage(stage, el, accent, bg) {
+  m3SelectedStage = stage;
+  m3StageAccent = accent;
+
+  // Update card styles
+  document.querySelectorAll('.stage-card').forEach(c => {
+    c.classList.remove('selected');
+    c.style.borderColor = '#e5e7eb';
+    c.style.background = '#ffffff';
+    c.style.borderWidth = '1px';
+  });
+  el.classList.add('selected');
+  el.style.borderColor = accent;
+  el.style.background = bg;
+  el.style.borderWidth = '2px';
+
+  // Update leak options
+  const select = document.getElementById('leakSelect');
+  select.innerHTML = '';
+  (leakOptions[stage] || []).forEach(opt => {
+    const o = document.createElement('option');
+    o.value = opt;
+    o.textContent = opt;
+    select.appendChild(o);
+  });
+}
+
+async function generateM3() {
+  if (!apiKey) { showBannerFocus(); return; }
+  if (!m3SelectedStage) { alert('Please select a growth stage first.'); return; }
+
+  const leak = document.getElementById('leakSelect').value;
+  if (!leak) { alert('Please select a leak area.'); return; }
+
+  const btn = document.getElementById('m3GenBtn');
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
+  document.getElementById('m3Output').classList.add('hidden');
+  document.getElementById('m3Error').classList.add('hidden');
+  document.getElementById('m3Loading').classList.remove('hidden');
+
+  const systemPrompt = `You are a senior growth PM specializing in retail and e-commerce customer lifecycle. Given a growth loop stage and a specific leak, return ONLY a valid JSON object with these exact keys:
+- leak_headline: string (bold 1-line diagnosis, under 12 words)
+- leak_body: string (2-3 analytical paragraphs separated by \\n\\n, written at a principal PM level — specific, insight-driven, not generic)
+- interventions: array of exactly 3 objects, each with: name, priority ("High"/"Medium"/"Quick win"), description, effort ("Low"/"Medium"/"High"), impact ("Low"/"Medium"/"High"), owner (team name)
+- feedback_loop_explanation: string (1 paragraph explaining how automated signals and actions create a self-improving loop for this specific stage)
+- metrics: array of exactly 6 objects, each with: name, stage_badge (short stage name), stage_color (hex color), benchmark (industry or internal benchmark as string), target (specific target as string), how_to_measure (brief string)
+
+Respond with JSON only. No markdown, no explanation.`;
+
+  const userMsg = `Growth stage: ${m3SelectedStage}
+Leak: ${leak}
+
+Analyze this growth leak and return the JSON.`;
+
+  try {
+    const data = await callClaude(systemPrompt, userMsg, 1200);
+    renderM3Output(data);
+  } catch (err) {
+    showError('m3Error', err.message);
+  } finally {
+    document.getElementById('m3Loading').classList.add('hidden');
+    btn.disabled = false;
+    btn.textContent = 'Analyze this Stage →';
+  }
+}
+
+function renderM3Output(data) {
+  document.getElementById('m3Output').classList.remove('hidden');
+
+  // Loop diagram
+  renderLoopDiagram(m3SelectedStage, m3StageAccent);
+
+  // Leak analysis
+  const leakEl = document.getElementById('m3LeakAnalysis');
+  leakEl.innerHTML = '';
+  const badge = document.createElement('span');
+  badge.style.cssText = `display:inline-block;background:${m3StageAccent};color:#ffffff;font-size:11px;font-weight:700;text-transform:uppercase;padding:3px 10px;border-radius:4px;margin-bottom:12px;letter-spacing:0.04em;`;
+  badge.textContent = m3SelectedStage.charAt(0).toUpperCase() + m3SelectedStage.slice(1);
+  leakEl.appendChild(badge);
+
+  const headline = document.createElement('div');
+  headline.style.cssText = 'font-size:16px;font-weight:700;color:#111827;margin-bottom:12px;';
+  headline.textContent = data.leak_headline || '';
+  leakEl.appendChild(headline);
+
+  (data.leak_body || '').split('\n\n').forEach(para => {
+    if (!para.trim()) return;
+    const p = document.createElement('p');
+    p.style.cssText = 'font-size:14px;color:#374151;line-height:1.7;margin-bottom:12px;';
+    p.textContent = para.trim();
+    leakEl.appendChild(p);
+  });
+
+  // Interventions
+  const intEl = document.getElementById('m3Interventions');
+  intEl.innerHTML = '';
+  (data.interventions || []).forEach(iv => {
+    const priorityClass = iv.priority === 'High' ? 'priority-high' : iv.priority === 'Medium' ? 'priority-medium' : 'priority-quick';
+    const card = document.createElement('div');
+    card.className = 'intervention-card';
+    card.innerHTML = `
+      <span class="priority-badge ${priorityClass}">${escHtml(iv.priority || '')}</span>
+      <div class="intervention-name">${escHtml(iv.name || '')}</div>
+      <div class="intervention-desc">${escHtml(iv.description || '')}</div>
+      <div class="intervention-meta">
+        <span><span class="meta-dot" style="background:${effortColor(iv.effort)}"></span>Effort: ${escHtml(iv.effort || '')}</span>
+        <span><span class="meta-dot" style="background:${impactColor(iv.impact)}"></span>Impact: ${escHtml(iv.impact || '')}</span>
+        <span style="color:#6b7280">Owner: ${escHtml(iv.owner || '')}</span>
+      </div>`;
+    intEl.appendChild(card);
+  });
+
+  // Feedback loop
+  document.getElementById('m3FeedbackExplain').textContent = data.feedback_loop_explanation || '';
+
+  // Metrics
+  const metricsEl = document.getElementById('m3Metrics');
+  metricsEl.innerHTML = '';
+  (data.metrics || []).forEach(m => {
+    const card = document.createElement('div');
+    card.className = 'metric-m3-card';
+    const badgeColor = m.stage_color || '#0071ce';
+    card.innerHTML = `
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <span style="background:${badgeColor};color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;text-transform:uppercase;">${escHtml(m.stage_badge || '')}</span>
+      </div>
+      <div class="metric-m3-name">${escHtml(m.name || '')}</div>
+      <div class="metric-m3-numbers">
+        <div class="metric-m3-num">Benchmark: <span>${escHtml(m.benchmark || '')}</span></div>
+        <div class="metric-m3-num">Target: <span>${escHtml(m.target || '')}</span></div>
+      </div>
+      <div class="metric-m3-detail" style="margin-top:6px;">${escHtml(m.how_to_measure || '')}</div>`;
+    metricsEl.appendChild(card);
+  });
+}
+
+function renderLoopDiagram(selectedStage, accent) {
+  const stages = [
+    { id: 'acquisition', label: 'Acquire', metrics: 'CAC · NUV rate' },
+    { id: 'activation', label: 'Activate', metrics: '2nd purchase · App dl' },
+    { id: 'engagement', label: 'Engage', metrics: 'Session freq · Cat depth' },
+    { id: 'retention', label: 'Retain', metrics: 'Churn rate · L90 active' },
+    { id: 'monetization', label: 'Monetize', metrics: 'LTV · W+ attach' }
+  ];
+
+  const W = 820, H = 200;
+  const cx = W / 2;
+  const nodeW = 110, nodeH = 56;
+  const gap = (W - 40 - stages.length * nodeW) / (stages.length - 1);
+  const startX = 20;
+  const nodeY = 80;
+
+  let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;display:block;margin:0 auto;" xmlns="http://www.w3.org/2000/svg">`;
+  svg += `<defs><marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#9ca3af"/></marker><marker id="arr-fb" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#0071ce"/></marker></defs>`;
+
+  stages.forEach((stage, i) => {
+    const x = startX + i * (nodeW + gap);
+    const isSelected = stage.id === selectedStage;
+    const fill = isSelected ? accent : '#ffffff';
+    const stroke = isSelected ? accent : '#e5e7eb';
+    const textColor = isSelected ? '#ffffff' : '#374151';
+    const sw = isSelected ? 2 : 1;
+    const scale = isSelected ? 1.15 : 1.0;
+    const cx2 = x + nodeW / 2;
+    const cy2 = nodeY + nodeH / 2;
+
+    svg += `<g transform="translate(${cx2},${cy2}) scale(${scale}) translate(${-cx2},${-cy2})">`;
+    svg += `<rect x="${x}" y="${nodeY}" width="${nodeW}" height="${nodeH}" rx="8" fill="${fill}" stroke="${stroke}" stroke-width="${sw}" filter="url(#shadow)"/>`;
+    svg += `<text x="${cx2}" y="${nodeY + 26}" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="${textColor}">${stage.label}</text>`;
+    if (stage.metrics) {
+      svg += `<text x="${cx2}" y="${nodeY + 42}" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="${isSelected ? 'rgba(255,255,255,0.8)' : '#9ca3af'}">${stage.metrics}</text>`;
+    }
+    svg += `</g>`;
+
+    // Arrow to next
+    if (i < stages.length - 1) {
+      const ax = x + nodeW + 4;
+      const nx = x + nodeW + gap - 4;
+      const ay = nodeY + nodeH / 2;
+      svg += `<line x1="${ax}" y1="${ay}" x2="${nx}" y2="${ay}" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr)"/>`;
+    }
+  });
+
+  // Feedback arrow (curved, from Monetize back to Acquire)
+  const firstX = startX + nodeW / 2;
+  const lastX = startX + (stages.length - 1) * (nodeW + gap) + nodeW / 2;
+  const curveY = nodeY + nodeH + 44;
+  svg += `<path d="M ${lastX} ${nodeY + nodeH} Q ${lastX} ${curveY} ${(firstX + lastX) / 2} ${curveY} Q ${firstX} ${curveY} ${firstX} ${nodeY + nodeH}" fill="none" stroke="#0071ce" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arr-fb)"/>`;
+  svg += `<text x="${(firstX + lastX) / 2}" y="${curveY + 14}" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#0071ce">referral / word of mouth</text>`;
+
+  svg += `</svg>`;
+
+  document.getElementById('loopDiagramWrap').innerHTML = svg;
+}
+
+function effortColor(effort) {
+  if (effort === 'Low') return '#16a34a';
+  if (effort === 'High') return '#dc2626';
+  return '#d97706';
+}
+
+function impactColor(impact) {
+  if (impact === 'High') return '#16a34a';
+  if (impact === 'Low') return '#dc2626';
+  return '#d97706';
+}
+
+// ===== SHARED UTILS =====
+async function callClaude(systemPrompt, userMsg, maxTokens) {
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: maxTokens || 1000,
+      system: systemPrompt,
+      messages: [{ role: 'user', content: userMsg }]
+    })
+  });
+
+  if (!response.ok) {
+    const errText = await response.text().catch(() => 'Unknown error');
+    let errMsg = `API error ${response.status}`;
+    try {
+      const errJson = JSON.parse(errText);
+      if (errJson.error && errJson.error.message) errMsg = errJson.error.message;
+    } catch (_) {}
+    throw new Error(errMsg);
+  }
+
+  const result = await response.json();
+  const raw = result.content?.[0]?.text || '';
+
+  // Strip markdown fences if present
+  let cleaned = raw.trim();
+  if (cleaned.startsWith('```')) {
+    cleaned = cleaned.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '').trim();
+  }
+
+  try {
+    return JSON.parse(cleaned);
+  } catch (e) {
+    throw new Error('Response was not valid JSON. Please try again.');
+  }
+}
+
+function showError(containerId, message) {
+  const el = document.getElementById(containerId);
+  el.classList.remove('hidden');
+  el.innerHTML = `
+    <div class="error-card">
+      <div class="error-card-message">
+        <div class="error-card-title">Something went wrong</div>
+        <div class="error-card-body">${escHtml(message)}</div>
+      </div>
+      <button class="btn-secondary" onclick="document.getElementById('${containerId}').classList.add('hidden')">Dismiss</button>
+    </div>`;
+}
+
+function escHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// Initialize calculator on load
+document.addEventListener('DOMContentLoaded', () => {
+  calcSampleSize();
+});
+</script>
+</body>
+</html>

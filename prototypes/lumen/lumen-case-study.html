@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lumen: The Missing Layer in Walmart's Customer Growth Engine — Sonal Singh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #ffffff;
+      color: #374151;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 60px 40px 80px;
+    }
+
+    @media (max-width: 600px) {
+      .page {
+        padding: 40px 20px 60px;
+      }
+    }
+
+    /* Header */
+    .label {
+      font-size: 12px;
+      font-weight: 500;
+      color: #0071ce;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .title {
+      font-size: 36px;
+      font-weight: 700;
+      color: #111827;
+      line-height: 1.2;
+      margin-top: 12px;
+    }
+
+    @media (max-width: 600px) {
+      .title {
+        font-size: 28px;
+      }
+    }
+
+    .subtitle {
+      font-size: 18px;
+      font-weight: 400;
+      color: #6b7280;
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      font-size: 13px;
+      color: #9ca3af;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #e5e7eb;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    .disclaimer {
+      display: inline-block;
+      background: #fef3c7;
+      color: #92400e;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 4px;
+    }
+
+    /* Section headings */
+    .section-heading {
+      font-size: 22px;
+      font-weight: 700;
+      color: #111827;
+      margin-top: 48px;
+      margin-bottom: 16px;
+    }
+
+    /* Body text */
+    p {
+      font-size: 16px;
+      line-height: 1.75;
+      color: #374151;
+      margin-bottom: 20px;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Pull quote */
+    .pull-quote {
+      border-left: 3px solid #0071ce;
+      background: #f0f7ff;
+      padding: 20px 24px;
+      font-size: 18px;
+      font-style: italic;
+      color: #374151;
+      border-radius: 0 8px 8px 0;
+      margin: 32px 0;
+      line-height: 1.55;
+    }
+
+    /* Failure modes */
+    .failure-mode {
+      border-left: 3px solid #e5e7eb;
+      padding-left: 20px;
+      margin-bottom: 36px;
+    }
+
+    .numbered-badge {
+      display: inline-block;
+      background: #0071ce;
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      letter-spacing: 0.04em;
+    }
+
+    .failure-mode-heading {
+      font-size: 18px;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 10px;
+    }
+
+    .failure-mode p {
+      margin-bottom: 0;
+    }
+
+    /* Table */
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 24px 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    thead tr {
+      background: #f9fafb;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    thead th {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #6b7280;
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    tbody td {
+      padding: 12px 14px;
+      font-size: 14px;
+      color: #374151;
+    }
+
+    /* Decision blocks */
+    .decision-block {
+      margin-bottom: 36px;
+    }
+
+    .decision-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: #0071ce;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .decision-heading {
+      font-size: 18px;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 10px;
+    }
+
+    .decision-block p {
+      margin-bottom: 0;
+    }
+
+    /* Module cards */
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    @media (max-width: 640px) {
+      .module-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .module-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 20px;
+      background: white;
+    }
+
+    .module-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 8px;
+    }
+
+    .module-desc {
+      font-size: 13px;
+      color: #6b7280;
+      line-height: 1.55;
+      margin-bottom: 12px;
+    }
+
+    .module-link {
+      color: #0071ce;
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .module-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Limitations section */
+    .real-data-label {
+      font-weight: 600;
+      font-size: 15px;
+      color: #111827;
+      margin: 20px 0 12px;
+    }
+
+    .numbered-list {
+      list-style: none;
+      counter-reset: item-counter;
+      padding-left: 0;
+    }
+
+    .numbered-list li {
+      counter-increment: item-counter;
+      display: flex;
+      gap: 14px;
+      font-size: 15px;
+      line-height: 1.7;
+      color: #374151;
+      margin-bottom: 12px;
+    }
+
+    .numbered-list li::before {
+      content: counter(item-counter);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      background: #0071ce;
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 50%;
+      margin-top: 2px;
+    }
+
+    /* Contact block */
+    .contact-block {
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .contact-name {
+      font-weight: 600;
+      font-size: 15px;
+      color: #111827;
+      margin-bottom: 4px;
+    }
+
+    .contact-link {
+      display: block;
+      font-size: 14px;
+      color: #0071ce;
+      text-decoration: none;
+      margin-bottom: 2px;
+    }
+
+    .contact-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding-top: 32px;
+      border-top: 1px solid #e5e7eb;
+      margin-top: 48px;
+    }
+
+    .footer-primary {
+      font-size: 14px;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+
+    .footer-secondary {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- Header -->
+    <div class="label">Self-Initiated Case Study</div>
+    <h1 class="title">Lumen: The Missing Layer in Walmart's Customer Growth Engine</h1>
+    <p class="subtitle">How a behavioral signals decisioning layer could close the gap between Walmart's data richness and its growth outcomes</p>
+    <div class="meta-row">
+      <span>By Sonal Singh · Principal PM</span>
+      <span>May 2026</span>
+    </div>
+    <hr class="divider" />
+    <span class="disclaimer">Speculative work — not affiliated with Walmart</span>
+
+    <!-- Section 1: The Opportunity -->
+    <h2 class="section-heading">The Opportunity</h2>
+
+    <p>Walmart is the largest retailer on earth. 255 million customers visit every week. They have more behavioral data than almost any company in the world — what people search, browse, add to carts, abandon, buy, and return, across app, web, and physical stores. The CEO has named personalization as one of three strategic AI priorities. Walmart is actively building a system to give every customer a unique homepage.</p>
+
+    <p>And yet the numbers tell a different story. 81% of customers want personalized offers. 92% feel retail still lags in delivering them. Cart abandonment on Walmart.com sits above 70%. Most in-store customers have no digital profile at all, meaning Walmart cannot reach them between visits, cannot predict when they will churn, and cannot invite them to Walmart+.</p>
+
+    <p>The gap is not data. Walmart has the data. The gap is the layer between knowing something about a customer and doing something about it — in real time, at the individual level, with the right message, on the right channel, at the right moment. That layer does not fully exist yet. That is the opportunity Lumen addresses.</p>
+
+    <blockquote class="pull-quote">
+      "The gap is not data. Walmart has the data. The gap is the layer between knowing something and doing something about it."
+    </blockquote>
+
+    <!-- Section 2: Three Failure Modes -->
+    <h2 class="section-heading">Three Ways Walmart Loses Customers It Could Have Kept</h2>
+
+    <div class="failure-mode">
+      <div class="numbered-badge">01</div>
+      <div class="failure-mode-heading">Price Sensitivity Without Detection</div>
+      <p>A customer browses electronics or apparel for 20 minutes, adds three items to the cart, and abandons. Walmart knows this happened. It does not know why. Was it shipping cost? Was the price higher than Amazon? Was it a budget issue? Without that interpretation, the follow-up action is generic — a "you left something behind" email that converts at 2-3%. A decisioning layer that interprets browse-to-abandon patterns and infers price sensitivity would send a targeted promotion to the right customer only — not everyone, which trains customers to wait for discounts.</p>
+    </div>
+
+    <div class="failure-mode">
+      <div class="numbered-badge">02</div>
+      <div class="failure-mode-heading">Decision Fatigue Without Curation</div>
+      <p>Walmart.com has tens of millions of SKUs. The paradox of choice is real — customers who cannot decide do not buy. A customer who searches "running shoes," browses 40 product pages, adds two pairs to the cart, and leaves is not indifferent. They are overwhelmed. The right action is curation: a personalized "we picked three options for you" module that collapses the decision space. Most retail platforms respond to this pattern with more exposure to more products — exactly the wrong move.</p>
+    </div>
+
+    <div class="failure-mode">
+      <div class="numbered-badge">03</div>
+      <div class="failure-mode-heading">The Unidentified In-Store Customer</div>
+      <p>90% of Walmart's revenue still comes from physical stores. A customer who visits the Bentonville supercenter twice a week, spends $150 each visit, but has never downloaded the Walmart app and has never shopped online is invisible to every personalization system. Walmart cannot reach them with a promotion, cannot predict when they will churn, cannot invite them to Walmart+. The industry calls this the identity resolution problem. The primary resolution paths — loyalty card swipe, email capture at checkout, phone number at self-checkout — are underutilized. This is not a data science problem. It is a product problem.</p>
+    </div>
+
+    <!-- Section 3: RFM -->
+    <h2 class="section-heading">RFM: The Foundation</h2>
+
+    <p>The industry standard for customer segmentation in growth teams is RFM — Recency, Frequency, Monetary value. Every serious growth team at Walmart, Amazon, and Target uses it. It is not exotic. It is the baseline. Understanding where a customer sits in RFM space is the minimum requirement for any personalization system worth building.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Dimension</th>
+          <th>What it measures</th>
+          <th>High signal</th>
+          <th>Low signal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Recency</td>
+          <td>How recently purchased</td>
+          <td>Last 7 days</td>
+          <td>90+ days</td>
+        </tr>
+        <tr>
+          <td>Frequency</td>
+          <td>How often they purchase</td>
+          <td>Weekly</td>
+          <td>Quarterly or less</td>
+        </tr>
+        <tr>
+          <td>Monetary</td>
+          <td>How much they spend</td>
+          <td>$150+ per order</td>
+          <td>Under $30</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>RFM alone is not enough. The decisioning layer must interpret combinations of signals — a customer who is high-frequency but declining in recency is a different problem than one who was always low-frequency. The model must read the trajectory, not just the snapshot. That is what makes the difference between a segmentation tool and a growth engine.</p>
+
+    <!-- Section 4: Lumen Concept -->
+    <h2 class="section-heading">Lumen: A Concept for the Decisioning Layer</h2>
+
+    <p>Lumen is a prototype of the intelligence layer that sits between Walmart's behavioral data and its customer-facing actions. It takes eight behavioral signals, interprets them at the individual level, and outputs a specific next-best action — with a recommended channel, timing, and a message that could actually be sent.</p>
+
+    <div class="decision-block">
+      <span class="decision-label">Decision 1</span>
+      <div class="decision-heading">Individual over Segment</div>
+      <p>Most personalization systems operate on segments — "users like this historically do X." Lumen is designed to operate at the individual level. A customer's signals are interpreted in combination, not in isolation. A price-sensitive customer who is also a Walmart+ member near renewal gets a completely different recommendation than a price-sensitive customer who has never heard of Walmart+.</p>
+    </div>
+
+    <div class="decision-block">
+      <span class="decision-label">Decision 2</span>
+      <div class="decision-heading">Channel Matching Is as Important as the Message</div>
+      <p>Sending the right message on the wrong channel is the same as not sending it. A push notification to a customer who primarily shops on desktop web will be ignored. An email to a customer who only uses the app will sit unread. Lumen's recommendations always include a channel and a reason — and the Walmart UI mockups in the prototype show what the touchpoint actually looks like when it lands.</p>
+    </div>
+
+    <div class="decision-block">
+      <span class="decision-label">Decision 3</span>
+      <div class="decision-heading">The Loop Must Close</div>
+      <p>A decisioning layer that does not learn is just a rules engine. Lumen is designed around a feedback loop — every action taken generates a signal, every signal updates the model. Over time, the system learns which recommendations drive engagement for which segments, and refines future recommendations automatically. This is the difference between a campaign tool and a growth engine.</p>
+    </div>
+
+    <!-- Section 5: The Prototype -->
+    <h2 class="section-heading">The Prototype</h2>
+
+    <p>Rather than writing about this problem, I built a working demonstration of what the decisioning layer could look like. Lumen has three modules, each calling a live AI model.</p>
+
+    <div class="module-grid">
+      <div class="module-card">
+        <div class="module-name">Segment Intelligence</div>
+        <p class="module-desc">Enter behavioral signals for any of six customer scenarios and receive a real-time AI recommendation including propensity scores, next-best action, channel, timing, and a sample message rendered in Walmart's UI.</p>
+        <a class="module-link" href="index.html" target="_blank">→ Open prototype</a>
+      </div>
+      <div class="module-card">
+        <div class="module-name">Experiment Designer</div>
+        <p class="module-desc">Select a growth hypothesis and generate a full experiment design with sample size, metrics, guardrails, and risk flags.</p>
+        <a class="module-link" href="index.html" target="_blank">→ Open prototype</a>
+      </div>
+      <div class="module-card">
+        <div class="module-name">Growth Loop Analyzer</div>
+        <p class="module-desc">Select a lifecycle stage, identify the leak, and receive intervention recommendations with a visualization of the feedback loop.</p>
+        <a class="module-link" href="index.html" target="_blank">→ Open prototype</a>
+      </div>
+    </div>
+
+    <!-- Section 6: Honest Limitations -->
+    <h2 class="section-heading">Honest Limitations</h2>
+
+    <p>This is speculative work. I do not have access to Walmart's actual behavioral data, experimentation infrastructure, or ML systems. The signal inputs are simplified compared to what a real customer data platform would surface. The AI responses are generated by a general-purpose language model, not a trained propensity model built on Walmart's first-party data. The accuracy of the recommendations would improve substantially with real training data and real outcome labels.</p>
+
+    <div class="real-data-label">What I would do with access to real data and systems:</div>
+
+    <ol class="numbered-list">
+      <li>Replace the eight dropdown inputs with a real-time data feed from Walmart's CDP, so the system analyzes actual customer profiles rather than manually entered signals.</li>
+      <li>Train the propensity models on historical outcome data — who actually churned, who actually upgraded to Walmart+ — rather than relying on a general-purpose language model.</li>
+      <li>Build the feedback loop as a real data pipeline: action taken, outcome recorded, model retrained on a weekly cadence.</li>
+      <li>Run a controlled experiment to measure whether Lumen's recommendations outperform the current baseline for at-risk customer retention.</li>
+    </ol>
+
+    <!-- Section 7: Why I Built This -->
+    <h2 class="section-heading">Why I Built This</h2>
+
+    <p>I applied for the Principal PM role on Walmart's Customer Growth team because the problem is genuinely hard and genuinely important. Not hard in a technical sense — the technology exists. Hard in a product sense: knowing which problem to solve first, how to instrument the right signals, how to design a system that gets smarter over time rather than requiring constant manual tuning.</p>
+
+    <p>My background is in B2B platforms and fulfillment — not consumer growth. I built Lumen to close that gap by thinking through the problem from first principles, doing the research, and building something I could actually demo rather than just describe.</p>
+
+    <p>If you are on the team working on this, I would love to talk.</p>
+
+    <div class="contact-block">
+      <div class="contact-name">Sonal Singh</div>
+      <a class="contact-link" href="mailto:sonalsingh.email@gmail.com">sonalsingh.email@gmail.com</a>
+      <a class="contact-link" href="https://linkedin.com/in/sonalsingh444" target="_blank">linkedin.com/in/sonalsingh444</a>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-primary">Lumen — Customer Growth Intelligence</div>
+      <div class="footer-secondary">A self-initiated product concept by Sonal Singh | Not affiliated with Walmart</div>
+    </footer>
+
+  </div>
+</body>
+</html>
