@@ -114,11 +114,12 @@ This happens automatically. No need to ask for it.
 - 900-1200 words
 
 ### Writing Style (All Outputs)
-- Write at a principal PM level — strategic, specific, intellectually honest
+- Write at a principal PM level: strategic, specific, intellectually honest
 - Numbers and specificity over adjectives
-- Show tradeoffs — what you chose and what you gave up
+- Show tradeoffs: what you chose and what you gave up
 - Assume the reader is a sophisticated hiring manager or CPO
 - Clean Markdown unless another format is explicitly requested
+- Never use em dashes (—) in any copy, descriptions, or content. Use commas, colons, or rephrase instead.
 
 ---
 
