@@ -161,75 +161,71 @@
       <div class="exec-summary-title">Executive Summary</div>
       <div class="exec-row">
         <div class="exec-key">The problem</div>
-        <div class="exec-val">Most retail personalization at scale is segment-based. Customers are grouped into buckets, and the bucket determines the action. The problem with segments is that they flatten the variation that matters most. A price-sensitive cart abandoner and a decision-fatigued one can look identical in aggregate. They need completely different responses. Walmart generates behavioral signals on 270 million weekly customers across app, web, and 4,700 stores. The question is whether those signals are reaching the right action, on the right channel, at the right moment, for each specific person, or whether they are being averaged into a segment response that misses too many of them.</div>
-      </div>
-      <div class="exec-row">
-        <div class="exec-key">The hypothesis</div>
-        <div class="exec-val">A decisioning layer that reads individual signals, scores propensity, selects the right channel and timing, and closes a feedback loop on outcomes would produce meaningfully better results than segment-based rules. This concept demonstrates what that layer could look like.</div>
+        <div class="exec-val">Walmart generates behavioral signals on 270 million weekly customers. Most personalization at this scale operates on segments. Segments lose the variation that matters: two customers with identical purchase histories can need completely different responses. The gap is the decisioning layer that translates individual signals into individual action.</div>
       </div>
       <div class="exec-row">
         <div class="exec-key">What Lumen is</div>
-        <div class="exec-val">A concept for the layer between Walmart's behavioral data and its customer-facing channels. It reads signals per customer, scores propensity, selects the best action and channel, and generates the message at the individual level.</div>
+        <div class="exec-val">A concept for that decisioning layer. It reads behavioral signals per customer, scores propensity, selects the best action and channel, generates the message, and closes the feedback loop so the system learns from outcomes rather than requiring manual tuning.</div>
       </div>
       <div class="exec-row">
-        <div class="exec-key">What makes it different</div>
-        <div class="exec-val">Individual-level decisions rather than segment rules. Channel selection as a first-class output, not an afterthought. A feedback loop that retrains on outcomes rather than requiring manual tuning.</div>
+        <div class="exec-key">Three principles</div>
+        <div class="exec-val">Individual-level decisions over segment rules. Channel selection as a first-class output, not an afterthought. A feedback loop that retrains on outcomes: the difference between a campaign tool and a closed-loop growth engine.</div>
       </div>
       <div class="exec-row">
         <div class="exec-key">Where to start</div>
-        <div class="exec-val">Walmart+ at-risk retention: clear intervention window, measurable outcome, high LTV stakes, and enough labeled outcome data to train a propensity model quickly. This validates the core infrastructure before expanding to cart recovery and new-customer activation.</div>
+        <div class="exec-val">Walmart+ at-risk retention. Defined intervention window, high LTV stakes, measurable outcome, and enough labeled outcome data to train a propensity model quickly. This validates the infrastructure before expanding to cart recovery and new-customer activation.</div>
       </div>
       <div class="exec-row">
-        <div class="exec-key">How to measure success</div>
-        <div class="exec-val">Three use cases, each with a primary metric: 30-day cancellation rate for at-risk Walmart+ members; cart recovery rate for high-intent abandoners; second-purchase rate for new customers within 21 days. One guardrail across all three: promo redemption rate must not rise, because discounts are not the goal.</div>
+        <div class="exec-key">How to prove it</div>
+        <div class="exec-val">Personalized savings summary sent 14 days before renewal vs. standard reminder email. Primary metric: 30-day cancellation rate for at-risk Walmart+ members. If individual-level decisioning outperforms the segment-level baseline, expand scope to Phase 2.</div>
       </div>
     </div>
 
     <!-- Section 1: The Problem -->
     <h2 class="section-heading">The Problem</h2>
 
-    <p>Walmart is the largest retailer on earth. 270 million customers visit every week.<sup>1</sup> They generate behavioral data across app, web, and 4,700 physical stores: what people search, browse, add to cart, abandon, buy, and return. CEO Doug McMillon has named personalization as one of three strategic AI priorities.<sup>2</sup> Walmart is building a system to give every customer a unique homepage. Sparky, Walmart's AI shopping assistant, is an early signal of what is possible: customers who interact with it build 35% larger baskets than those who do not.<sup>3</sup></p>
+    <p>Walmart is the largest retailer on earth. 270 million customers visit every week.<sup>1</sup> They generate behavioral data across app, web, and 4,700 physical stores: what they search, browse, add to cart, abandon, buy, and return. CEO Doug McMillon has named personalization as one of three strategic AI priorities.<sup>2</sup> Sparky, Walmart's AI shopping assistant, shows what is possible: customers who interact with it build 35% larger baskets than those who do not.<sup>3</sup></p>
 
-    <p>And yet the gap is visible. Industry research finds 80% of consumers are more likely to purchase from brands that offer personalized experiences.<sup>5</sup> And yet 92% of retailers say they already personalize effectively, while only 48% of consumers agree.<sup>6</sup> E-commerce cart abandonment averages above 70% industry-wide;<sup>4</sup> Walmart does not publicly disclose its own rate. Walmart has noted that 100+ million weekly shoppers engage with digital tools in stores,<sup>7</sup> and Walmart+ membership stands at approximately 28 million.<sup>8</sup> Walmart does not disclose what share of its 270 million weekly visitors have a linked digital profile. The distance between anonymous foot traffic and a reachable, identifiable customer is the product problem this concept is designed to address.</p>
+    <p>The personalization gap is real across the industry. 80% of consumers are more likely to purchase from brands that offer personalized experiences.<sup>5</sup> And yet 92% of retailers say they already personalize effectively, while only 48% of consumers agree.<sup>6</sup> E-commerce cart abandonment averages above 70% industry-wide.<sup>4</sup> The gap between retailer confidence and customer perception is 44 points. That is the problem.</p>
 
-    <p>There are two distinct problems. The first is identity: not every Walmart shopper can be reached digitally. Anonymous in-store transactions generate no addressable customer record. The second is decisioning: for the customers Walmart can identify, the question is whether that data is reaching the right action, on the right channel, at the right moment, for each specific person, or being averaged into a segment response that misses the variation that matters. Lumen is designed to address the second problem. The in-store identity gap is addressed separately below.</p>
+    <p>At Walmart's scale, the gap takes two forms. The first is identity: some customers, particularly those who shop only in-store, cannot be reached digitally. Walmart+ membership stands at approximately 28 million<sup>8</sup> out of 270 million weekly visitors. Walmart does not disclose what share of the rest have a linked digital profile. The second is decisioning: for the customers Walmart can identify, the question is whether their behavioral signals are reaching individual-level action, or being averaged into segment responses that miss the variation that matters. Lumen addresses the second problem. The in-store identity gap is a companion problem, addressed in its own section below.</p>
+
+    <p>Two customers with the same RFM profile (identical recency, frequency, and spending) can need completely different interventions. A price-sensitive cart abandoner needs a targeted promotion. A decision-fatigued one needs curation, not more products. Segment-level systems cannot tell them apart. Individual-level decisioning can.</p>
 
     <blockquote class="pull-quote">
       "For the customers Walmart can identify, the gap is not data. It is decisioning: knowing which signal matters, which action to take, and which channel to use, for that specific person."
     </blockquote>
 
-    <!-- Section 2: Three Failure Modes -->
-    <h2 class="section-heading">Three Places Walmart Loses Customers It Could Keep</h2>
+    <!-- Section 2: Where the Gap Shows Up -->
+    <h2 class="section-heading">Where the Gap Shows Up</h2>
 
     <div class="failure-mode">
       <div class="numbered-badge">01</div>
       <div class="failure-mode-heading">Price Sensitivity Without Detection</div>
-      <p>A customer browses electronics for 20 minutes, adds three items to the cart, and abandons. Walmart knows the event. It does not know why. Was it price? Shipping cost? A competitor? Without that interpretation, the follow-up is a generic "you left something behind" email that converts at 2-3%. A decisioning layer that infers price sensitivity from browse-to-abandon patterns sends a targeted promotion to the right customer, not everyone. Blanketing discounts trains customers to wait for them.</p>
+      <p>A customer browses electronics for 20 minutes, adds three items to the cart, and abandons. Walmart knows the event. It does not know why. Was it price? Shipping cost? A competitor? Without that interpretation, the follow-up is a generic reminder that converts at 2-3%. A decisioning layer that infers price sensitivity from browse-to-abandon patterns sends a targeted promotion to the right customer, not everyone. Blanketing discounts trains customers to wait for them.</p>
     </div>
 
     <div class="failure-mode">
       <div class="numbered-badge">02</div>
       <div class="failure-mode-heading">Decision Fatigue Without Curation</div>
-      <p>Walmart.com has tens of millions of SKUs. A customer who searches "running shoes," browses 40 product pages, adds two pairs to the cart, and leaves is not indifferent. They are overwhelmed. The right response is curation: a "we picked three for you" module that collapses the decision space. Most platforms respond with more product exposure. That is the wrong move, and the data shows it in session abandonment rates.</p>
+      <p>Walmart.com has tens of millions of SKUs. A customer who searches "running shoes," browses 40 product pages, adds two pairs to the cart, and leaves is not indifferent. They are overwhelmed. The right response is curation: a "we picked three for you" module that collapses the decision space. Most systems respond with more product exposure. That is the wrong move, and it shows in session abandonment rates.</p>
     </div>
 
     <div class="failure-mode">
       <div class="numbered-badge">03</div>
       <div class="failure-mode-heading">The Unidentified In-Store Customer</div>
-      <p>In-store shopping still drives over 80% of Walmart's sales.<sup>1</sup> A customer who shops in-store twice a week, spends $150 per visit, and has never touched the app is invisible to every personalization system. Walmart cannot promote to them, cannot predict churn, cannot convert them to Walmart+. This is the identity resolution problem, and the paths that solve it (email capture, phone number at checkout, app download) are underutilized. This is not a data science gap. It is a product gap.</p>
+      <p>In-store shopping drives over 80% of Walmart's sales.<sup>1</sup> A customer who shops twice a week, spends $150 per visit, and has never used the app is invisible to every personalization system. Walmart cannot promote to them, cannot predict churn, and cannot invite them to Walmart+. This is the identity resolution problem. The approaches to solving it are product decisions, not data science ones. They are addressed in the in-store identity section below.</p>
     </div>
 
-    <!-- Section 3: What Makes Lumen Different -->
-    <h2 class="section-heading">What Makes Lumen Different</h2>
+    <!-- Section 3: The Decisioning Layer -->
+    <h2 class="section-heading">Lumen: The Decisioning Layer</h2>
 
-    <p>Most personalization systems at retailers operate on segments. A customer falls into a bucket ("lapsed grocery buyer," "high-AOV at-risk") and the bucket determines the action. Segments are a useful starting point, but they collapse the variance that matters most.</p>
-
-    <p>Two customers can share identical RFM scores and need completely different interventions. A price-sensitive customer near Walmart+ renewal gets a different recommendation than a price-sensitive customer who has never heard of Walmart+. Segment-level systems cannot distinguish them. Individual-level decisioning can.</p>
+    <p>Lumen is a concept for the layer between Walmart's behavioral data and its customer-facing channels. It reads signals per customer, scores propensity to act, selects the best action and channel for that specific person, and generates the message. Every action taken produces an outcome signal. Every outcome signal feeds back into the model. The system learns from what worked and refines future decisions without manual tuning. That is what makes it a closed-loop growth engine rather than a campaign scheduler.</p>
 
     <div class="decision-block">
       <span class="decision-label">Principle 1</span>
       <div class="decision-heading">Individual over segment</div>
-      <p>Lumen reads eight signals per customer and interprets them in combination. The decision is made at the individual level, not mapped to a pre-defined bucket.</p>
+      <p>Lumen reads behavioral signals per customer and interprets them in combination. The decision is made at the individual level, not mapped to a pre-defined bucket. Two customers in the same segment can receive different recommendations if their signals point in different directions.</p>
     </div>
 
     <div class="decision-block">
@@ -241,13 +237,13 @@
     <div class="decision-block">
       <span class="decision-label">Principle 3</span>
       <div class="decision-heading">The loop must close</div>
-      <p>A decisioning layer that does not learn is a rules engine with extra steps. Every action taken by Lumen generates a signal. Every signal feeds back into the model. Over time the system learns which recommendations work for which customers and refines future decisions automatically. That is the difference between a campaign tool and a growth engine.</p>
+      <p>A decisioning layer that does not learn is a rules engine with extra steps. Every action Lumen takes generates a signal. Every signal feeds back into the model. Over time the system learns which recommendations work for which customers and refines future decisions automatically.</p>
     </div>
 
-    <!-- Section: RFM Foundation -->
-    <h2 class="section-heading">The Signal Framework</h2>
+    <!-- Section 4: Signal Foundation -->
+    <h2 class="section-heading">The Signal Foundation</h2>
 
-    <p>The foundation is RFM: Recency, Frequency, Monetary value. Every serious growth team at Walmart, Amazon, and Target uses it. It is not novel. It is the baseline that any personalization system must start from.</p>
+    <p>The baseline is RFM: Recency, Frequency, Monetary value. Every serious growth team at Walmart, Amazon, and Target uses it. It is the floor, not the ceiling.</p>
 
     <table>
       <thead>
@@ -260,59 +256,59 @@
       </tbody>
     </table>
 
-    <p>RFM alone is not enough. What matters is trajectory, not snapshot. A customer who was weekly and is now monthly is a different problem than one who has always been monthly. The decisioning layer must read the direction of change, not just the current position.</p>
+    <p>RFM captures position, not trajectory. A customer who was weekly and is now monthly is a different problem than one who has always been monthly. The first is an emerging churn risk. The second is a baseline. The decisioning layer must read the direction of change, not just the current snapshot, to tell them apart.</p>
 
-    <!-- Section: How This Would Ship at Walmart -->
+    <!-- Section 5: How This Would Ship -->
     <h2 class="section-heading">How This Would Ship at Walmart</h2>
 
-    <p>The decisioning layer is not a standalone product. It is infrastructure that sits between existing systems. Here is how it would actually get built.</p>
+    <p>Lumen is infrastructure, not a campaign. It connects systems Walmart already has. The PM owns the product spec and the experiment roadmap. Engineering owns the data pipeline. Data Science owns the propensity models.</p>
 
     <div class="ship-grid">
       <div class="ship-card">
         <div class="ship-card-title">Where it lives in the org</div>
-        <div class="ship-card-body">Customer Growth team, sitting under Walmart Connect or the broader CRM and Personalization function. PM owns the product spec and experiment roadmap. Engineering owns the pipeline. Data Science owns the propensity models.</div>
+        <div class="ship-card-body">Customer Growth team, under the CRM and Personalization function. Sits at the intersection of the four disciplines in the team's charter: AI/ML personalization, experimentation, customer data intelligence, and lifecycle engagement.</div>
       </div>
       <div class="ship-card">
         <div class="ship-card-title">Systems it connects to</div>
-        <div class="ship-card-body">Customer Data Platform (behavioral events, purchase history, app engagement), marketing automation (email, push, SMS), homepage personalization engine, Walmart+ membership data, and the experimentation platform.</div>
+        <div class="ship-card-body">Customer Data Platform (behavioral events, purchase history, app engagement), marketing automation (email, push, SMS), homepage personalization engine, Walmart+ membership data, and the A/B experimentation platform.</div>
       </div>
       <div class="ship-card">
         <div class="ship-card-title">Data it needs</div>
-        <div class="ship-card-body">Individual-level behavioral events (browse, cart, purchase, return), channel engagement signals (email opens, push opt-in, app vs. web session share), Walmart+ status and renewal date, and labeled outcome data (who churned, who upgraded).</div>
+        <div class="ship-card-body">Individual-level behavioral events streamed from app and web (browse, cart, purchase, return), channel engagement signals (email open rates, push opt-in status, session share by surface), Walmart+ renewal date and benefit usage, and labeled outcome data: who churned, who purchased again, who upgraded.</div>
       </div>
       <div class="ship-card">
         <div class="ship-card-title">Teams it depends on</div>
-        <div class="ship-card-body">CDP / Data Platform (event ingestion), ML Science (propensity models), MarTech (channel execution), App and Web (surface rendering), Legal and Privacy (consent and data use), and Marketing Operations (message QA and compliance).</div>
+        <div class="ship-card-body">CDP and Data Platform (event ingestion and identity resolution), ML Science (propensity model training and evaluation), MarTech (channel execution and suppression rules), App and Web (surface rendering), Legal and Privacy (consent and data use governance).</div>
       </div>
     </div>
 
-    <!-- Section: 3-Phase Rollout -->
-    <h2 class="section-heading">Three-Phase Rollout Plan</h2>
+    <!-- Section 6: Rollout -->
+    <h2 class="section-heading">Three-Phase Rollout</h2>
 
-    <p>Start narrow, validate fast, expand with evidence. The worst mistake is building a full decisioning platform before proving that individual-level recommendations outperform segment-level ones.</p>
+    <p>Start narrow. Prove the core claim before expanding scope: that individual-level recommendations outperform segment-level ones. Each phase adds a use case only after the previous one is validated.</p>
 
     <div class="phase-block">
       <div class="phase-label">Phase 1: Months 1–4</div>
       <div class="phase-heading">Walmart+ At-Risk Retention</div>
       <div class="phase-meta">
         <span class="phase-tag tag-metrics">Primary metric: 30-day cancellation rate</span>
-        <span class="phase-tag tag-dep">Depends on: CDP, Walmart+ data, email/push channels</span>
+        <span class="phase-tag tag-dep">Depends on: CDP, Walmart+ data, email and push channels</span>
         <span class="phase-tag tag-risk">Risk: Model accuracy without sufficient labeled data</span>
       </div>
-      <p>Focus entirely on one use case: members showing early disengagement signals (declining session frequency, reduced purchases, low benefit usage) who are within 60 days of renewal. The business case is clear: Walmart+ LTV is high, churn is costly, and the intervention window is defined. Build one propensity model. Run one experiment. Prove that personalized outreach beats the standard renewal reminder.</p>
-      <p>This phase validates the core infrastructure: can we identify the right customers, select the right action, deliver on the right channel, and measure the outcome? Everything else depends on this working.</p>
+      <p>One use case: members showing disengagement signals (declining session frequency, no purchase in 45+ days, low benefit usage) who are within 60 days of renewal. The business case is clear: Walmart+ LTV is high, churn is costly, and the intervention window is defined. Build one propensity model. Run one experiment. Prove that a personalized retention message beats the standard renewal reminder.</p>
+      <p>This phase validates the infrastructure: can Lumen identify the right customers, select the right action, deliver on the right channel, and measure the outcome? Phase 2 depends on this working.</p>
     </div>
 
     <div class="phase-block">
       <div class="phase-label">Phase 2: Months 5–10</div>
       <div class="phase-heading">Cart Recovery and New Customer Activation</div>
       <div class="phase-meta">
-        <span class="phase-tag tag-metrics">Primary metrics: Cart recovery rate, 2nd purchase rate</span>
+        <span class="phase-tag tag-metrics">Primary metrics: Cart recovery rate, second-purchase rate</span>
         <span class="phase-tag tag-dep">Depends on: Session-level event streaming, A/B infra at scale</span>
-        <span class="phase-tag tag-risk">Risk: Channel saturation if recommendations overlap with existing campaigns</span>
+        <span class="phase-tag tag-risk">Risk: Recommendation overlap with existing marketing automation</span>
       </div>
-      <p>Expand to two additional use cases. Cart recovery: use browse-to-abandon signals to infer the reason (price sensitivity, decision fatigue, friction) and send a differentiated response, not a generic reminder. New customer activation: identify the moment when a first-time buyer is most likely to purchase again and intervene with a curated recommendation in their top category.</p>
-      <p>By this point the infrastructure is proven. The focus shifts to model quality and channel coordination: making sure the decisioning layer does not conflict with existing marketing automation rules.</p>
+      <p>Two additional use cases. Cart recovery: use browse-to-abandon signals to infer the reason (price sensitivity, decision fatigue, friction) and send a differentiated response, not a generic reminder. New customer activation: identify the moment when a first-time buyer is most likely to purchase again and intervene with a curated recommendation in their top category.</p>
+      <p>The infrastructure is proven. The focus shifts to model quality and channel coordination: ensuring Lumen's decisions do not conflict with existing campaign logic.</p>
     </div>
 
     <div class="phase-block">
@@ -323,16 +319,14 @@
         <span class="phase-tag tag-dep">Depends on: Real-time event streaming, full channel integration</span>
         <span class="phase-tag tag-risk">Risk: Model drift at scale, governance of automated decisions</span>
       </div>
-      <p>Extend decisioning across the full customer lifecycle: acquisition-to-activation, engagement deepening, lapsed customer recovery, and Walmart+ upgrade nudges. At this stage the feedback loop is operational: every action taken generates a labeled outcome, the model retrains on a weekly cadence, and recommendation quality improves without manual intervention.</p>
-      <p>The goal of Phase 3 is not a wider campaign. It is a self-improving system that gets more accurate over time and requires less manual tuning to operate.</p>
+      <p>Extend decisioning across the full customer lifecycle: acquisition-to-activation, engagement deepening, lapsed customer recovery, and Walmart+ upgrade nudges. At this stage the feedback loop is fully operational. Every action generates a labeled outcome. The model retrains on a weekly cadence. Recommendation quality improves without manual intervention.</p>
+      <p>The goal of Phase 3 is not a wider campaign. It is a self-improving system: the closed-loop growth engine the team's charter describes.</p>
     </div>
 
-    <!-- Section: In-Store Identity -->
+    <!-- Section 7: In-Store Identity -->
     <h2 class="section-heading">Solving In-Store Identity</h2>
 
-    <p>The in-store customer problem is a product problem, not a data science problem. The data exists (store visit frequency, category spend, transaction size) but it is locked behind anonymous transactions. The work is building the product flows that capture consent-based identity without creating friction that breaks the checkout experience.</p>
-
-    <p>Five concrete approaches, in order of least to most friction:</p>
+    <p>The in-store identity gap is a product problem. The data exists (transaction records, category spend, visit frequency) but it sits behind anonymous transactions. The work is building product flows that capture consent-based identity without adding friction at checkout. Five concrete approaches, in order of least to most friction:</p>
 
     <div class="instore-grid">
       <div class="instore-item">
@@ -346,8 +340,8 @@
       <div class="instore-item">
         <div class="instore-icon">2</div>
         <div class="instore-content">
-          <div class="instore-title">Scan & Go as the app download driver</div>
-          <div class="instore-desc">Position Scan & Go not as a convenience feature but as the identity capture mechanism. Every Scan & Go session is an authenticated app user. The in-store UX should make Scan & Go the default path for regular shoppers.</div>
+          <div class="instore-title">Scan &amp; Go as the app download driver</div>
+          <div class="instore-desc">Position Scan &amp; Go not as a convenience feature but as the identity capture mechanism. Every Scan &amp; Go session is an authenticated app user. The in-store UX should make Scan &amp; Go the default path for regular shoppers.</div>
           <div class="instore-tradeoff">Tradeoff: Requires associate training and store-level rollout. Works best in high-traffic urban stores first.</div>
         </div>
       </div>
@@ -377,16 +371,16 @@
       </div>
     </div>
 
-    <!-- Section: Success Metrics -->
+    <!-- Section 8: Measuring Success -->
     <h2 class="section-heading">How Success Gets Measured</h2>
 
-    <p>Metrics must be chosen before the experiment runs, not after. The primary metric drives the go/no-go decision. Secondary metrics explain the mechanism. Guardrails exist to prevent optimizing one number at the expense of something that matters.</p>
+    <p>Metrics are chosen before the experiment runs, not after. The primary metric drives the go/no-go decision. Secondary metrics explain the mechanism. Guardrails protect against optimizing one number at the expense of something that matters.</p>
 
     <div class="metrics-grid">
       <div class="metric-card primary">
         <div class="metric-type">Primary</div>
         <div class="metric-name">30-day W+ cancellation rate</div>
-        <div class="metric-desc">Measures whether at-risk members who receive a personalized recommendation are less likely to cancel than those who receive the standard renewal flow.</div>
+        <div class="metric-desc">Measures whether at-risk members who receive a personalized recommendation cancel at a lower rate than those who receive the standard renewal flow.</div>
       </div>
       <div class="metric-card primary">
         <div class="metric-type">Primary</div>
@@ -395,7 +389,7 @@
       </div>
       <div class="metric-card primary">
         <div class="metric-type">Primary</div>
-        <div class="metric-name">2nd purchase rate (new customers)</div>
+        <div class="metric-name">Second-purchase rate</div>
         <div class="metric-desc">Among first-time buyers who receive a personalized activation nudge, the rate of a second purchase within 21 days.</div>
       </div>
       <div class="metric-card secondary">
@@ -411,7 +405,7 @@
       <div class="metric-card guardrail">
         <div class="metric-type">Guardrail</div>
         <div class="metric-name">Promo redemption rate</div>
-        <div class="metric-desc">Must not increase beyond 5% relative to baseline. If customers are converting only because of discounts, the model is training the wrong behavior.</div>
+        <div class="metric-desc">Must not increase beyond 5% relative to baseline. Customers converting only because of discounts means the model is training the wrong behavior.</div>
       </div>
     </div>
 
@@ -451,36 +445,36 @@
       </div>
     </div>
 
-    <!-- Section: The Prototype -->
+    <!-- Section 9: The Prototype -->
     <h2 class="section-heading">The Prototype</h2>
 
-    <p>Rather than describing the concept, I built a working version of what the decisioning layer could look like. Lumen has three modules, each making live calls to an AI model.</p>
+    <p>Rather than describing the concept, I built a working version. Lumen has three modules, each making live calls to an AI model.</p>
 
     <div class="module-grid">
       <div class="module-card">
         <div class="module-name">Segment Intelligence</div>
         <p class="module-desc">Enter behavioral signals for any of six customer scenarios. Receive a real-time AI recommendation with propensity scores, next-best action, channel, timing, and a sample message rendered in Walmart's UI.</p>
-        <a class="module-link" href="index.html" target="_blank">→ Open prototype</a>
+        <a class="module-link" href="index.html" target="_blank">Open prototype</a>
       </div>
       <div class="module-card">
         <div class="module-name">Experiment Designer</div>
         <p class="module-desc">Select a growth hypothesis. Generate a full experiment design: sample size, control vs. variant, success metrics, guardrails, and risk flags.</p>
-        <a class="module-link" href="index.html" target="_blank">→ Open prototype</a>
+        <a class="module-link" href="index.html" target="_blank">Open prototype</a>
       </div>
       <div class="module-card">
         <div class="module-name">Growth Loop Analyzer</div>
         <p class="module-desc">Select a lifecycle stage and identify the leak. Receive targeted interventions, a feedback loop visualization, and a metrics dashboard to instrument.</p>
-        <a class="module-link" href="index.html" target="_blank">→ Open prototype</a>
+        <a class="module-link" href="index.html" target="_blank">Open prototype</a>
       </div>
     </div>
 
-    <!-- Section: Honest Limitations -->
+    <!-- Section 10: Honest Limitations -->
     <h2 class="section-heading">Honest Limitations</h2>
 
     <p>This is speculative work. The signal inputs are simplified. The AI responses come from a general-purpose language model, not a propensity model trained on Walmart's first-party outcome data. The recommendations would be materially better with real data and real feedback loops.</p>
 
     <ul class="limitations-list">
-      <li><span class="lim-dot"></span><span>The eight dropdown fields are a proxy for a real CDP feed. A production system reads continuous event streams, not manually entered values.</span></li>
+      <li><span class="lim-dot"></span><span>The eight dropdown fields are a proxy for a real CDP event stream. A production system reads continuous behavioral events, not manually entered values.</span></li>
       <li><span class="lim-dot"></span><span>Propensity scores from an LLM are directionally reasonable but not calibrated. Real scores require training on labeled outcome data: who actually churned, who actually upgraded.</span></li>
       <li><span class="lim-dot"></span><span>The feedback loop is described, not implemented. Productionizing it requires a real data pipeline: action logged, outcome labeled, model retrained on cadence.</span></li>
       <li><span class="lim-dot"></span><span>Channel recommendations do not account for suppression rules, frequency caps, or opt-out status, all of which a production system must respect.</span></li>
@@ -495,12 +489,12 @@
       <li>Run the Walmart+ at-risk retention experiment described above and use the results to validate whether the decisioning layer beats the baseline before expanding scope.</li>
     </ol>
 
-    <!-- Section: Why I Built This -->
+    <!-- Section 11: Why I Built This -->
     <h2 class="section-heading">Why I Built This</h2>
 
     <p>I applied for the Principal PM role on Walmart's Customer Growth team because the problem is genuinely hard. Not technically. The technology exists. Hard in a product sense: knowing which signal matters, which intervention to run first, how to design a system that gets smarter without constant manual tuning.</p>
 
-    <p>My background is in B2B platforms and fulfillment, not consumer growth. I built Lumen to close that gap: to think through the problem from first principles and build something I could demonstrate rather than just describe.</p>
+    <p>My background is in B2B platforms and fulfillment operations, not consumer growth. I built Lumen to close that gap: to think through the problem from first principles and build something I could demonstrate rather than just describe.</p>
 
     <p>If you are working on this problem, I would like to talk.</p>
 
