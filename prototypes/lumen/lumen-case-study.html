@@ -123,27 +123,27 @@
       <div class="exec-summary-title">Executive Summary</div>
       <div class="exec-row">
         <div class="exec-key">The problem</div>
-        <div class="exec-val">Walmart knows which customers are drifting toward cancellation, which first-time buyers haven't returned, and which cart abandoners were one nudge away from buying. That data exists. What doesn't exist is a consistent layer that turns those signals into action. The result is generic messaging, missed retention windows, and customer relationships that decay when they didn't have to.</div>
+        <div class="exec-val">Walmart already knows which customers are close to canceling, which first-time buyers have not come back, and which cart abandoners were one step away from purchasing. That data exists. But there is no layer that consistently turns those signals into action. The result is generic messaging, missed moments, and customers who drift away when they did not have to.</div>
       </div>
       <div class="exec-row">
         <div class="exec-key">What Lumen is</div>
-        <div class="exec-val">A decisioning layer between Walmart's behavioral data and its customer channels. For each identified customer, it reads signals, scores the likelihood of a specific outcome, selects the best action and channel, generates the message, and logs the result. Every outcome becomes a training signal. The system improves without manual tuning.</div>
+        <div class="exec-val">A layer that sits between Walmart's customer data and its communication channels. For each identified customer, it reads behavioral signals, picks the best action and channel, and sends the right message. Every result feeds back in, so the system gets better over time without anyone tuning it by hand.</div>
       </div>
       <div class="exec-row">
         <div class="exec-key">Where to start</div>
-        <div class="exec-val">Walmart+ at-risk retention. When a high-value member stops engaging in the 60 days before renewal, there is a defined window to act. The outcome is binary, the signal is readable, and labeled historical data exists to train a model. Proving this use case validates the infrastructure that every subsequent use case depends on.</div>
+        <div class="exec-val">Walmart+ members who are at risk of canceling. When a high-value member stops engaging before their renewal date, there is a clear window to act. The signal is readable, the outcome is easy to measure, and Walmart already has the historical data to train a model. Getting this right also builds the foundation that every other use case depends on.</div>
       </div>
     </div>
 
     <!-- The Problem -->
     <h2 class="section-heading">The Problem</h2>
 
-    <p>Walmart collects behavioral data at scale: 270 million customers every week across app, web, and 4,700 stores.<sup>1</sup> Early results from Sparky, Walmart's AI shopping assistant, show what acting on those signals can unlock: users build 35% larger baskets than non-users.<sup>2</sup> But industry research points to a persistent gap between data collected and value delivered: 92% of retailers believe they personalize effectively; only 48% of consumers agree.<sup>3</sup> The problem is not collection. It is what happens after.</p>
+    <p>Walmart has 270 million customers every week across its app, website, and 4,700 stores.<sup>1</sup> Early results from Sparky, Walmart's AI shopping assistant, show what is possible when signals are actually used. Customers who interact with Sparky build baskets that are 35% larger than those who do not.<sup>2</sup> But industry research shows a gap between what retailers think they are doing and what customers actually experience. 92% of retailers say they personalize effectively. Only 48% of consumers agree.<sup>3</sup> More data collection is not the answer. The problem is what happens with the data that already exists.</p>
 
-    <p>Three gaps sit between Walmart's data and individual-level customer action. The <strong>data gap</strong> is not the constraint: behavioral signals exist at scale across every channel. The <strong>identity gap</strong> is real: a portion of in-store shoppers have no linked digital profile and generate no addressable record.<sup>4</sup> Lumen does not solve this directly, though practical approaches exist and are covered below. The <strong>decisioning gap</strong> is the actual opportunity: for the customers Walmart can already identify, those signals are not consistently becoming individual-level action. That is the problem Lumen is designed to address.</p>
+    <p>There are three gaps between having customer data and acting on it. The first is data collection, and that is not Walmart's problem. The second is identity. Some in-store shoppers have no linked account, so Walmart cannot reach them directly.<sup>4</sup> Lumen does not solve this, though practical approaches exist and are covered below. The third gap is decisioning. For the customers Walmart can already identify, their behavioral signals are not consistently turning into individual action. That is the gap Lumen addresses.</p>
 
     <blockquote class="pull-quote">
-      "For the customers Walmart can identify, the gap is not data. It is decisioning: knowing which signal matters, which action to take, and which channel to use, for that specific person."
+      "For the customers Walmart can already identify, the gap is not data. It is decisioning. Knowing which signal matters, which action to take, and which channel to use, for that specific person."
     </blockquote>
 
     <!-- Where the Gap Shows Up -->
@@ -164,7 +164,7 @@
     <!-- Lumen: The Decisioning Layer -->
     <h2 class="section-heading">Lumen: The Decisioning Layer</h2>
 
-    <p>Lumen reads behavioral signals, scores propensity, selects the right action and channel, generates the message, and logs the outcome. Signal velocity matters as much as signal presence: a customer trending from weekly to monthly visits is a different risk than one who has always been monthly. Every outcome feeds back into the model without manual tuning.</p>
+    <p>Lumen reads a customer's behavioral signals, scores the likelihood of a specific outcome, picks the best action and channel, and sends the message. It also looks at how signals are changing over time, not just what they are today. A customer whose visits have dropped from weekly to monthly is a different kind of risk than someone who has always visited monthly. Every outcome feeds back into the model. The system improves on its own.</p>
 
     <div class="decision-block">
       <span class="decision-label">Principle 1</span>
@@ -198,7 +198,7 @@
       </div>
       <div class="ship-card">
         <div class="ship-card-title">Data it needs</div>
-        <div class="ship-card-body">Individual behavioral events, channel engagement signals, Walmart+ renewal dates and benefit usage, and labeled outcomes: who churned, purchased again, or upgraded.</div>
+        <div class="ship-card-body">Individual behavioral events, channel engagement signals, Walmart+ renewal dates and benefit usage, and labeled outcome data showing who churned, purchased again, or upgraded.</div>
       </div>
       <div class="ship-card">
         <div class="ship-card-title">Teams it depends on</div>
@@ -217,7 +217,7 @@
         <span class="phase-tag tag-dep">Depends on: CDP, Walmart+ data, email and push</span>
         <span class="phase-tag tag-risk">Risk: Model accuracy without sufficient labeled data</span>
       </div>
-      <p>Target Walmart+ members showing disengagement within 60 days of renewal. One propensity model, one experiment: does a personalized message beat the standard renewal reminder?</p>
+      <p>Focus on Walmart+ members who have stopped engaging in the 60 days before their renewal. Build one model. Run one experiment. Does a personalized message work better than the standard renewal reminder?</p>
     </div>
 
     <div class="phase-block">
@@ -239,20 +239,20 @@
         <span class="phase-tag tag-dep">Depends on: Real-time event streaming, full channel integration</span>
         <span class="phase-tag tag-risk">Risk: Model drift at scale, governance of automated decisions</span>
       </div>
-      <p>Decisioning expands across the full lifecycle: activation, engagement, lapsed recovery, and upgrade nudges. The model retrains weekly on labeled outcomes from every action Lumen takes.</p>
+      <p>Expand across the full customer lifecycle, from new buyers to lapsed shoppers to Walmart+ upgrade candidates. The model retrains weekly using the outcome of every action Lumen has taken.</p>
     </div>
 
     <!-- In-Store Identity -->
     <h2 class="section-heading">Solving In-Store Identity</h2>
 
-    <p>In-store drives over 80% of Walmart's sales.<sup>1</sup> Most of those transactions are anonymous. Three practical approaches to close the gap, each at a different friction level:</p>
+    <p>More than 80% of Walmart's sales happen in-store.<sup>1</sup> Most of those transactions are anonymous. There are three practical ways to close that gap, each requiring a different level of customer effort.</p>
 
     <div class="instore-grid">
       <div class="instore-item">
         <div class="instore-icon">1</div>
         <div class="instore-content">
           <div class="instore-title">Phone number at checkout</div>
-          <div class="instore-desc">Bridges anonymous shoppers to a behavioral profile. The prompt already exists at many stores. The incentive needs to be stronger: a coupon converts better than "get your receipt by text."</div>
+          <div class="instore-desc">This connects an anonymous shopper to a behavioral profile. The prompt already exists at many stores. The incentive just needs to be stronger. A coupon converts better than an offer to get a digital receipt.</div>
         </div>
       </div>
       <div class="instore-item">
@@ -274,7 +274,7 @@
     <!-- Measuring Success -->
     <h2 class="section-heading">How Success Gets Measured</h2>
 
-    <p>Metrics are defined before experiments run. Primary metrics drive go/no-go decisions. Secondary metrics explain the mechanism. The guardrail prevents discount conditioning.</p>
+    <p>All metrics are set before any experiment runs. Primary metrics determine whether the approach is working. Secondary metrics explain why. The guardrail makes sure results are not driven purely by discounts.</p>
 
     <div class="metrics-grid">
       <div class="metric-card primary">
@@ -316,7 +316,7 @@
 
     <div class="proto-box">
       <div class="proto-box-title">Segment Intelligence</div>
-      <div class="proto-box-desc">Six customer scenarios: new customer, at-risk, lapsed, browsing, Walmart+ renewal risk, price-sensitive. Each shows what the decisioning layer would surface for that individual.</div>
+      <div class="proto-box-desc">Six customer scenarios to choose from. New customer, at-risk, lapsed, browsing, Walmart+ renewal risk, and price-sensitive. Each one shows what the decisioning layer would surface for that individual.</div>
       <a class="proto-link" href="index.html" target="_blank">Open prototype</a>
     </div>
 
@@ -326,15 +326,15 @@
     <p>This is speculative work built without access to Walmart's data or systems.</p>
 
     <ul class="limitations-list">
-      <li><span class="lim-dot"></span><span>Propensity scores are directionally reasonable but not calibrated. Real scores require labeled outcome data: who churned, who upgraded, and what signals preceded each.</span></li>
-      <li><span class="lim-dot"></span><span>The feedback loop is described, not implemented. Closing it in production requires a real pipeline: action logged, outcome labeled, model retrained on cadence.</span></li>
+      <li><span class="lim-dot"></span><span>The propensity scores shown are directionally reasonable but not based on real data. Building accurate scores would require Walmart's own historical data showing who actually churned, who upgraded, and what signals came before each outcome.</span></li>
+      <li><span class="lim-dot"></span><span>The feedback loop is described but not built. Making it work in production requires a full data pipeline where each action is logged, the outcome is labeled, and the model retrains on a regular cadence.</span></li>
     </ul>
 
     <!-- Sources -->
     <h2 class="section-heading">Sources</h2>
     <ol class="numbered-list">
       <li>Walmart Inc. Annual Report (FY2026). 270 million weekly customers; e-commerce represents 18% of net sales. Walmart Investor Relations.</li>
-      <li>Modern Retail (2025). Walmart's Sparky AI shopping assistant: users build 35% larger baskets than non-users.</li>
+      <li>Modern Retail (2025). Walmart's Sparky AI shopping assistant. Users build 35% larger baskets than non-users.</li>
       <li>Deloitte. Consumer Products and Retail Industry Report (2024). 92% of retailers believe they personalize effectively; 48% of consumers agree.</li>
       <li>Morgan Stanley Research (January 2026). Walmart+ membership approximately 28.4 million. Members shop 2x more frequently and spend 3x as much as non-members.</li>
     </ol>
