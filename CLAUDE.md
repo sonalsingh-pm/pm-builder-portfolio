@@ -86,6 +86,13 @@ This happens automatically. No need to ask for it.
 
 ---
 
+## Git and Deployment Rules
+
+- Commit changes locally as needed, but do NOT push to GitHub automatically.
+- Only push to GitHub when explicitly told: "push to GitHub" or "deploy."
+
+---
+
 ## Hard Rules — Apply to Every Output
 
 ### PRDs
