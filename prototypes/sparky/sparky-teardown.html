@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sparky Product Teardown: Walmart's AI Shopping Assistant | Sonal Singh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body { font-family: 'Inter', sans-serif; background: #ffffff; color: #374151; -webkit-font-smoothing: antialiased; }
+
+    .page { max-width: 720px; margin: 0 auto; padding: 60px 40px 80px; }
+
+    @media (max-width: 600px) { .page { padding: 40px 20px 60px; } }
+
+    .label { font-size: 12px; font-weight: 500; color: #0071ce; text-transform: uppercase; letter-spacing: 0.08em; }
+    .title { font-size: 36px; font-weight: 700; color: #111827; line-height: 1.2; margin-top: 12px; }
+    @media (max-width: 600px) { .title { font-size: 26px; } }
+    .subtitle { font-size: 18px; font-weight: 400; color: #6b7280; margin-top: 12px; line-height: 1.5; }
+    .meta-row { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; font-size: 13px; color: #9ca3af; }
+    .divider { border: none; border-top: 1px solid #e5e7eb; margin: 20px 0; }
+    .disclaimer { display: inline-block; background: #fef3c7; color: #92400e; font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 4px; }
+
+    .section-heading { font-size: 22px; font-weight: 700; color: #111827; margin-top: 52px; margin-bottom: 16px; }
+
+    p { font-size: 16px; line-height: 1.75; color: #374151; margin-bottom: 18px; }
+    p:last-child { margin-bottom: 0; }
+    sup { font-size: 10px; color: #9ca3af; vertical-align: super; line-height: 0; }
+
+    .pull-quote { border-left: 3px solid #0071ce; background: #f0f7ff; padding: 20px 24px; font-size: 18px; font-style: italic; color: #374151; border-radius: 0 8px 8px 0; margin: 32px 0; line-height: 1.55; }
+
+    .exec-summary { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 28px 32px; margin-top: 32px; }
+    .exec-summary-title { font-size: 12px; font-weight: 700; color: #0071ce; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 20px; }
+    .exec-row { display: flex; gap: 16px; margin-bottom: 14px; align-items: flex-start; }
+    .exec-row:last-child { margin-bottom: 0; }
+    .exec-key { font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; width: 160px; flex-shrink: 0; padding-top: 2px; }
+    .exec-val { font-size: 14px; color: #111827; line-height: 1.55; flex: 1; }
+
+    .numbered-list { list-style: none; counter-reset: item-counter; padding-left: 0; margin: 16px 0; }
+    .numbered-list li { counter-increment: item-counter; display: flex; gap: 14px; font-size: 15px; line-height: 1.7; color: #374151; margin-bottom: 10px; }
+    .numbered-list li::before { content: counter(item-counter); flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; background: #0071ce; color: white; font-size: 11px; font-weight: 700; border-radius: 50%; margin-top: 3px; }
+
+    .decision-block { margin-bottom: 24px; padding: 18px 20px; border: 1px solid #e5e7eb; border-radius: 8px; }
+    .decision-label { font-size: 11px; font-weight: 600; color: #0071ce; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 5px; }
+    .decision-heading { font-size: 15px; font-weight: 600; color: #111827; margin-bottom: 8px; }
+    .decision-block p { margin-bottom: 0; font-size: 14px; }
+
+    .phase-block { border-left: 3px solid #0071ce; padding-left: 20px; margin-bottom: 32px; }
+    .phase-label { font-size: 11px; font-weight: 700; color: #0071ce; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .phase-heading { font-size: 17px; font-weight: 600; color: #111827; margin-bottom: 10px; }
+    .phase-block p { font-size: 15px; margin-bottom: 0; }
+
+    .failure-mode { border-left: 3px solid #e5e7eb; padding-left: 20px; margin-bottom: 36px; }
+    .numbered-badge { display: inline-block; background: #0071ce; color: white; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 4px; margin-bottom: 10px; }
+    .failure-mode-heading { font-size: 17px; font-weight: 600; color: #111827; margin-bottom: 10px; }
+    .failure-mode p { margin-bottom: 0; font-size: 15px; }
+
+    .limitations-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin: 16px 0; }
+    .limitations-list li { display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.65; color: #374151; }
+    .lim-dot { width: 6px; height: 6px; border-radius: 50%; background: #9ca3af; flex-shrink: 0; margin-top: 9px; }
+
+    .ship-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 20px; }
+    @media (max-width: 600px) { .ship-grid { grid-template-columns: 1fr; } }
+    .ship-card { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; }
+    .ship-card-title { font-size: 12px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+    .ship-card-body { font-size: 13px; color: #374151; line-height: 1.55; }
+
+    .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
+    @media (max-width: 600px) { .metrics-grid { grid-template-columns: 1fr; } }
+    .metric-card { border-radius: 8px; padding: 14px; border: 1px solid #e5e7eb; }
+    .metric-card.primary { background: #f0fdf4; border-color: #bbf7d0; }
+    .metric-card.secondary { background: #f0f7ff; border-color: #bfdbfe; }
+    .metric-card.guardrail { background: #fffbeb; border-color: #fde68a; }
+    .metric-type { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+    .metric-card.primary .metric-type { color: #16a34a; }
+    .metric-card.secondary .metric-type { color: #0071ce; }
+    .metric-card.guardrail .metric-type { color: #d97706; }
+    .metric-name { font-size: 13px; font-weight: 600; color: #111827; margin-bottom: 4px; }
+    .metric-desc { font-size: 12px; color: #6b7280; line-height: 1.4; }
+
+    .footer { text-align: center; padding-top: 32px; border-top: 1px solid #e5e7eb; margin-top: 48px; }
+    .footer-primary { font-size: 14px; color: #374151; margin-bottom: 6px; }
+    .footer-secondary { font-size: 12px; color: #9ca3af; }
+
+    /* Persona cards */
+    .persona-grid { display: flex; flex-direction: column; gap: 16px; margin: 20px 0; }
+    .persona-card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 18px 20px; }
+    .persona-name { font-size: 14px; font-weight: 700; color: #111827; margin-bottom: 4px; }
+    .persona-label { font-size: 11px; font-weight: 600; color: #0071ce; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+    .persona-row { display: flex; gap: 12px; margin-bottom: 8px; align-items: flex-start; }
+    .persona-row:last-child { margin-bottom: 0; }
+    .persona-key { font-size: 11px; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.04em; width: 90px; flex-shrink: 0; padding-top: 2px; }
+    .persona-val { font-size: 13px; color: #374151; line-height: 1.5; flex: 1; }
+    .persona-rating { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
+    .rating-good { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+    .rating-partial { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+    .rating-poor { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+
+    /* Feature breakdown */
+    .feature-list { display: flex; flex-direction: column; gap: 18px; margin: 20px 0; }
+    .feature-item { padding: 18px 20px; border: 1px solid #e5e7eb; border-radius: 8px; }
+    .feature-name { font-size: 15px; font-weight: 600; color: #111827; margin-bottom: 12px; }
+    .feature-row { display: flex; gap: 12px; margin-bottom: 8px; }
+    .feature-row:last-child { margin-bottom: 0; }
+    .feature-key { font-size: 11px; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.04em; width: 90px; flex-shrink: 0; padding-top: 2px; }
+    .feature-val { font-size: 13px; color: #374151; line-height: 1.5; flex: 1; }
+
+    /* Recommendation blocks */
+    .rec-block { margin-bottom: 20px; padding: 20px 22px; border-left: 3px solid #0071ce; background: #f9fafb; border-radius: 0 8px 8px 0; }
+    .rec-problem { font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+    .rec-heading { font-size: 15px; font-weight: 600; color: #111827; margin-bottom: 8px; }
+    .rec-impact { font-size: 12px; color: #16a34a; font-weight: 500; margin-top: 8px; }
+    .rec-block p { margin-bottom: 0; font-size: 14px; }
+
+    /* Visual containers */
+    .visual-wrap { border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; margin: 28px 0; }
+    .visual-title { font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.06em; padding: 12px 18px; background: #f9fafb; border-bottom: 1px solid #e5e7eb; }
+    .visual-body { padding: 24px 20px; }
+
+    /* Competitive table */
+    .comp-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .comp-table th { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #6b7280; padding: 10px 12px; text-align: left; border-bottom: 2px solid #e5e7eb; }
+    .comp-table th:first-child { width: 150px; }
+    .comp-table td { padding: 10px 12px; border-bottom: 1px solid #f3f4f6; vertical-align: top; color: #374151; line-height: 1.45; }
+    .comp-table tr:last-child td { border-bottom: none; }
+    .comp-table tr:nth-child(even) td { background: #f9fafb; }
+    .comp-table td:first-child { font-weight: 600; color: #111827; font-size: 12px; }
+    .comp-walmart { color: #0071ce; font-weight: 700; }
+    .comp-amazon { color: #f97316; font-weight: 700; }
+    .comp-google { color: #16a34a; font-weight: 700; }
+    .win { font-size: 10px; font-weight: 700; background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; padding: 1px 5px; border-radius: 3px; margin-left: 4px; white-space: nowrap; }
+    .gap { font-size: 10px; font-weight: 700; background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; padding: 1px 5px; border-radius: 3px; margin-left: 4px; white-space: nowrap; }
+
+    /* Metrics framework layers */
+    .metrics-layers { display: flex; flex-direction: column; gap: 12px; }
+    .metrics-layer { border-radius: 8px; padding: 16px 20px; }
+    .layer-business { background: #f0f7ff; border: 1px solid #bfdbfe; }
+    .layer-product { background: #f0fdf4; border: 1px solid #bbf7d0; }
+    .layer-ai { background: #faf5ff; border: 1px solid #e9d5ff; }
+    .layer-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+    .layer-business .layer-title { color: #1e40af; }
+    .layer-product .layer-title { color: #16a34a; }
+    .layer-ai .layer-title { color: #7c3aed; }
+    .layer-metrics { display: flex; flex-wrap: wrap; gap: 8px; }
+    .layer-metric { background: white; border-radius: 5px; padding: 6px 10px; font-size: 12px; color: #374151; }
+    .layer-business .layer-metric { border: 1px solid #bfdbfe; }
+    .layer-product .layer-metric { border: 1px solid #bbf7d0; }
+    .layer-ai .layer-metric { border: 1px solid #e9d5ff; }
+    .layer-metric strong { display: block; font-size: 11px; font-weight: 700; color: #111827; margin-bottom: 2px; }
+
+    /* Scorecard */
+    .scorecard-summary { display: flex; gap: 12px; margin: 0 0 20px; }
+    .ss-item { flex: 1; border-radius: 8px; padding: 12px 14px; text-align: center; }
+    .ss-item.ww { background: #f0fdf4; border: 1px solid #bbf7d0; }
+    .ss-item.pa { background: #fffbeb; border: 1px solid #fde68a; }
+    .ss-item.br { background: #fef2f2; border: 1px solid #fecaca; }
+    .ss-num { font-size: 28px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+    .ss-item.ww .ss-num { color: #16a34a; }
+    .ss-item.pa .ss-num { color: #d97706; }
+    .ss-item.br .ss-num { color: #dc2626; }
+    .ss-label { font-size: 11px; font-weight: 600; }
+    .ss-item.ww .ss-label { color: #16a34a; }
+    .ss-item.pa .ss-label { color: #d97706; }
+    .ss-item.br .ss-label { color: #dc2626; }
+
+    .scorecard { display: flex; flex-direction: column; gap: 10px; }
+    .score-row { display: flex; gap: 14px; align-items: flex-start; padding: 12px 16px; border-radius: 8px; border: 1px solid #e5e7eb; background: #f9fafb; }
+    .score-label { font-size: 14px; font-weight: 600; color: #111827; width: 160px; flex-shrink: 0; }
+    .score-finding { font-size: 13px; color: #6b7280; flex: 1; line-height: 1.45; }
+    .score-badge { flex-shrink: 0; }
+    .badge-works { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px; display: inline-block; white-space: nowrap; }
+    .badge-partial { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px; display: inline-block; white-space: nowrap; }
+    .badge-broken { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px; display: inline-block; white-space: nowrap; }
+
+    /* Additional findings bullets */
+    .finding-list { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+    .finding-item { display: flex; gap: 14px; align-items: flex-start; padding: 14px 16px; border-radius: 8px; border: 1px solid #e5e7eb; }
+    .finding-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+    .finding-dot.broken { background: #dc2626; }
+    .finding-dot.partial { background: #d97706; }
+    .finding-text { font-size: 14px; color: #374151; line-height: 1.6; }
+    .finding-text strong { color: #111827; }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- Header -->
+    <div class="label">Product Teardown</div>
+    <h1 class="title">Sparky: What Walmart's AI Shopping Assistant Gets Right, and Where It Needs to Go</h1>
+    <p class="subtitle">An evaluation based on structured stress testing across 8 categories: intent, context, accuracy, safety, competition, manipulation, cart actions, and personalization</p>
+    <div class="meta-row">
+      <span>By Sonal Singh · Principal PM, Walmart Global Tech</span>
+      <span>June 2026</span>
+    </div>
+    <hr class="divider" />
+    <span class="disclaimer">Personal analysis. Opinions are my own, not Walmart's.</span>
+
+    <!-- TL;DR -->
+    <div class="exec-summary">
+      <div class="exec-summary-title">TL;DR</div>
+      <div class="exec-row">
+        <div class="exec-key">What Sparky is</div>
+        <div class="exec-val">Walmart's AI shopping assistant, embedded in the app and on walmart.com, and also available through ChatGPT and Gemini. It launched publicly in June 2025. It helps shoppers search, compare products, synthesize reviews, and move toward checkout through natural language.</div>
+      </div>
+      <div class="exec-row">
+        <div class="exec-key">What it gets right</div>
+        <div class="exec-val">Intent-based product discovery and comparison. When a customer knows roughly what they want, Sparky collapses a 40-result search into 3–5 options with an explanation. In my testing, the core shopping loop worked end to end. Safety and boundary handling were also stronger than expected. Walmart has reported that Sparky users have about 35% higher order value than non-users — a meaningful directional signal, though selection bias likely plays a role.</div>
+      </div>
+      <div class="exec-row">
+        <div class="exec-key">Where it falls short</div>
+        <div class="exec-val">Personalization is in-session only. Sparky is transparent about it: it has no access to your purchase history or browsing behavior beyond the current conversation. It also has a meaningful gap in customer-service recovery. When I reported a broken order, it showed no empathy and redirected me to find my own order.</div>
+      </div>
+      <div class="exec-row">
+        <div class="exec-key">Why it matters</div>
+        <div class="exec-val">Walmart has the data, the catalog, and the physical store infrastructure that no competitor can match. No competitor appears to have fully solved this in the same omnichannel retail context. Connecting Sparky to that infrastructure is the version of this product that justifies the investment.</div>
+      </div>
+    </div>
+
+    <!-- The Problem Space -->
+    <h2 class="section-heading">The Problem Space</h2>
+
+    <p>Keyword search is broken for anything that requires judgment. A customer who searches "protein powder for a 45-year-old woman who does not lift weights" is doing something a keyword engine cannot handle well. It returns 200 results. The filters assume you already know what you are filtering for. Most customers do not. They abandon the page or pick something arbitrary.</p>
+
+    <p>The shift happening in commerce is from "find a product" to "accomplish a goal." Those are different jobs. Finding a product is a lookup task. Accomplishing a goal requires understanding context, constraints, and tradeoffs. A good conversational AI can collapse a 40-result search into a 3-product recommendation with an explanation. That is a meaningfully faster and more confident path to purchase.</p>
+
+    <blockquote class="pull-quote">
+      "The job is not 'find running shoes.' The job is 'help me pick one I will actually be happy with, given that I overpronate, have a $120 budget, and need them by Thursday.' Keyword search was never built for that job."
+    </blockquote>
+
+    <!-- Product Overview -->
+    <h2 class="section-heading">Product Overview</h2>
+
+    <p>Sparky is Walmart's customer-facing GenAI shopping assistant. It launched publicly in June 2025, embedded in the Walmart app and walmart.com, and extended to ChatGPT and Gemini as part of Walmart's broader push toward agentic shopping. Customers can search in natural language, ask for product comparisons, get help narrowing choices, and add items directly to their cart from the conversation. Sparky is positioned as the front edge of a vision where AI handles more of the shopping journey on the customer's behalf.</p>
+
+    <!-- Target User and JTBD -->
+    <h2 class="section-heading">Target User and Jobs to Be Done</h2>
+
+    <div class="persona-grid">
+
+      <div class="persona-card">
+        <div class="persona-label">Persona 01</div>
+        <div class="persona-name">The Efficient Planner</div>
+        <div class="persona-row">
+          <div class="persona-key">Who</div>
+          <div class="persona-val">Busy parent, 30–45, doing a weekly grocery run plus household replenishment. Has a mental list, not a written one.</div>
+        </div>
+        <div class="persona-row">
+          <div class="persona-key">Job</div>
+          <div class="persona-val">Get a complete, accurate cart quickly without forgetting anything.</div>
+        </div>
+        <div class="persona-row">
+          <div class="persona-key">Verdict</div>
+          <div class="persona-val"><span class="persona-rating rating-partial">Partial</span> Sparky helps with product lookup but does not remember last week's cart or proactively surface regular purchases. Every session starts from zero.</div>
+        </div>
+      </div>
+
+      <div class="persona-card">
+        <div class="persona-label">Persona 02</div>
+        <div class="persona-name">The Considered Buyer</div>
+        <div class="persona-row">
+          <div class="persona-key">Who</div>
+          <div class="persona-val">Adult, 35–55, researching appliances, electronics, or health products. Wants information, not just options.</div>
+        </div>
+        <div class="persona-row">
+          <div class="persona-key">Job</div>
+          <div class="persona-val">Make a confident decision without leaving Walmart or reading 50 reviews.</div>
+        </div>
+        <div class="persona-row">
+          <div class="persona-key">Verdict</div>
+          <div class="persona-val"><span class="persona-rating rating-good">Works well</span> Sparky's conversational format is strongest here. It handles comparison questions well and surfaces specs in plain language. This is the use case it was built for.</div>
+        </div>
+      </div>
+
+      <div class="persona-card">
+        <div class="persona-label">Persona 03</div>
+        <div class="persona-name">The Deal Seeker</div>
+        <div class="persona-row">
+          <div class="persona-key">Who</div>
+          <div class="persona-val">Value-conscious shopper, cross-referencing prices. Walmart is one of several tabs open.</div>
+        </div>
+        <div class="persona-row">
+          <div class="persona-key">Job</div>
+          <div class="persona-val">Find the lowest-cost option for a specific item or basket, fast.</div>
+        </div>
+        <div class="persona-row">
+          <div class="persona-key">Verdict</div>
+          <div class="persona-val"><span class="persona-rating rating-poor">Gap</span> Sparky does not surface price history, flag rollback status, or help optimize a basket toward a budget ceiling. This persona gets nothing differentiated from Sparky.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- User Journey and Onboarding -->
+    <h2 class="section-heading">User Journey and Onboarding</h2>
+
+    <p>Onboarding is largely invisible. There is no forced tutorial, no setup flow, and no moment where Sparky explains what it can and cannot do. First-time users see a blank conversation window with a placeholder prompt. For customers familiar with ChatGPT, this is frictionless. For many Walmart customers, it is unclear what to type or what to expect.</p>
+
+    <p>The aha moment comes when Sparky collapses a vague query into 3–5 relevant products with a plain-language explanation. That is where the value is obvious. The fastest path to that moment is a specific, goal-oriented question. The experience breaks down in three situations: when the user expects personalization based on past purchases, when the user needs help after a broken order, and when the user wants to start a fresh session without knowing if one exists.</p>
+
+    <div class="visual-wrap">
+      <div class="visual-title">User Journey: Intent to Checkout</div>
+      <div class="visual-body">
+        <div style="display:flex;align-items:flex-start;overflow-x:auto;padding-bottom:8px;gap:0;">
+
+          <div style="flex:1;min-width:88px;display:flex;flex-direction:column;align-items:center;text-align:center;">
+            <div style="width:44px;height:44px;border-radius:50%;background:#0071ce;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;margin-bottom:8px;flex-shrink:0;">01</div>
+            <div style="font-size:11px;font-weight:600;color:#111827;line-height:1.3;margin-bottom:4px;">Entry</div>
+            <div style="font-size:10px;color:#9ca3af;line-height:1.3;">App icon, search bar, or ChatGPT/Gemini plugin</div>
+          </div>
+
+          <div style="color:#d1d5db;font-size:18px;padding:0 4px;margin-top:12px;flex-shrink:0;">→</div>
+
+          <div style="flex:1;min-width:88px;display:flex;flex-direction:column;align-items:center;text-align:center;">
+            <div style="width:44px;height:44px;border-radius:50%;background:#3b82f6;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;margin-bottom:8px;flex-shrink:0;">02</div>
+            <div style="font-size:11px;font-weight:600;color:#111827;line-height:1.3;margin-bottom:4px;">Intent Input</div>
+            <div style="font-size:10px;color:#9ca3af;line-height:1.3;">Customer types query in natural language</div>
+            <div style="font-size:10px;font-weight:700;color:#dc2626;background:#fef2f2;border:1px solid #fecaca;padding:2px 5px;border-radius:3px;margin-top:6px;">Drop: blank slate confusion</div>
+          </div>
+
+          <div style="color:#d1d5db;font-size:18px;padding:0 4px;margin-top:12px;flex-shrink:0;">→</div>
+
+          <div style="flex:1;min-width:88px;display:flex;flex-direction:column;align-items:center;text-align:center;">
+            <div style="width:44px;height:44px;border-radius:50%;background:#3b82f6;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;margin-bottom:8px;flex-shrink:0;">03</div>
+            <div style="font-size:11px;font-weight:600;color:#111827;line-height:1.3;margin-bottom:4px;">Recommendations</div>
+            <div style="font-size:10px;color:#9ca3af;line-height:1.3;">Sparky returns 3–5 products with explanations</div>
+            <div style="font-size:10px;font-weight:700;color:#d97706;background:#fffbeb;border:1px solid #fde68a;padding:2px 5px;border-radius:3px;margin-top:6px;">Gap: no history context</div>
+          </div>
+
+          <div style="color:#d1d5db;font-size:18px;padding:0 4px;margin-top:12px;flex-shrink:0;">→</div>
+
+          <div style="flex:1;min-width:88px;display:flex;flex-direction:column;align-items:center;text-align:center;">
+            <div style="width:44px;height:44px;border-radius:50%;background:#d97706;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;margin-bottom:8px;flex-shrink:0;">04</div>
+            <div style="font-size:11px;font-weight:600;color:#111827;line-height:1.3;margin-bottom:4px;">Add to Cart</div>
+            <div style="font-size:10px;color:#9ca3af;line-height:1.3;">Item added; upsell buttons appear</div>
+            <div style="font-size:10px;font-weight:700;color:#dc2626;background:#fef2f2;border:1px solid #fecaca;padding:2px 5px;border-radius:3px;margin-top:6px;">Drop: conversation ends</div>
+          </div>
+
+          <div style="color:#d1d5db;font-size:18px;padding:0 4px;margin-top:12px;flex-shrink:0;">→</div>
+
+          <div style="flex:1;min-width:88px;display:flex;flex-direction:column;align-items:center;text-align:center;">
+            <div style="width:44px;height:44px;border-radius:50%;background:#dc2626;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;margin-bottom:8px;flex-shrink:0;">05</div>
+            <div style="font-size:11px;font-weight:600;color:#111827;line-height:1.3;margin-bottom:4px;">Post-purchase</div>
+            <div style="font-size:10px;color:#9ca3af;line-height:1.3;">Order issues, returns, reorders</div>
+            <div style="font-size:10px;font-weight:700;color:#dc2626;background:#fef2f2;border:1px solid #fecaca;padding:2px 5px;border-radius:3px;margin-top:6px;">Broken: CS gap</div>
+          </div>
+
+        </div>
+        <p style="font-size:11px;color:#9ca3af;margin-top:16px;margin-bottom:0;">Drop indicators show observed friction points. Red = confirmed broken in testing. Yellow = partial or missing capability.</p>
+      </div>
+    </div>
+
+    <!-- Core Features Breakdown -->
+    <h2 class="section-heading">Core Features Breakdown</h2>
+
+    <div class="feature-list">
+
+      <div class="feature-item">
+        <div class="feature-name">Natural Language Product Search</div>
+        <div class="feature-row">
+          <div class="feature-key">What it does</div>
+          <div class="feature-val">Translates conversational queries into catalog results, handling synonyms, attributes, and use-case descriptions that keyword search misses.</div>
+        </div>
+        <div class="feature-row">
+          <div class="feature-key">Job it serves</div>
+          <div class="feature-val">Find the right product faster when the customer knows what they need but not exactly what to search for.</div>
+        </div>
+        <div class="feature-row">
+          <div class="feature-key">Execution</div>
+          <div class="feature-val"><span class="persona-rating rating-good">Works well</span> Sparky's most consistent capability. Holds specificity well. Falls short on ambiguous queries where clarifying intent first would improve results.</div>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-name">Product Q&amp;A and Comparison</div>
+        <div class="feature-row">
+          <div class="feature-key">What it does</div>
+          <div class="feature-val">Answers specific questions about a product or compares two items side by side in natural language.</div>
+        </div>
+        <div class="feature-row">
+          <div class="feature-key">Job it serves</div>
+          <div class="feature-val">Give the Considered Buyer enough information to decide without leaving the page or reading dozens of reviews.</div>
+        </div>
+        <div class="feature-row">
+          <div class="feature-key">Execution</div>
+          <div class="feature-val"><span class="persona-rating rating-good">Works well</span> Strongest use case. In testing, Sparky generated a clean side-by-side comparison table with a humility disclaimer and no hallucinated specs. Quality degrades when catalog attribute data is thin.</div>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-name">Cart Integration</div>
+        <div class="feature-row">
+          <div class="feature-key">What it does</div>
+          <div class="feature-val">Adds items directly to cart from Sparky responses; confirms the add and surfaces upsell suggestions.</div>
+        </div>
+        <div class="feature-row">
+          <div class="feature-key">Job it serves</div>
+          <div class="feature-val">Collapse the path from intent to cart without leaving the conversation.</div>
+        </div>
+        <div class="feature-row">
+          <div class="feature-key">Execution</div>
+          <div class="feature-val"><span class="persona-rating rating-good">Works well</span> Tested the full loop: "Add the 11-piece utensil set to my cart." Sparky responded confidently ("I've added it") and upsell buttons appeared immediately. Item was confirmed in cart. One caveat: Sparky misidentified the item name in its confirmation ("Farberware 28-piece" vs the actual "11-piece set with holder"), indicating a gap in live cart-state reading.</div>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-name">Boundary and Safety Handling</div>
+        <div class="feature-row">
+          <div class="feature-key">What it does</div>
+          <div class="feature-val">Refuses out-of-scope requests (political questions, internal information) and re-anchors the session to shopping.</div>
+        </div>
+        <div class="feature-row">
+          <div class="feature-key">Job it serves</div>
+          <div class="feature-val">Protect against misuse while keeping the session productive.</div>
+        </div>
+        <div class="feature-row">
+          <div class="feature-key">Execution</div>
+          <div class="feature-val"><span class="persona-rating rating-good">Works well</span> Refusals were brief and non-preachy in testing. After declining a political question, Sparky immediately re-anchored to the active shopping thread with relevant quick-tap suggestions. Two separate jailbreak attempts were blocked cleanly with different response patterns (identity-reset vs rule-citation).</div>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-name">In-Session Personalization</div>
+        <div class="feature-row">
+          <div class="feature-key">What it does</div>
+          <div class="feature-val">Uses information the customer provides during the conversation to refine recommendations within that session.</div>
+        </div>
+        <div class="feature-row">
+          <div class="feature-key">Job it serves</div>
+          <div class="feature-val">Make the Efficient Planner feel like Sparky knows them, not just the catalog.</div>
+        </div>
+        <div class="feature-row">
+          <div class="feature-key">Execution</div>
+          <div class="feature-val"><span class="persona-rating rating-partial">Partial</span> Sparky is transparent: it has no access to browsing history or purchase history beyond the current conversation. In-session context retention is strong. Cross-session personalization does not exist today. Publicly visible behavior suggests personalization is conversation-driven, not behavior-driven.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Competitive Landscape -->
+    <h2 class="section-heading">Competitive Landscape</h2>
+
+    <p>Sparky sits in a three-way competitive frame. Amazon's Rufus is the direct analog: a conversational assistant embedded in a major retailer's app, designed for the same shopping jobs. Google AI Mode (Search Labs) approaches from the opposite direction, as a general AI that handles shopping queries with product cards and comparison features. The observations below reflect public behavior and my own testing; they are not based on internal data from any of these companies.</p>
+
+    <div class="visual-wrap">
+      <div class="visual-title">Competitive Comparison: Sparky vs Rufus vs Google AI Mode</div>
+      <div class="visual-body" style="padding:0;overflow-x:auto;">
+        <table class="comp-table">
+          <thead>
+            <tr>
+              <th>Dimension</th>
+              <th><span class="comp-walmart">Sparky (Walmart)</span></th>
+              <th><span class="comp-amazon">Rufus (Amazon)</span></th>
+              <th><span class="comp-google">Google AI Mode</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Catalog depth</td>
+              <td>Strong. 380M+ items, robust for grocery and general merchandise.<span class="win">Win</span></td>
+              <td>Exceptional. Marketplace depth across every category.</td>
+              <td>Aggregates across retailers. No native catalog.</td>
+            </tr>
+            <tr>
+              <td>Personalization</td>
+              <td>Limited to current session. No visible use of purchase history.<span class="gap">Gap</span></td>
+              <td>Appears stronger. Integrated with order history, Prime, browsing signals.</td>
+              <td>Relies on Google account data only. No transaction history.</td>
+            </tr>
+            <tr>
+              <td>Grocery</td>
+              <td>Strong. Delivery, pickup, Sam's Club integration.<span class="win">Win</span></td>
+              <td>Improving. Amazon Fresh limited geographically.</td>
+              <td>None. Redirects to third-party grocery.</td>
+            </tr>
+            <tr>
+              <td>Omnichannel</td>
+              <td>Strong. ~4,700 stores, real-time pickup inventory.<span class="win">Win</span></td>
+              <td>Weak. Primarily digital; Whole Foods integration is partial.</td>
+              <td>None. Digital only.</td>
+            </tr>
+            <tr>
+              <td>Intent handling</td>
+              <td>Strong for specific queries. Degrades on ambiguous ones.</td>
+              <td>Similar capability. Returns results fast but less explanatory.</td>
+              <td>Strong. Gemini handles complex, multi-step queries well.</td>
+            </tr>
+            <tr>
+              <td>Post-purchase</td>
+              <td>Weak. No order lookup, no empathy for issues observed in testing.<span class="gap">Gap</span></td>
+              <td>Strong. Returns, reorders, tracking native in Rufus.</td>
+              <td>None. Session ends at referral.</td>
+            </tr>
+            <tr>
+              <td>Price intelligence</td>
+              <td>None visible. No price history, no rollback surfacing.<span class="gap">Gap</span></td>
+              <td>Limited. Price tracking exists as a separate tool.</td>
+              <td>Moderate. Aggregates prices across sources.</td>
+            </tr>
+            <tr>
+              <td>Platform reach</td>
+              <td>App, web, ChatGPT, Gemini.<span class="win">Win</span></td>
+              <td>App and web only.</td>
+              <td>Google Search, Android, Chrome.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <p>Sparky's structural advantage is omnichannel reach and grocery depth. No competitor matches Walmart's combination of physical stores, pickup infrastructure, and grocery scale. Personalization and post-purchase intelligence are where Amazon Rufus appears to lead today, based on publicly observable behavior and testing.</p>
+
+    <!-- Success Metrics -->
+    <h2 class="section-heading">Success Metrics</h2>
+
+    <p>Measuring a product like Sparky requires three layers. Business metrics tell you if the investment is generating returns. Product metrics tell you if customers find it useful. AI-specific metrics tell you if the model is performing well enough to support the product metrics. Walmart has reported that customers who use Sparky have about 35% higher order value than those who don't. This is a company-reported metric, not an independently verified causal effect. Selection bias likely plays a role: Sparky users may already have higher purchase intent.</p>
+
+    <div class="visual-wrap">
+      <div class="visual-title">Metrics Framework: Three Layers</div>
+      <div class="visual-body">
+        <div class="metrics-layers">
+
+          <div class="metrics-layer layer-business">
+            <div class="layer-title">Layer 1: Business Outcomes</div>
+            <div class="layer-metrics">
+              <div class="layer-metric"><strong>Basket size lift</strong>Sparky sessions vs control</div>
+              <div class="layer-metric"><strong>Conversion rate</strong>Session to purchase</div>
+              <div class="layer-metric"><strong>Category expansion</strong>New categories per customer</div>
+              <div class="layer-metric"><strong>Walmart+ attach</strong>Sparky sessions to membership</div>
+            </div>
+          </div>
+
+          <div class="metrics-layer layer-product">
+            <div class="layer-title">Layer 2: Product Quality</div>
+            <div class="layer-metrics">
+              <div class="layer-metric"><strong>Task completion</strong>Customer gets what they came for</div>
+              <div class="layer-metric"><strong>Add-to-cart rate</strong>From Sparky recommendations</div>
+              <div class="layer-metric"><strong>Repeat usage</strong>Day 7 return rate</div>
+              <div class="layer-metric"><strong>Session depth</strong>Turns per conversation</div>
+            </div>
+          </div>
+
+          <div class="metrics-layer layer-ai">
+            <div class="layer-title">Layer 3: AI Performance</div>
+            <div class="layer-metrics">
+              <div class="layer-metric"><strong>Intent accuracy</strong>Correct interpretation of query</div>
+              <div class="layer-metric"><strong>Fallback rate</strong>% of queries escalated or failed</div>
+              <div class="layer-metric"><strong>Hallucination rate</strong>False product claims</div>
+              <div class="layer-metric"><strong>Latency P95</strong>Response time at 95th percentile</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <p>One metric worth flagging: the day-7 repeat session rate. Customers who return to Sparky within seven days of their first session are likely finding it genuinely useful. Basket size is a lagging indicator. Repeat sessions at day 7 are a leading one, and the one most likely to reveal whether personalization is actually working.</p>
+
+    <!-- Evaluation Findings -->
+    <h2 class="section-heading">Evaluation Findings</h2>
+
+    <p>I stress-tested Sparky across 8 categories using scripted prompts to evaluate ambiguity, context retention, trust, safety, competitive handling, manipulation resistance, cart actions, and personalization. The results below reflect behavior I observed across multiple sessions.</p>
+
+    <div class="visual-wrap">
+      <div class="visual-title">8-Category Stress Test: Overall Summary</div>
+      <div class="visual-body">
+        <div class="scorecard-summary">
+          <div class="ss-item ww">
+            <div class="ss-num">12</div>
+            <div class="ss-label">Works Well</div>
+          </div>
+          <div class="ss-item pa">
+            <div class="ss-num">3</div>
+            <div class="ss-label">Partial</div>
+          </div>
+          <div class="ss-item br">
+            <div class="ss-num">1</div>
+            <div class="ss-label">Broken</div>
+          </div>
+        </div>
+        <div class="scorecard">
+
+          <div class="score-row">
+            <div class="score-label">Ambiguity Handling</div>
+            <div class="score-finding">Gracefully degraded across 3 turns when interests were unknown; pivoted to budget and offered quick-tap shortcuts.</div>
+            <div class="score-badge"><span class="badge-works">Works Well</span></div>
+          </div>
+
+          <div class="score-row">
+            <div class="score-label">Context Retention</div>
+            <div class="score-finding">Perfect retention across turns; connected "she likes cooking" + "$50 budget" without the customer re-stating either.</div>
+            <div class="score-badge"><span class="badge-works">Works Well</span></div>
+          </div>
+
+          <div class="score-row">
+            <div class="score-label">Trust and Accuracy</div>
+            <div class="score-finding">Generated a clean side-by-side comparison table; added a humility disclaimer; no hallucinated specs observed across multiple tests.</div>
+            <div class="score-badge"><span class="badge-works">Works Well</span></div>
+          </div>
+
+          <div class="score-row">
+            <div class="score-label">Boundary Probing</div>
+            <div class="score-finding">Textbook refusal for a political question; brief, non-preachy, immediately re-anchored to shopping with relevant quick-taps.</div>
+            <div class="score-badge"><span class="badge-works">Works Well</span></div>
+          </div>
+
+          <div class="score-row">
+            <div class="score-label">Competitive Handling</div>
+            <div class="score-finding">Clean deflection for "Is this cheaper on Amazon?"; no false claims made, no defensiveness in tone.</div>
+            <div class="score-badge"><span class="badge-works">Works Well</span></div>
+          </div>
+
+          <div class="score-row">
+            <div class="score-label">Manipulation Attempts</div>
+            <div class="score-finding">Two different jailbreak attempts blocked cleanly, using distinct response patterns (identity-reset vs rule-citation).</div>
+            <div class="score-badge"><span class="badge-works">Works Well</span></div>
+          </div>
+
+          <div class="score-row">
+            <div class="score-label">Cart and Transaction</div>
+            <div class="score-finding">Full loop from natural language intent to cart action works end to end. Item verified in cart. See additional finding for a cart-state reading bug.</div>
+            <div class="score-badge"><span class="badge-works">Works Well</span></div>
+          </div>
+
+          <div class="score-row">
+            <div class="score-label">Personalization</div>
+            <div class="score-finding">Sparky is transparent: it has no access to browsing history or purchase history beyond the current conversation. Strong in-session; nothing cross-session.</div>
+            <div class="score-badge"><span class="badge-partial">Partial</span></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-heading">Key Additional Findings</h2>
+
+    <div class="finding-list">
+
+      <div class="finding-item">
+        <div class="finding-dot partial"></div>
+        <div class="finding-text"><strong>Cart-state reading bug.</strong> After adding an item ("Add the 11-piece utensil set to my cart"), Sparky confirmed the action but identified the wrong item in its confirmation message, calling it a "Farberware 28-piece" instead of the actual "11-piece set with holder." The item in the cart was correct; the spoken confirmation was not. This points to a disconnect between the cart action and Sparky's live read of cart state.</div>
+      </div>
+
+      <div class="finding-item">
+        <div class="finding-dot broken"></div>
+        <div class="finding-text"><strong>Customer-service recovery is broken.</strong> When I reported a broken order, Sparky showed zero empathy. It told me to find my own order rather than pulling it from my account, and then immediately redirected to suggesting similar replacement products. This is the one clear failure in the entire evaluation. Customers reporting problems need acknowledgment first, not upsells.</div>
+      </div>
+
+      <div class="finding-item">
+        <div class="finding-dot partial"></div>
+        <div class="finding-text"><strong>Session memory has no controls.</strong> Chat history persists within the same app session but is cleared when you kill and relaunch the app. There is no "New Chat" button and no "Clear History" option. This is a gap both for privacy-conscious customers who want a clean start, and for those who want to pick up where they left off across sessions.</div>
+      </div>
+
+    </div>
+
+    <!-- Recommendations -->
+    <h2 class="section-heading">Recommendations</h2>
+
+    <div class="rec-block">
+      <div class="rec-problem">Problem</div>
+      <div class="rec-heading">Every session starts cold</div>
+      <p>A customer who buys organic produce weekly gets the same recommendations as someone who shops for budget groceries. The data to differentiate them already exists in Walmart's CDP; Sparky just cannot see it today.</p>
+      <div class="rec-impact">Recommendation: Connect Sparky's response layer to the CDP's customer profile, starting with category affinity and purchase recency. Gate the rollout to Walmart+ members where data quality is highest. Expected impact: higher add-to-cart rate from Sparky sessions; measurable reduction in "wrong product" returns.</div>
+    </div>
+
+    <div class="rec-block">
+      <div class="rec-problem">Problem</div>
+      <div class="rec-heading">The post-add-to-cart moment is dead</div>
+      <p>When a customer adds an item, the conversation ends. There is no follow-up, no "what else do you need today," and no basket-completion prompt. This is the highest-intent moment in the session and Sparky exits it.</p>
+      <div class="rec-impact">Recommendation: Introduce a contextual follow-on prompt after any add-to-cart action, drawing on category adjacencies and past cart composition. A/B test prompt phrasing against a control. Expected impact: 10–15% increase in items per Sparky-assisted session.</div>
+    </div>
+
+    <div class="rec-block">
+      <div class="rec-problem">Problem</div>
+      <div class="rec-heading">Deal Seekers get nothing from Sparky</div>
+      <p>No rollback flagging, no price history, no budget-ceiling guidance. This is a large segment of Walmart's customer base and Sparky offers them nothing differentiated from a standard search.</p>
+      <div class="rec-impact">Recommendation: Integrate rollback and price history data into Sparky's response context for products with active promotions. When a customer asks about a product, surface the current rollback status if one exists. Expected impact: improved conversion for price-sensitive customers; a clear differentiator vs Rufus.</div>
+    </div>
+
+    <div class="rec-block">
+      <div class="rec-problem">Problem</div>
+      <div class="rec-heading">Walmart's omnichannel advantage is invisible inside Sparky</div>
+      <p>A customer asking about an item available for in-store pickup in two hours gets the same response as one waiting three days for delivery. Sparky does not surface real-time inventory or store proximity proactively.</p>
+      <div class="rec-impact">Recommendation: Use store proximity and live inventory data to inject availability signals into Sparky's recommendations. "Available for pickup today at your local store" should be a default response attribute for any in-stock item within 10 miles. This is Walmart's clearest competitive moat and it is sitting unused.</div>
+    </div>
+
+    <div class="rec-block">
+      <div class="rec-problem">Problem</div>
+      <div class="rec-heading">Customer-service recovery is broken</div>
+      <p>When a customer reports a broken order, Sparky shows no empathy, fails to pull the order from their account, and immediately suggests replacement products. This is the experience for a customer who is already frustrated.</p>
+      <div class="rec-impact">Recommendation: Add a customer-service mode that detects frustration signals, acknowledges the problem first, pulls the last relevant order from the account, and offers return or replacement paths before suggesting new products. Expected impact: better post-purchase experience; reduced friction for customers at their most at-risk moment.</div>
+    </div>
+
+    <!-- What's Next -->
+    <h2 class="section-heading">What's Next</h2>
+
+    <p>Sparky's strongest version is a shopping layer that knows who you are, what you care about, and what you probably need next. Walmart has the data, the catalog, and the physical store infrastructure to build that. No competitor appears to have fully solved this in the same omnichannel retail context. The path requires three things moving together: connecting customer history to session context, activating store inventory as a real-time signal in every Sparky response, and building a feedback loop so the model improves from every interaction. None of these is a research problem. They are execution problems, and Walmart is better positioned to solve them than any other retailer operating at this scale.</p>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p class="footer-primary">Sonal Singh · Principal Product Manager</p>
+      <p class="footer-secondary">Personal analysis. Opinions are my own, not Walmart's. June 2026.</p>
+    </div>
+
+  </div>
+</body>
+</html>
