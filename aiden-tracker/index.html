@@ -693,6 +693,8 @@
     .modal-btn.primary:hover { background: #4338ca; }
     .modal-btn.secondary { background: var(--surface2); color: var(--text); }
     .modal-btn.secondary:hover { background: var(--border); }
+    .modal-btn.danger { background: #fee2e2; color: #dc2626; }
+    .modal-btn.danger:hover { background: #fecaca; }
 
     /* ---- CONFETTI ---- */
     @keyframes confetti-fall {
@@ -809,6 +811,7 @@
     <input type="number" id="modal-input" min="400" max="1600" step="10" placeholder="1270" />
     <div class="modal-btns">
       <button class="modal-btn secondary" onclick="dismissModal()">Cancel</button>
+      <button class="modal-btn danger" id="clear-score-btn" onclick="clearScore()" style="display:none">Clear</button>
       <button class="modal-btn primary" onclick="submitScore()">Save Score</button>
     </div>
   </div>
@@ -818,7 +821,7 @@
 <div class="header">
   <div class="header-tag">Valley Christian High School</div>
   <h1>Aiden's Summer 2026</h1>
-  <p class="subtitle">June 9 – August 10 &nbsp;·&nbsp; 9 weeks to build something real</p>
+  <p class="subtitle">June 8 – August 10 &nbsp;·&nbsp; 9 weeks to build something real</p>
   <div class="stats-row">
     <div class="stat-chip" id="stat-days">-- days left</div>
     <div class="stat-chip" id="stat-week">Week --</div>
@@ -986,7 +989,7 @@
 
   // ========== CONSTANTS ==========
 
-  const SUMMER_START = new Date('2026-06-09T00:00:00');
+  const SUMMER_START = new Date('2026-06-08T00:00:00');
   const SCHOOL_START = new Date('2026-08-10T00:00:00');
   const MEXICO_START = new Date('2026-07-03T00:00:00');
   const MEXICO_END   = new Date('2026-07-08T23:59:59');
@@ -1374,11 +1377,13 @@
 
   window.openModal = function(testId) {
     pendingTestId = testId;
-    const test = SAT_TESTS[testId - 1];
+    const test  = SAT_TESTS[testId - 1];
+    const existing = currentScores[testId];
     document.getElementById('modal-title').textContent = `Enter score: ${test.name}`;
     document.getElementById('modal-desc').textContent  = 'Type your score between 400 and 1600';
     const input = document.getElementById('modal-input');
-    input.value = currentScores[testId] || '';
+    input.value = existing || '';
+    document.getElementById('clear-score-btn').style.display = existing ? 'block' : 'none';
     document.getElementById('modal-overlay').classList.add('open');
     setTimeout(() => input.focus(), 100);
   };
@@ -1400,6 +1405,12 @@
       return;
     }
     set(ref(db, `sat_scores/${pendingTestId}`), val);
+    window.dismissModal();
+  };
+
+  window.clearScore = function() {
+    if (!pendingTestId) return;
+    set(ref(db, `sat_scores/${pendingTestId}`), null);
     window.dismissModal();
   };
 
