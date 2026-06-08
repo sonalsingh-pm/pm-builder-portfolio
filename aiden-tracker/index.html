@@ -217,6 +217,17 @@
       color: #9d174d;
     }
 
+    .day-type-badge.sat-test-day {
+      background: #ede9ff;
+      color: #5533FF;
+      border: 1px solid #c4b5fd;
+    }
+
+    .check-item.sat-test-day-item {
+      border: 2px solid #5533FF;
+      background: #ede9ff;
+    }
+
     /* ---- SCHEDULE LIST ---- */
     .schedule-list {
       display: flex;
@@ -1055,12 +1066,18 @@
   const CORE_IDS = ['sat', 'usaaio', 'exercise', 'outside', 'horn'];
 
   const SAT_TESTS = [
-    { id: 1, name: 'Test 1',   date: 'Jun 9',  label: 'T1',  isReal: false },
-    { id: 2, name: 'Test 2',   date: 'Jul 12', label: 'T2',  isReal: false },
-    { id: 3, name: 'Test 3',   date: 'Jul 26', label: 'T3',  isReal: false },
-    { id: 4, name: 'Test 4',   date: 'Aug 2',  label: 'T4',  isReal: false },
-    { id: 5, name: 'Real SAT', date: 'Sep',    label: 'SAT', isReal: true  },
+    { id: 1, name: 'Test 1',   date: 'Jun 8',  label: 'T1',  isReal: false, testDate: '2026-06-08' },
+    { id: 2, name: 'Test 2',   date: 'Jul 12', label: 'T2',  isReal: false, testDate: '2026-07-12' },
+    { id: 3, name: 'Test 3',   date: 'Jul 26', label: 'T3',  isReal: false, testDate: '2026-07-26' },
+    { id: 4, name: 'Test 4',   date: 'Aug 2',  label: 'T4',  isReal: false, testDate: '2026-08-02' },
+    { id: 5, name: 'Real SAT', date: 'Sep',    label: 'SAT', isReal: true,  testDate: null         },
   ];
+
+  // Returns the SAT_TESTS entry for today if it's a practice test day, else null
+  function getSATTestToday() {
+    const today = todayStr();
+    return SAT_TESTS.find(t => t.testDate === today) || null;
+  }
 
   const TOPICS = [
     'Python Fundamentals',
@@ -1078,7 +1095,7 @@
   ];
 
   const WEEKS = [
-    { n: 1,  dates: 'Jun 9–14',      type: 'normal',   deliverable: 'Take Practice Test 1 (baseline) · Link Khan Academy · Python assessed · Routine starts' },
+    { n: 1,  dates: 'Jun 8–14',      type: 'normal',   deliverable: 'Take Practice Test 1 (baseline) · Link Khan Academy · Python assessed · Routine starts' },
     { n: 2,  dates: 'Jun 15–21',     type: 'class',    deliverable: 'Spanish begins Mon–Thu · First week on two-schedule system · 5 Khan Academy sessions' },
     { n: 3,  dates: 'Jun 22–28',     type: 'class',    deliverable: 'Weakest SAT section identified and drilling · USAAIO Topics 2 and 3' },
     { n: 4,  dates: 'Jun 29–Jul 2',  type: 'class',    deliverable: 'Push through Wed before Mexico · USAAIO Topic 4 done · Then enjoy the trip!' },
@@ -1126,7 +1143,15 @@
     const now    = new Date();
     const isVac  = isVacation(now);
     const isCls  = isClassDay(now);
-    const schedule = isCls ? CLASS_SCHEDULE : FREE_SCHEDULE;
+    const satTest = getSATTestToday();
+
+    // On practice test days, replace the regular SAT study block with the full timed test
+    const baseSchedule = isCls ? CLASS_SCHEDULE : FREE_SCHEDULE;
+    const schedule = satTest
+      ? baseSchedule.map(item => item.id === 'sat'
+          ? { ...item, label: `SAT Practice Test ${satTest.id} — full timed test`, emoji: '📝', duration: '2 hr 14 min', isSATTestDay: true }
+          : item)
+      : baseSchedule;
 
     const opts = { weekday: 'long', month: 'long', day: 'numeric' };
     const dateStr = now.toLocaleDateString('en-US', opts);
@@ -1134,6 +1159,8 @@
     let dayTypeHTML = '';
     if (isVac) {
       dayTypeHTML = '<span class="day-type-badge vacation">Mexico Trip</span>';
+    } else if (satTest) {
+      dayTypeHTML = `<span class="day-type-badge sat-test-day">SAT Test Day — Practice Test ${satTest.id}</span>`;
     } else if (isCls) {
       dayTypeHTML = '<span class="day-type-badge class-day">Class Day — SJCC Spanish 9:30–11:30 AM</span>';
     } else {
@@ -1158,7 +1185,7 @@
         return;
       }
       const checked = !!state[item.id];
-      const cls = `check-item ${item.core ? 'core' : 'routine'}${checked ? ' done' : ''}`;
+      const cls = `check-item ${item.core ? 'core' : 'routine'}${checked ? ' done' : ''}${item.isSATTestDay ? ' sat-test-day-item' : ''}`;
       const cbSize = item.core ? '24px' : '18px';
       itemsHTML += `
         <div class="${cls}" data-id="${item.id}" onclick="toggleItem('${item.id}')">
