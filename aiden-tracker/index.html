@@ -1063,6 +1063,27 @@
     { id: 'sleep',     time: '11:30 PM', label: 'Lights out',                  emoji: '🌙', core: false },
   ];
 
+  // SAT practice test day schedule — test takes 2h14m, everything pushed back
+  const SAT_TEST_SCHEDULE = [
+    { section: 'Morning Routine' },
+    { id: 'wake',      time: '9:00 AM',  label: 'Wake up',                            emoji: '⏰', core: false },
+    { id: 'bed',       time: '9:10 AM',  label: 'Make bed',                           emoji: '🛏️', core: false },
+    { id: 'shower',    time: '9:20 AM',  label: 'Shower and get ready',               emoji: '🚿', core: false },
+    { id: 'breakfast', time: '9:45 AM',  label: 'Breakfast',                          emoji: '🥗', core: false },
+    { section: 'SAT Test' },
+    { id: 'sat',       time: '10:30 AM', label: 'SAT Practice Test — timed, collegeboard.org', emoji: '📝', duration: '2 hr 14 min', core: true, isSATTestDay: true },
+    { id: 'lunch',     time: '1:00 PM',  label: 'Lunch break',                        emoji: '🍱', core: false },
+    { section: 'Study' },
+    { id: 'usaaio',    time: '2:00 PM',  label: 'USAAIO Competition Prep',            emoji: '🤖', duration: '90 min', core: true },
+    { section: 'Movement and Music' },
+    { id: 'exercise',  time: '3:30 PM',  label: 'Exercise at home',                   emoji: '🏋️', duration: '1 hr',   core: true },
+    { id: 'horn',      time: '4:30 PM',  label: 'French Horn Practice',               emoji: '🎵', duration: '1 hr',   core: true },
+    { id: 'outside',   time: '6:30 PM',  label: 'Get outside — walk, run, bike',      emoji: '🌿', duration: '1 hr',   core: true },
+    { section: 'Evening' },
+    { id: 'winddown',  time: '11:00 PM', label: 'Phone away — wind down',             emoji: '📵', core: false },
+    { id: 'sleep',     time: '11:30 PM', label: 'Lights out',                         emoji: '🌙', core: false },
+  ];
+
   const CORE_IDS = ['sat', 'usaaio', 'exercise', 'outside', 'horn'];
 
   const SAT_TESTS = [
@@ -1145,13 +1166,9 @@
     const isCls  = isClassDay(now);
     const satTest = getSATTestToday();
 
-    // On practice test days, replace the regular SAT study block with the full timed test
-    const baseSchedule = isCls ? CLASS_SCHEDULE : FREE_SCHEDULE;
-    const schedule = satTest
-      ? baseSchedule.map(item => item.id === 'sat'
-          ? { ...item, label: `SAT Practice Test ${satTest.id} — full timed test`, emoji: '📝', duration: '2 hr 14 min', isSATTestDay: true }
-          : item)
-      : baseSchedule;
+    const schedule = satTest ? SAT_TEST_SCHEDULE
+                   : isCls   ? CLASS_SCHEDULE
+                   :           FREE_SCHEDULE;
 
     const opts = { weekday: 'long', month: 'long', day: 'numeric' };
     const dateStr = now.toLocaleDateString('en-US', opts);
@@ -1359,7 +1376,7 @@
     if (!wasChecked) {
       launchConfetti('small');
       const now      = new Date();
-      const schedule = isClassDay(now) ? CLASS_SCHEDULE : FREE_SCHEDULE;
+      const schedule = getSATTestToday() ? SAT_TEST_SCHEDULE : isClassDay(now) ? CLASS_SCHEDULE : FREE_SCHEDULE;
       const coreIds  = schedule.filter(i => i.core).map(i => i.id);
       const wasAllDone = coreIds.every(cid => !!currentChecklist[cid]);
       const isNowAllDone = coreIds.every(cid => !!newState[cid]);
@@ -1386,7 +1403,7 @@
   function handleStreakUpdate(state) {
     const now = new Date();
     if (isVacation(now)) return;
-    const schedule = isClassDay(now) ? CLASS_SCHEDULE : FREE_SCHEDULE;
+    const schedule = getSATTestToday() ? SAT_TEST_SCHEDULE : isClassDay(now) ? CLASS_SCHEDULE : FREE_SCHEDULE;
     const coreIds  = schedule.filter(i => i.core).map(i => i.id);
     if (!coreIds.every(id => state[id])) return;
     const today = todayStr();
