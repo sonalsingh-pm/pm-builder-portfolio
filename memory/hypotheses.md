@@ -11,4 +11,4 @@ into product requirements.
 **Evidence for:** SAP Business Network experience, EU e-invoicing
 mandates research, Mexico CFDI, India GST.
 **Evidence against:** None yet.
-**Status:** Strong — promote to rule after NexTrade Aria PRD is written.
+**Status:** Strong — promote to rule after the next B2B enterprise PRD is written.

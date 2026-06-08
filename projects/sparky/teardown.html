@@ -81,9 +81,11 @@
     .metric-name { font-size: 13px; font-weight: 600; color: #111827; margin-bottom: 4px; }
     .metric-desc { font-size: 12px; color: #6b7280; line-height: 1.4; }
 
-    .footer { text-align: center; padding-top: 32px; border-top: 1px solid #e5e7eb; margin-top: 48px; }
-    .footer-primary { font-size: 14px; color: #374151; margin-bottom: 6px; }
-    .footer-secondary { font-size: 12px; color: #9ca3af; }
+    .footer { border-top: 1px solid #e5e7eb; padding: 36px 0; margin-top: 48px; display: flex; justify-content: space-between; align-items: center; }
+    .footer-name { font-size: 15px; font-weight: 600; color: #111827; }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-size: 13px; color: #6b7280; text-decoration: none; letter-spacing: 0.04em; }
+    .footer-links a:hover { color: #111827; }
 
     /* Persona cards */
     .persona-grid { display: flex; flex-direction: column; gap: 16px; margin: 20px 0; }
@@ -183,9 +185,25 @@
     .finding-dot.partial { background: #d97706; }
     .finding-text { font-size: 14px; color: #374151; line-height: 1.6; }
     .finding-text strong { color: #111827; }
+
+    .back-nav { border-bottom: 1px solid #e5e7eb; padding: 14px 0; position: sticky; top: 0; background: #ffffff; z-index: 100; }
+    .back-nav-inner { max-width: 720px; margin: 0 auto; padding: 0 40px; display: flex; align-items: center; justify-content: space-between; }
+    .back-link { font-size: 12px; font-weight: 500; color: #6b7280; text-decoration: none; letter-spacing: 0.08em; text-transform: uppercase; }
+    .back-link:hover { color: #111827; }
+    .back-tag { font-size: 12px; color: #0071ce; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; }
+
+    .footer-nav { margin-top: 14px; display: flex; justify-content: center; gap: 24px; }
+    .footer-nav a { font-size: 13px; color: #6b7280; text-decoration: none; letter-spacing: 0.04em; }
+    .footer-nav a:hover { color: #111827; }
   </style>
 </head>
 <body>
+  <nav class="back-nav">
+    <div class="back-nav-inner">
+      <a href="../../portfolio/index.html" class="back-link">← Sonal Singh</a>
+      <span class="back-tag">Product Teardown</span>
+    </div>
+  </nav>
   <div class="page">
 
     <!-- Header -->
@@ -701,8 +719,12 @@
 
     <!-- Footer -->
     <div class="footer">
-      <p class="footer-primary">Sonal Singh · Principal Product Manager</p>
-      <p class="footer-secondary">Personal analysis. Opinions are my own, not Walmart's. June 2026.</p>
+      <div class="footer-name">Sonal Singh</div>
+      <div class="footer-links">
+        <a href="../../portfolio/index.html">Portfolio</a>
+        <a href="https://www.linkedin.com/in/sonalsingh444/" target="_blank">LinkedIn</a>
+        <a href="mailto:sonalsingh.email@gmail.com">Email</a>
+      </div>
     </div>
 
   </div>

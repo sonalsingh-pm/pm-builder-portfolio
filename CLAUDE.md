@@ -15,40 +15,47 @@ at LinkedIn, Yelp, Shopify, or a late-stage startup.
 PM-BUILDER-PORTFOLIO/
 ├── CLAUDE.md                            ← you are here
 ├── README.md
-├── _redirects                           ← Netlify routing, do not touch
-├── campspark-case-study.html            ← deployed to Netlify, do not move
-├── transformation_dashboard.html        ← personal file, ignore for portfolio work
-├── PRDs/
-│   └── campspark-prd.md
-├── prototypes/
-│   ├── index.html                       ← portfolio website, deployed to Netlify, do not move
-│   └── campspark/
-│       └── index.html                   ← CampSpark prototype, deployed to Netlify, do not move
-├── resources/
-│   ├── prd-template.md
-│   ├── prd-vendoriq.md
-│   ├── prd-shiftswap.md
-│   └── campspark-data.json
-├── skills/
-│   ├── skill_brief.md
-│   ├── skill_prd.md
-│   ├── skill_prototype.md
-│   ├── skill_discovery.md
-│   ├── skill_user_stories.md
-│   ├── skill_test_cases.md
-│   ├── skill_research_sync.md
-│   ├── skill_case_study.md
-│   └── skill_job_search.md
-├── memory/
+├── _redirects                           ← Netlify routing: / → portfolio/index.html
+├── portfolio/
+│   └── index.html                       ← portfolio website, deployed to Netlify, do not move
+├── projects/                            ← one folder per project, everything inside
+│   ├── campspark/
+│   │   ├── prd.md
+│   │   ├── user-stories.md
+│   │   ├── test-cases.md
+│   │   ├── data.json
+│   │   ├── prototype/
+│   │   │   └── index.html
+│   │   └── case-study.html
+│   ├── lumen/
+│   │   ├── prototype/
+│   │   │   └── index.html
+│   │   └── case-study.html
+│   ├── sparky/
+│   │   └── teardown.html
+│   └── dropbox/
+│       └── prototype/
+│           └── index.html
+├── ai-workflow/                             ← Claude tooling, not portfolio content
+│   ├── skills/
+│   │   ├── skill_brief.md
+│   │   ├── skill_prd.md
+│   │   ├── skill_prototype.md
+│   │   ├── skill_discovery.md
+│   │   ├── skill_user_stories.md
+│   │   ├── skill_test_cases.md
+│   │   ├── skill_research_sync.md
+│   │   ├── skill_case_study.md
+│   │   └── skill_job_search.md
+│   └── templates/
+│       └── prd-template.md
+├── memory/                              ← self-improving loop memory
 │   ├── rules.md
 │   ├── hypotheses.md
 │   └── rejected.md
-├── case_studies/
-├── test_cases/
-│   └── campspark-test-cases.md
-├── user_stories/
-│   └── campspark-user-stories.md
-└── research/
+└── resources/                           ← reference PRDs (not active projects)
+    ├── prd-vendoriq.md
+    └── prd-shiftswap.md
 
 ---
 
@@ -58,14 +65,14 @@ When a command is called, automatically read the files listed — no additional 
 
 | Command | Read These Files Automatically | Output |
 |---|---|---|
-| `/brief [name]` | `skills/skill_brief.md` | `PRDs/[name]-brief.md` |
-| `/discovery [name]` | `skills/skill_discovery.md` → `PRDs/[name]-brief.md` | `research/[name]-discovery.md` |
-| `/prd [name]` | `skills/skill_prd.md` → `resources/prd-template.md` → `PRDs/campspark-prd.md` | `PRDs/[name].md` |
-| `/prototype [name] Sprint [N]` | `skills/skill_prototype.md` → `user_stories/[name].md` → `PRDs/[name].md` — build only the sprint specified | `prototypes/[name]/index.html` |
-| `/user-stories [name]` | `skills/skill_user_stories.md` → `PRDs/[name].md` | `user_stories/[name].md` |
-| `/test-cases [name]` | `skills/skill_test_cases.md` → `user_stories/[name].md` | `test_cases/[name].md` |
-| `/research-sync [name]` | `skills/skill_research_sync.md` → `PRDs/[name].md` | `research/[name].md` |
-| `/case-study [name]` | `skills/skill_case_study.md` → `PRDs/[name].md` → `user_stories/[name].md` → `research/[name].md` | `case_studies/[name]-case-study.md` |
+| `/brief [name]` | `ai-workflow/skills/skill_brief.md` | `projects/[name]/brief.md` |
+| `/discovery [name]` | `ai-workflow/skills/skill_discovery.md` → `projects/[name]/brief.md` | `projects/[name]/discovery.md` |
+| `/prd [name]` | `ai-workflow/skills/skill_prd.md` → `ai-workflow/templates/prd-template.md` → `projects/campspark/prd.md` | `projects/[name]/prd.md` |
+| `/prototype [name] Sprint [N]` | `ai-workflow/skills/skill_prototype.md` → `projects/[name]/user-stories.md` → `projects/[name]/prd.md` — build only the sprint specified | `projects/[name]/prototype/index.html` |
+| `/user-stories [name]` | `ai-workflow/skills/skill_user_stories.md` → `projects/[name]/prd.md` | `projects/[name]/user-stories.md` |
+| `/test-cases [name]` | `ai-workflow/skills/skill_test_cases.md` → `projects/[name]/user-stories.md` | `projects/[name]/test-cases.md` |
+| `/research-sync [name]` | `ai-workflow/skills/skill_research_sync.md` → `projects/[name]/prd.md` | `projects/[name]/research.md` |
+| `/case-study [name]` | `ai-workflow/skills/skill_case_study.md` → `projects/[name]/prd.md` → `projects/[name]/user-stories.md` → `projects/[name]/research.md` | `projects/[name]/case-study.html` |
 
 ---
 
@@ -161,12 +168,12 @@ If it cannot answer all four it is not ready for GitHub.
 
 ### CampSpark — Summer Camp Discovery and Coordination
 **Status:** PRD complete | Prototype live | Case study live
-**PRD:** `PRDs/campspark-prd.md`
-**User stories:** `user_stories/campspark-user-stories.md`
-**Test cases:** `test_cases/campspark-test-cases.md`
-**Prototype:** `prototypes/campspark/index.html`
-**Case study:** `campspark-case-study.html` (deployed, do not move)
-**Live URL:** https://sonalsingh-pm.netlify.app/prototypes/campspark/index.html
+**PRD:** `projects/campspark/prd.md`
+**User stories:** `projects/campspark/user-stories.md`
+**Test cases:** `projects/campspark/test-cases.md`
+**Prototype:** `projects/campspark/prototype/index.html`
+**Case study:** `projects/campspark/case-study.html`
+**Live URL:** https://sonalsingh-pm.netlify.app/projects/campspark/prototype/index.html
 
 **What it is:** A desktop-first platform helping working parents discover summer camps, plan their child's summer, and coordinate with other parents — replacing the fragmented process of visiting dozens of websites and coordinating over group texts.
 
@@ -181,15 +188,9 @@ If it cannot answer all four it is not ready for GitHub.
 
 ---
 
-### NexTrade Aria — AI-Powered B2B Trade Intelligence
-**Status:** PRD in progress
-**PRD:** `PRDs/nexttrade-aria.md` ← next to build
-
----
-
 ## Portfolio Website
 
-The portfolio website lives at `prototypes/index.html`.
+The portfolio website lives at `portfolio/index.html`.
 It is deployed to Netlify and linked from Sonal's LinkedIn profile and resume.
 Do not move this file — it will break the live URL.
 Every completed project gets a card in the Projects section.
@@ -199,4 +200,4 @@ All prototype links must always work before any commit.
 
 ## Author
 Sonal Singh | Principal Product Manager
-sonalsingh.email@gmail.com | linkedin.com/in/sonalsingh444Sonnet 4.6Claude is AI and can make mis
+sonalsingh.email@gmail.com | linkedin.com/in/sonalsingh444
