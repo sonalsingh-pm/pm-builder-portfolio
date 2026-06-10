@@ -616,7 +616,18 @@
 </div>
 
 <script>
-  const BACKEND = "http://127.0.0.1:8000";
+  // Environment-aware backend URL: localhost during development,
+  // the deployed Render backend when served from Netlify.
+  const IS_LOCAL = location.protocol === "file:" ||
+                   location.hostname === "localhost" ||
+                   location.hostname === "127.0.0.1";
+  const BACKEND = IS_LOCAL
+    ? "http://127.0.0.1:8000"
+    : "https://compass-backend.onrender.com";  // updated after Render service creation
+
+  // Free-tier Render sleeps when idle. Ping it the moment anyone opens the
+  // page so it wakes while they are still reading and typing.
+  fetch(`${BACKEND}/health`).catch(() => {});
 
   const problemEl         = document.getElementById("problem");
   const submitBtn         = document.getElementById("submit-btn");
