@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ella's Summer 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f6f9fc;
+      --surface: #ffffff;
+      --surface2: #f6f9fc;
+      --border: #e6ebf1;
+      --primary: #5533FF;
+      --primary-light: #ede9ff;
+      --success: #059669;
+      --success-light: #ecfdf5;
+      --warning: #f59e0b;
+      --text: #0a2540;
+      --muted: #6b7c93;
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* ---- HEADER ---- */
+    .header {
+      background: linear-gradient(135deg, #5E46BF 0%, #5533FF 30%, #1CA8FF 65%, #84F6D5 100%);
+      color: white;
+      padding: 52px 24px 76px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 30% 50%, rgba(255,255,255,0.08) 0%, transparent 60%),
+                  radial-gradient(ellipse 60% 80% at 75% 20%, rgba(255,255,255,0.06) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 0; right: 0;
+      height: 44px;
+      background: var(--bg);
+      border-radius: 50% 50% 0 0 / 22px 22px 0 0;
+    }
+
+    .header-tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 100px;
+      padding: 5px 16px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      color: rgba(255,255,255,0.95);
+    }
+
+    .header h1 {
+      font-size: 44px;
+      font-weight: 900;
+      letter-spacing: -2px;
+      margin-bottom: 8px;
+      line-height: 1;
+      color: #ffffff;
+    }
+
+    .header .subtitle {
+      font-size: 14px;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 32px;
+      letter-spacing: 0.2px;
+    }
+
+    .stats-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .stat-chip {
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.28);
+      border-radius: 100px;
+      padding: 9px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    /* ---- TAB NAV ---- */
+    .tab-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #ffffff;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      padding: 0 8px;
+      box-shadow: 0 1px 3px rgba(40,41,61,0.05);
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      padding: 14px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+      font-family: 'Inter', sans-serif;
+      margin-bottom: -1px;
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover { color: var(--text); }
+
+    .tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ---- MAIN ---- */
+    .main {
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 20px 16px 60px;
+    }
+
+    /* ---- CARD ---- */
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 26px;
+      margin-bottom: 14px;
+      box-shadow: 0 13px 27px -5px rgba(40,41,61,0.06), 0 8px 16px -8px rgba(40,41,61,0.04);
+      border: 1px solid var(--border);
+    }
+
+    .card-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    /* ---- TODAY HEADER ---- */
+    .today-date {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 2px;
+    }
+
+    .today-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .day-type-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 100px;
+      margin-bottom: 18px;
+    }
+
+    .day-type-badge.free-day {
+      background: #ede9ff;
+      color: #4c1d95;
+    }
+
+    .day-type-badge.camp-day {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .day-type-badge.vacation {
+      background: #fce7f3;
+      color: #9d174d;
+    }
+
+    /* ---- SCHEDULE LIST ---- */
+    .schedule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 20px;
+    }
+
+    /* section dividers */
+    .schedule-divider {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      padding: 10px 0 4px;
+      border-top: 1px solid var(--border);
+      margin-top: 4px;
+    }
+
+    .schedule-divider:first-child { border-top: none; margin-top: 0; padding-top: 0; }
+
+    /* core = big items (math, writing, reading, spanish, violin, basketball) */
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 14px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+      user-select: none;
+    }
+
+    .check-item.core {
+      background: var(--surface2);
+    }
+
+    .check-item.routine {
+      background: transparent;
+      padding: 8px 14px;
+    }
+
+    .check-item.core:hover  { background: #ede9ff; border-color: #a78bfa; }
+    .check-item.routine:hover { background: var(--surface2); }
+
+    .check-item.done {
+      background: var(--success-light);
+    }
+    .check-item.done.core {
+      border-color: #6ee7b7;
+    }
+
+    .check-item.done .check-label,
+    .check-item.done .item-time {
+      text-decoration: line-through;
+      color: var(--muted);
+    }
+
+    /* checkboxes */
+    .checkbox {
+      border-radius: 7px;
+      border: 2px solid #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-weight: 700;
+      color: white;
+      transition: all 0.2s ease;
+      background: white;
+    }
+
+    .check-item.core .checkbox  { width: 24px; height: 24px; font-size: 13px; }
+    .check-item.routine .checkbox { width: 18px; height: 18px; font-size: 10px; border-radius: 5px; }
+
+    .check-item.done .checkbox {
+      background: var(--success);
+      border-color: var(--success);
+    }
+
+    /* label + time stacked */
+    .item-body { flex: 1; min-width: 0; }
+
+    .check-label {
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .check-item.core .check-label  { font-size: 15px; }
+    .check-item.routine .check-label { font-size: 13px; color: var(--muted); }
+
+    .item-time {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-top: 1px;
+    }
+
+    /* today's writing prompt, shown right on the schedule item */
+    .item-prompt {
+      font-size: 12px;
+      color: #7c3aed;
+      background: #f5f3ff;
+      border-radius: 6px;
+      padding: 6px 10px;
+      margin-top: 6px;
+      line-height: 1.45;
+      white-space: normal;
+      font-style: italic;
+    }
+
+    .check-item.done .item-prompt {
+      color: var(--muted);
+      background: transparent;
+      padding: 0 10px;
+    }
+
+    .check-meta {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 100px;
+      flex-shrink: 0;
+    }
+
+    .check-item.core .check-meta { background: var(--border); color: var(--muted); }
+    .check-item.done.core .check-meta { background: #ede9ff; color: #4c1d95; }
+
+    /* progress */
+    .progress-wrap { margin-top: 4px; }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .progress-track {
+      height: 8px;
+      background: var(--border);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #5533FF, #1CA8FF);
+      border-radius: 100px;
+      transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .all-done-banner {
+      display: none;
+      margin-top: 16px;
+      padding: 18px 20px;
+      background: linear-gradient(135deg, #059669, #10b981);
+      border-radius: var(--radius-sm);
+      color: white;
+      text-align: center;
+      font-weight: 700;
+      font-size: 16px;
+      animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .all-done-dismiss {
+      position: absolute;
+      right: 14px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      opacity: 0.7;
+      font-weight: 400;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0.92); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* ---- TOMORROW PREVIEW ---- */
+    .tomorrow-preview {
+      margin-top: 16px;
+      padding: 14px 16px;
+      background: var(--surface2);
+      border-radius: var(--radius-sm);
+      border-left: 3px solid #059669;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .tomorrow-preview.camp-next { border-left-color: #f59e0b; }
+    .tomorrow-preview.vacation-next { border-left-color: #06b6d4; }
+
+    .tmr-icon { font-size: 20px; flex-shrink: 0; }
+
+    .tmr-body { flex: 1; }
+    .tmr-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 2px; }
+    .tmr-text  { font-size: 13px; font-weight: 600; color: var(--text); }
+
+    /* ---- QUOTE CARD ---- */
+    .quote-card {
+      background: #ffffff;
+      border-radius: var(--radius);
+      padding: 32px 32px 28px;
+      margin-bottom: 14px;
+      box-shadow: 0 13px 27px -5px rgba(40,41,61,0.06), 0 8px 16px -8px rgba(40,41,61,0.04);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-left: 4px solid #5533FF;
+    }
+
+    .quote-card::before {
+      content: '\201C';
+      position: absolute;
+      top: -16px;
+      right: 24px;
+      font-size: 140px;
+      font-weight: 900;
+      color: #5533FF;
+      opacity: 0.06;
+      line-height: 1;
+      font-family: Georgia, serif;
+      pointer-events: none;
+    }
+
+    .quote-accent { display: none; }
+
+    .quote-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #5533FF;
+      margin-bottom: 14px;
+    }
+
+    .quote-text {
+      font-size: 19px;
+      font-weight: 600;
+      line-height: 1.6;
+      color: var(--text);
+      margin-bottom: 16px;
+      font-style: italic;
+    }
+
+    .quote-author {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ---- SPECIAL DAY BANNERS ---- */
+    .vacation-card {
+      background: linear-gradient(135deg, #0369a1 0%, #0ea5e9 40%, #06b6d4 70%, #0891b2 100%);
+      color: white;
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      margin-bottom: 14px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(6, 182, 212, 0.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .vacation-card.forest {
+      background: linear-gradient(135deg, #14532d 0%, #166534 40%, #15803d 70%, #4d7c0f 100%);
+      box-shadow: 0 8px 32px rgba(22, 101, 52, 0.35);
+    }
+
+    .vacation-card.funpark {
+      background: linear-gradient(135deg, #9d174d 0%, #db2777 40%, #f97316 80%, #fbbf24 100%);
+      box-shadow: 0 8px 32px rgba(219, 39, 119, 0.35);
+    }
+
+    .vacation-card::before {
+      content: '';
+      position: absolute;
+      bottom: -20px; left: -20px; right: -20px;
+      height: 60px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 50%;
+    }
+
+    .cancun-icons {
+      font-size: 28px;
+      letter-spacing: 4px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .vacation-card h2 {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    .vacation-card p  { font-size: 14px; opacity: 0.85; line-height: 1.6; }
+
+    /* ---- WEEKLY MILESTONES ---- */
+    .weeks-list { display: flex; flex-direction: column; gap: 6px; }
+
+    .week-row {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 16px;
+      background: var(--surface2);
+      border-radius: var(--radius-sm);
+      border-left: 4px solid var(--border);
+      cursor: pointer; transition: all 0.2s;
+    }
+
+    .week-row:hover { background: #f1f5f9; }
+    .week-row.current  { border-left-color: var(--primary); background: #ede9ff; }
+    .week-row.complete { border-left-color: var(--success); background: var(--success-light); }
+    .week-row.vacation-week { border-left-color: #ec4899; background: #fdf2f8; }
+    .week-row.camp-week { border-left-color: #f59e0b; background: #fffbeb; }
+    .week-row.past:not(.complete):not(.vacation-week):not(.camp-week) { opacity: 0.6; }
+
+    .week-label { min-width: 64px; }
+    .week-num   { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); }
+    .week-row.current .week-num { color: #059669; }
+    .week-dates { font-size: 10px; color: #94a3b8; margin-top: 1px; }
+    .week-deliverable { font-size: 13px; font-weight: 500; flex: 1; line-height: 1.4; }
+    .week-icon { font-size: 18px; }
+
+    /* ---- CUPCAKE RAIN ---- */
+    @keyframes cupcake-fall {
+      0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+      85%  { opacity: 1; }
+      100% { transform: translateY(105vh) rotate(360deg); opacity: 0; }
+    }
+    @keyframes cupcake-sway {
+      0%, 100% { margin-left: 0; }
+      33%  { margin-left: 20px; }
+      66%  { margin-left: -20px; }
+    }
+    .cupcake-piece {
+      position: fixed;
+      top: -40px;
+      pointer-events: none;
+      z-index: 9999;
+      animation: cupcake-fall var(--dur) ease-in forwards,
+                 cupcake-sway calc(var(--dur) * 0.7) ease-in-out infinite;
+    }
+
+    /* party confetti for the all-done celebration */
+    .confetti-piece {
+      position: fixed;
+      top: -12px;
+      pointer-events: none;
+      z-index: 9999;
+      border-radius: 2px;
+      animation: cupcake-fall var(--dur) ease-in forwards,
+                 cupcake-sway calc(var(--dur) * 0.7) ease-in-out infinite;
+    }
+
+    /* ---- CELEBRATION TOAST ---- */
+    .celebration-toast {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-120px);
+      background: linear-gradient(135deg, #f59e0b, #ef4444);
+      color: white;
+      padding: 14px 28px;
+      border-radius: 100px;
+      font-size: 15px;
+      font-weight: 700;
+      z-index: 9998;
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      white-space: nowrap;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+      text-align: center;
+    }
+    .celebration-toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ---- RESOURCES ---- */
+    .resources-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .resource-link {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .resource-link:hover {
+      background: #ede9ff;
+      border-color: #a78bfa;
+    }
+
+    .resource-icon {
+      font-size: 22px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .resource-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .resource-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .resource-arrow {
+      margin-left: auto;
+      font-size: 16px;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .links-empty {
+      text-align: center;
+      padding: 32px 16px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .links-empty .links-empty-icon {
+      font-size: 32px;
+      display: block;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- CELEBRATION TOAST -->
+<div class="celebration-toast" id="celebration-toast"></div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-tag">Valley Christian Junior High</div>
+  <h1>Ella's Summer 2026</h1>
+  <p class="subtitle">June 8 – August 13 &nbsp;·&nbsp; A summer of music, hoops, camps, and fun</p>
+  <div class="stats-row">
+    <div class="stat-chip" id="stat-days">-- days left</div>
+    <div class="stat-chip" id="stat-week">Week --</div>
+    <div class="stat-chip" id="stat-streak" onclick="testCelebration()" style="cursor:pointer" title="Tap to preview the celebration">🔥 -- day streak</div>
+  </div>
+</div>
+
+<!-- TAB NAV -->
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('today')" id="tab-today">Today</button>
+  <button class="tab-btn" onclick="switchTab('plan')" id="tab-plan">Plan</button>
+  <button class="tab-btn" onclick="switchTab('links')" id="tab-links">Links</button>
+</nav>
+
+<div class="main" id="main-content">
+
+  <!-- TAB: TODAY -->
+  <div class="tab-panel active" id="panel-today">
+    <div class="quote-card" id="quote-card">
+      <div class="quote-accent"></div>
+      <div class="quote-label">Quote of the Day</div>
+      <div class="quote-text" id="quote-text"></div>
+      <div class="quote-author" id="quote-author"></div>
+    </div>
+    <div id="today-card"></div>
+  </div>
+
+  <!-- TAB: PLAN -->
+  <div class="tab-panel" id="panel-plan">
+    <div class="card">
+      <div class="card-title">Summer Plan</div>
+      <div class="weeks-list" id="weeks-list"></div>
+    </div>
+  </div>
+
+  <!-- TAB: LINKS -->
+  <div class="tab-panel" id="panel-links">
+    <div class="card">
+      <div class="card-title">Resources</div>
+      <div class="resources-grid">
+
+        <a class="resource-link" href="https://www.aleks.com/login" target="_blank">
+          <div class="resource-icon">🧮</div>
+          <div>
+            <div class="resource-name">ALEKS</div>
+            <div class="resource-desc">Math practice — your daily 90 minutes starts here</div>
+          </div>
+          <div class="resource-arrow">→</div>
+        </a>
+
+        <a class="resource-link" href="https://www.khanacademy.org" target="_blank">
+          <div class="resource-icon">📝</div>
+          <div>
+            <div class="resource-name">Khan Academy</div>
+            <div class="resource-desc">Free lessons — great for the English and grammar block</div>
+          </div>
+          <div class="resource-arrow">→</div>
+        </a>
+
+        <a class="resource-link" href="https://www.sjpl.org" target="_blank">
+          <div class="resource-icon">📚</div>
+          <div>
+            <div class="resource-name">San José Public Library</div>
+            <div class="resource-desc">Find your next book — browse, hold, and check due dates</div>
+          </div>
+          <div class="resource-arrow">→</div>
+        </a>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+  import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyANXyGjMK7uHCEhvYrgprmvWlgQoekitoo",
+    authDomain: "aiden-summer-2026.firebaseapp.com",
+    databaseURL: "https://aiden-summer-2026-default-rtdb.firebaseio.com",
+    projectId: "aiden-summer-2026",
+    storageBucket: "aiden-summer-2026.firebasestorage.app",
+    messagingSenderId: "801653156367",
+    appId: "1:801653156367:web:02576bb6a4469e4a02517a"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getDatabase(app);
+
+  // All of Ella's data lives under ella/ so it never collides with Aiden's tracker
+  const BASE = 'ella';
+
+  // ========== CONSTANTS ==========
+
+  const SUMMER_START = new Date('2026-06-08T00:00:00');
+  const SCHOOL_START = new Date('2026-08-13T00:00:00'); // First day of school: Thu Aug 13
+
+  // Returns YYYY-MM-DD using LOCAL date (not UTC)
+  const todayStr = () => {
+    const d = new Date();
+    return [d.getFullYear(), String(d.getMonth()+1).padStart(2,'0'), String(d.getDate()).padStart(2,'0')].join('-');
+  };
+
+  function dateStrOf(d) {
+    return [d.getFullYear(), String(d.getMonth()+1).padStart(2,'0'), String(d.getDate()).padStart(2,'0')].join('-');
+  }
+
+  function inRange(d, startStr, endStr) {
+    const s = dateStrOf(d);
+    return s >= startStr && s <= endStr;
+  }
+
+  // ---- Day types from the family calendar ----
+  // mexico:         Jul 3–8 family trip
+  // missionsprings: Jul 26 – Aug 1 overnight camp (Frontier Ranch)
+  // greatamerica:   Jun 17 day trip
+  // bballcamp:      Jun 22–25 and Jun 29–Jul 2, Mon–Thu 9am–12pm
+  // gsyo:           Jul 13–17 and Jul 20–24, Mon–Fri (GSYO Summer Conservatory, Los Altos)
+  function getDayType(d) {
+    const s = dateStrOf(d);
+    if (inRange(d, '2026-07-03', '2026-07-08')) return 'mexico';
+    if (inRange(d, '2026-07-26', '2026-08-01')) return 'missionsprings';
+    if (s === '2026-06-17') return 'greatamerica';
+    if (inRange(d, '2026-06-22', '2026-06-25') || inRange(d, '2026-06-29', '2026-07-02')) return 'bballcamp';
+    if (inRange(d, '2026-07-13', '2026-07-17') || inRange(d, '2026-07-20', '2026-07-24')) return 'gsyo';
+    return 'regular';
+  }
+
+  // ---- Regular summer day ----
+  // Math first thing, lunch 1:30–2:30, nothing outside before 6:30 PM (too hot),
+  // basketball 6:30–7:30, dinner 8:00, lights out 10:00.
+  const REGULAR_SCHEDULE = [
+    { section: 'Morning Routine' },
+    { id: 'wake',      time: '9:00 AM',  label: 'Wake up',                          emoji: '⏰', core: false },
+    { id: 'bed',       time: '9:10 AM',  label: 'Make bed',                         emoji: '🛏️', core: false },
+    { id: 'shower',    time: '9:15 AM',  label: 'Shower and brush',                 emoji: '🚿', core: false },
+    { id: 'breakfast', time: '9:40 AM',  label: 'Breakfast',                        emoji: '🥞', core: false },
+    { section: 'Morning Learning' },
+    { id: 'math',      time: '10:00 AM', label: 'Math on ALEKS',                    emoji: '🧮', duration: '90 min', core: true },
+    { id: 'break1',    time: '11:30 AM', label: 'Break — snack, stretch',           emoji: '🍪', duration: '15 min', core: false },
+    { id: 'writing',   time: '11:45 AM', label: 'Writing — one piece in your notebook', emoji: '✍️', duration: '1 hr', core: true, showPrompt: true },
+    { id: 'lunch',     time: '1:30 PM',  label: 'Lunch',                            emoji: '🍱', duration: '1 hr', core: false },
+    { section: 'Afternoon (indoors — too hot outside!)' },
+    { id: 'spanish',   time: '2:30 PM',  label: 'Spanish',                          emoji: '🇪🇸', duration: '30 min', core: true },
+    { id: 'english',   time: '3:00 PM',  label: 'English — grammar practice',       emoji: '📝', duration: '30 min', core: true },
+    { id: 'reading',   time: '3:30 PM',  label: 'Reading time',                     emoji: '📚', duration: '90 min', core: true },
+    { id: 'violin',    time: '5:00 PM',  label: 'Violin Practice',                  emoji: '🎻', duration: '1 hr', core: true },
+    { id: 'freetime',  time: '6:00 PM',  label: 'Free time',                        emoji: '🎨', core: false },
+    { section: 'Evening' },
+    { id: 'basketball',time: '6:30 PM',  label: 'Basketball — hoops, drills, play', emoji: '🏀', duration: '1 hr', core: true },
+    { id: 'dinner',    time: '8:00 PM',  label: 'Dinner',                           emoji: '🍽️', core: false },
+    { id: 'winddown',  time: '9:30 PM',  label: 'Screens away — wind down',         emoji: '📵', core: false },
+    { id: 'sleep',     time: '10:00 PM', label: 'Lights out',                       emoji: '🌙', core: false },
+  ];
+
+  // ---- Basketball camp day (Mon–Thu, Jun 22–25 and Jun 29–Jul 2) ----
+  // Camp 9–12 replaces evening basketball. Spanish skipped on camp days.
+  const BBALL_CAMP_SCHEDULE = [
+    { section: 'Morning Routine' },
+    { id: 'wake',      time: '7:45 AM',  label: 'Wake up',                          emoji: '⏰', core: false },
+    { id: 'shower',    time: '7:55 AM',  label: 'Get ready and brush',              emoji: '🚿', core: false },
+    { id: 'breakfast', time: '8:20 AM',  label: 'Breakfast',                        emoji: '🥞', core: false },
+    { id: 'leave',     time: '8:40 AM',  label: 'Leave for camp',                   emoji: '🚗', core: false },
+    { section: 'Basketball Camp' },
+    { id: 'camp',      time: '9:00 AM',  label: 'Basketball Camp',                  emoji: '🏀', duration: '3 hrs', core: true },
+    { id: 'home',      time: '12:15 PM', label: 'Home — change and rest',           emoji: '🏠', core: false },
+    { id: 'lunch',     time: '1:30 PM',  label: 'Lunch',                            emoji: '🍱', duration: '1 hr', core: false },
+    { section: 'Afternoon Learning' },
+    { id: 'math',      time: '2:30 PM',  label: 'Math on ALEKS',                    emoji: '🧮', duration: '90 min', core: true },
+    { id: 'break1',    time: '4:00 PM',  label: 'Break — snack, stretch',           emoji: '🍪', duration: '15 min', core: false },
+    { id: 'writing',   time: '4:15 PM',  label: 'Writing — one piece in your notebook', emoji: '✍️', duration: '1 hr', core: true, showPrompt: true },
+    { id: 'reading',   time: '5:15 PM',  label: 'Reading time',                     emoji: '📚', duration: '1 hr', core: true },
+    { section: 'Evening' },
+    { id: 'violin',    time: '6:30 PM',  label: 'Violin Practice',                  emoji: '🎻', duration: '45 min', core: true },
+    { id: 'dinner',    time: '8:00 PM',  label: 'Dinner',                           emoji: '🍽️', core: false },
+    { id: 'winddown',  time: '9:30 PM',  label: 'Screens away — wind down',         emoji: '📵', core: false },
+    { id: 'sleep',     time: '10:00 PM', label: 'Lights out',                       emoji: '🌙', core: false },
+  ];
+
+  // ---- GSYO Conservatory day (Mon–Fri, Jul 13–17 and Jul 20–24) ----
+  // Hours assumed 9 AM – 3 PM (CONFIRM). Long music day, so a lighter home plan:
+  // shorter math, writing + reading, basketball in the evening, no extra violin.
+  const GSYO_SCHEDULE = [
+    { section: 'Morning Routine' },
+    { id: 'wake',      time: '7:45 AM',  label: 'Wake up',                          emoji: '⏰', core: false },
+    { id: 'shower',    time: '7:55 AM',  label: 'Get ready and brush',              emoji: '🚿', core: false },
+    { id: 'breakfast', time: '8:15 AM',  label: 'Breakfast',                        emoji: '🥞', core: false },
+    { id: 'leave',     time: '8:30 AM',  label: 'Leave for Los Altos',              emoji: '🚗', core: false },
+    { section: 'GSYO Summer Conservatory' },
+    { id: 'camp',      time: '9:00 AM',  label: 'GSYO Conservatory (hours TBC)',    emoji: '🎻', duration: '~6 hrs', core: true },
+    { id: 'home',      time: '3:30 PM',  label: 'Home — snack and rest',            emoji: '🏠', core: false },
+    { section: 'Afternoon Learning (lighter day)' },
+    { id: 'math',      time: '4:00 PM',  label: 'Math on ALEKS',                    emoji: '🧮', duration: '45 min', core: true },
+    { id: 'writing',   time: '4:50 PM',  label: 'Writing — one piece in your notebook', emoji: '✍️', duration: '45 min', core: true, showPrompt: true },
+    { id: 'reading',   time: '5:40 PM',  label: 'Reading time',                     emoji: '📚', duration: '45 min', core: true },
+    { section: 'Evening' },
+    { id: 'basketball',time: '6:30 PM',  label: 'Basketball — hoops, drills, play', emoji: '🏀', duration: '1 hr', core: true },
+    { id: 'dinner',    time: '8:00 PM',  label: 'Dinner',                           emoji: '🍽️', core: false },
+    { id: 'winddown',  time: '9:30 PM',  label: 'Screens away — wind down',         emoji: '📵', core: false },
+    { id: 'sleep',     time: '10:00 PM', label: 'Lights out',                       emoji: '🌙', core: false },
+  ];
+
+  function getSchedule(dayType) {
+    if (dayType === 'bballcamp') return BBALL_CAMP_SCHEDULE;
+    if (dayType === 'gsyo')      return GSYO_SCHEDULE;
+    return REGULAR_SCHEDULE;
+  }
+
+  // ---- Daily writing prompts (rotates by day of summer) ----
+  const WRITING_PROMPTS = [
+    "If Toby could talk for one day, what would he tell you?",
+    "Invent a new ice cream flavor. Describe how it tastes and who would love it.",
+    "You wake up 6 feet tall. What happens when you play basketball today?",
+    "Write about your perfect summer day, from waking up to falling asleep.",
+    "A new girl from another country joins your class. Write her first day.",
+    "You get one superpower for one week. What do you do with it?",
+    "Describe the beach using all five senses.",
+    "Write a letter to yourself to open on the first day of 7th grade.",
+    "Your violin is secretly magic. What happens when you play it?",
+    "You have $100, but you must spend it on someone else. What do you do?",
+    "Write the menu for a restaurant run entirely by dogs.",
+    "You find a door in your backyard that wasn't there yesterday. Open it.",
+    "Ask a grandparent (real or imagined) what life was like at age 11. Write their story.",
+    "The WNBA calls: you get to play one quarter tonight. Describe it.",
+    "Write about a time you were brave, even just a little.",
+    "Invent a holiday. What is it called and how do people celebrate?",
+    "Describe your dream treehouse, room by room.",
+    "Toby and a squirrel finally have a conversation. Write it.",
+    "What is the best smell in the world? Convince me.",
+    "You can have dinner with anyone, alive or from history. Who and why?",
+    "Write a story that starts with: 'The lights went out, and then...'",
+    "What would school be like on the moon?",
+    "Write about a favorite memory with Aiden.",
+    "You are principal of VCJH for a day. What 3 rules do you change?",
+    "Describe a thunderstorm from a raindrop's point of view.",
+    "You shrink to the size of an ant for one day. Where do you go?",
+    "Write a poem about summer without using the word 'hot.'",
+    "What makes a good friend? Write about a great friend you know.",
+    "Plan the world's best sleepover. Every detail.",
+    "A mysterious package arrives with your name on it. What's inside?",
+    "Write about a food you used to hate. Do you still hate it?",
+    "If animals had jobs, what job would Toby have? What about a giraffe?",
+    "Design the perfect basketball shoe in words.",
+    "Write the first page of a mystery that happens at summer camp.",
+    "Pick 5 things for a time capsule you'll open in 2036. Why each one?",
+    "You switch lives with Mom for one day. Write what happens.",
+    "Invent a new sport that mixes basketball with something else.",
+    "What are you most excited about for 7th grade? Why?",
+    "Describe your favorite song without naming it.",
+    "If the ocean could talk, what would it complain about?",
+    "Write a thank-you letter to someone who doesn't know they helped you.",
+    "If your life were a book, what would this chapter be called?",
+  ];
+
+  function getTodayPrompt() {
+    const now = new Date();
+    const dayOfSummer = Math.max(0, Math.floor((now - SUMMER_START) / (24 * 60 * 60 * 1000)));
+    return WRITING_PROMPTS[dayOfSummer % WRITING_PROMPTS.length];
+  }
+
+  const WEEKS = [
+    { n: 1,  start: '2026-06-08', dates: 'Jun 8–14',     type: 'normal',   deliverable: 'Routine starts · Library trip to pick summer books · First notebook pieces' },
+    { n: 2,  start: '2026-06-15', dates: 'Jun 15–21',    type: 'normal',   deliverable: '🎢 Great America trip Wed Jun 17 · Routine the rest of the week' },
+    { n: 3,  start: '2026-06-22', dates: 'Jun 22–28',    type: 'camp',     deliverable: '🏀 Basketball Camp Mon–Thu 9–12 · Weekend: San Jose museum' },
+    { n: 4,  start: '2026-06-29', dates: 'Jun 29–Jul 2', type: 'camp',     deliverable: '🏀 Basketball Camp Mon–Thu 9–12 · Pack for Mexico!' },
+    { n: 5,  start: '2026-07-03', dates: 'Jul 3–8',      type: 'vacation', deliverable: '🌴 Mexico trip — no schedule, just fun' },
+    { n: 6,  start: '2026-07-09', dates: 'Jul 9–12',     type: 'normal',   deliverable: 'Back from Mexico · Ease back into the routine' },
+    { n: 7,  start: '2026-07-13', dates: 'Jul 13–19',    type: 'camp',     deliverable: '🎻 GSYO Summer Conservatory Mon–Fri · Union Presbyterian Church, Los Altos' },
+    { n: 8,  start: '2026-07-20', dates: 'Jul 20–25',    type: 'camp',     deliverable: '🎻 GSYO Conservatory week 2 · Pack for Mission Springs on Saturday' },
+    { n: 9,  start: '2026-07-26', dates: 'Jul 26–Aug 1', type: 'vacation', deliverable: '🌲 Mission Springs Frontier Ranch Camp — sleepaway week!' },
+    { n: 10, start: '2026-08-02', dates: 'Aug 2–13',     type: 'normal',   deliverable: 'Last stretch · Shift sleep schedule back · School starts Thu Aug 13 — 7th grade!' },
+  ];
+
+  // ========== CACHED STATE ==========
+  let currentChecklist = {};
+  let currentWeeks     = {};
+  let currentStreak    = { count: 0, lastDate: '' };
+  let allDoneThisSession = false; // only show banner when achieved in current session
+  let celebratedToday  = false;   // big party fires only once per day (stored in Firebase)
+
+  // ========== UTILITIES ==========
+
+  function getCurrentWeek() {
+    const today = todayStr();
+    let current = 1;
+    WEEKS.forEach(w => { if (today >= w.start) current = w.n; });
+    return current;
+  }
+
+  function getDaysLeft() {
+    return Math.max(0, Math.ceil((SCHOOL_START - new Date()) / (24 * 60 * 60 * 1000)));
+  }
+
+  // ========== HEADER ==========
+
+  function renderHeader() {
+    document.getElementById('stat-days').textContent = `${getDaysLeft()} days left`;
+    document.getElementById('stat-week').textContent = `Week ${getCurrentWeek()} of 10`;
+  }
+
+  // ========== TODAY CARD ==========
+
+  function specialBanner(dayType) {
+    if (dayType === 'mexico') return `
+      <div class="vacation-card">
+        <span class="cancun-icons">🌴 🏖️ 🌊 🐠 🌮 🎉 🌅 🦀</span>
+        <h2>¡Vamos a Cancún!</h2>
+        <p>July 3–8 · Turquoise water, good food, no schedule<br>Have the best time, Ella!</p>
+      </div>`;
+    if (dayType === 'missionsprings') return `
+      <div class="vacation-card forest">
+        <span class="cancun-icons">🌲 🏕️ 🔥 🎣 🛶 ⭐ 🌌 🦌</span>
+        <h2>Mission Springs Camp!</h2>
+        <p>Jul 26 – Aug 1 · Frontier Ranch sleepaway week<br>Campfires, new friends, big adventures. No checklist — just fun!</p>
+      </div>`;
+    if (dayType === 'greatamerica') return `
+      <div class="vacation-card funpark">
+        <span class="cancun-icons">🎢 🎡 🎠 🍦 🎯 🎪 🌟 🎉</span>
+        <h2>Great America Day!</h2>
+        <p>No schedule today · Ride everything twice<br>Sunscreen, water, and have a blast!</p>
+      </div>`;
+    return null;
+  }
+
+  function renderTodayCard(state) {
+    const now     = new Date();
+    const dayType = getDayType(now);
+
+    const opts = { weekday: 'long', month: 'long', day: 'numeric' };
+    const dateStr = now.toLocaleDateString('en-US', opts);
+
+    const banner = specialBanner(dayType);
+    if (banner) {
+      document.getElementById('today-card').innerHTML = banner;
+      return;
+    }
+
+    const schedule = getSchedule(dayType);
+
+    let dayTypeHTML = '<span class="day-type-badge free-day">Summer Day</span>';
+    if (dayType === 'bballcamp') dayTypeHTML = '<span class="day-type-badge camp-day">🏀 Basketball Camp Day — 9 AM–12 PM</span>';
+    if (dayType === 'gsyo')      dayTypeHTML = '<span class="day-type-badge camp-day">🎻 GSYO Conservatory Day — Los Altos</span>';
+
+    const prompt = getTodayPrompt();
+
+    let itemsHTML = '';
+    schedule.forEach(item => {
+      if (item.section) {
+        itemsHTML += `<div class="schedule-divider">${item.section}</div>`;
+        return;
+      }
+      const checked = !!state[item.id];
+      const cls = `check-item ${item.core ? 'core' : 'routine'}${checked ? ' done' : ''}`;
+      const cbSize = item.core ? '24px' : '18px';
+      itemsHTML += `
+        <div class="${cls}" data-id="${item.id}" onclick="toggleItem('${item.id}')">
+          <div class="checkbox" id="cb-${item.id}" style="width:${cbSize};height:${cbSize}">${checked ? '✓' : ''}</div>
+          <div class="item-body">
+            <div class="check-label">${item.emoji}&nbsp; ${item.label}</div>
+            <div class="item-time">${item.time}</div>
+            ${item.showPrompt ? `<div class="item-prompt">💡 Today's idea: ${prompt}</div>` : ''}
+          </div>
+          ${item.duration ? `<div class="check-meta">${item.duration}</div>` : ''}
+        </div>
+      `;
+    });
+
+    const coreItems     = schedule.filter(i => i.core);
+    const doneCoreCount = coreItems.filter(i => !!state[i.id]).length;
+    const pct           = coreItems.length ? Math.round(doneCoreCount / coreItems.length * 100) : 0;
+
+    // Tomorrow preview
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tmrType = getDayType(tomorrow);
+    let tmrClass = 'free-next', tmrIcon = '✅', tmrText = 'Summer day — math starts at 10:00 AM';
+    if (tmrType === 'mexico')         { tmrClass = 'vacation-next'; tmrIcon = '🌴'; tmrText = '¡Vamos a Cancún! Pack tonight.'; }
+    if (tmrType === 'missionsprings') { tmrClass = 'vacation-next'; tmrIcon = '🌲'; tmrText = 'Mission Springs camp! Make sure your bag is packed.'; }
+    if (tmrType === 'greatamerica')   { tmrClass = 'vacation-next'; tmrIcon = '🎢'; tmrText = 'Great America day! Sleep well tonight.'; }
+    if (tmrType === 'bballcamp')      { tmrClass = 'camp-next';     tmrIcon = '🏀'; tmrText = 'Basketball camp — leave by 8:40 AM'; }
+    if (tmrType === 'gsyo')           { tmrClass = 'camp-next';     tmrIcon = '🎻'; tmrText = 'GSYO Conservatory — leave for Los Altos by 8:30 AM'; }
+
+    document.getElementById('today-card').innerHTML = `
+      <div class="card">
+        <div class="today-date">${dateStr}</div>
+        <div class="today-sub">Check off each item as you go</div>
+        ${dayTypeHTML}
+        <div class="schedule-list">${itemsHTML}</div>
+        <div class="progress-wrap">
+          <div class="progress-meta">
+            <span>${doneCoreCount} of ${coreItems.length} core tasks done</span>
+            <span>${pct}%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-bar" style="width:${pct}%"></div>
+          </div>
+        </div>
+        <div class="all-done-banner" id="all-done-banner" style="display:${allDoneThisSession ? 'block' : 'none'}" onclick="dismissAllDone()">
+          🎉 Ella, you go girl! All tasks done today.
+          <span class="all-done-dismiss">✕</span>
+        </div>
+        <div class="tomorrow-preview ${tmrClass}">
+          <div class="tmr-icon">${tmrIcon}</div>
+          <div class="tmr-body">
+            <div class="tmr-label">Tomorrow</div>
+            <div class="tmr-text">${tmrText}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ========== QUOTES ==========
+
+  const QUOTES = [
+    { text: "You're braver than you believe, stronger than you seem, and smarter than you think.", author: "A.A. Milne" },
+    { text: "I've failed over and over and over again in my life. And that is why I succeed.", author: "Michael Jordan" },
+    { text: "Champions keep playing until they get it right.", author: "Billie Jean King" },
+    { text: "Practice like you've never won. Play like you've never lost.", author: "Michael Jordan" },
+    { text: "It always seems impossible until it's done.", author: "Nelson Mandela" },
+    { text: "The more that you read, the more things you will know.", author: "Dr. Seuss" },
+    { text: "Music gives a soul to the universe and wings to the mind.", author: "Plato" },
+    { text: "You miss 100% of the shots you don't take.", author: "Wayne Gretzky" },
+    { text: "Don't count the days. Make the days count.", author: "Muhammad Ali" },
+    { text: "The expert in anything was once a beginner.", author: "Helen Hayes" },
+    { text: "Every day is a chance to get 1% better.", author: "James Clear" },
+    { text: "It does not matter how slowly you go as long as you do not stop.", author: "Confucius" },
+    { text: "Success is the sum of small efforts, repeated day in and day out.", author: "Robert Collier" },
+    { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+    { text: "You don't have to be great to start, but you have to start to be great.", author: "Zig Ziglar" },
+    { text: "I never lose. I either win or learn.", author: "Nelson Mandela" },
+    { text: "Hard work beats talent when talent doesn't work hard.", author: "Tim Notke" },
+    { text: "A reader lives a thousand lives before she dies.", author: "George R.R. Martin" },
+    { text: "Today a reader, tomorrow a leader.", author: "Margaret Fuller" },
+    { text: "The beautiful thing about learning is that nobody can take it away from you.", author: "B.B. King" },
+    { text: "Do something today that your future self will thank you for.", author: "Sean Patrick Flanery" },
+    { text: "Great things are done by a series of small things brought together.", author: "Vincent van Gogh" },
+    { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+    { text: "Start where you are. Use what you have. Do what you can.", author: "Arthur Ashe" },
+    { text: "All our dreams can come true, if we have the courage to pursue them.", author: "Walt Disney" },
+    { text: "The journey of a thousand miles begins with a single step.", author: "Lao Tzu" },
+    { text: "If my mind can conceive it and my heart can believe it, then I can achieve it.", author: "Muhammad Ali" },
+    { text: "She believed she could, so she did.", author: "R.S. Grey" },
+    { text: "Be yourself; everyone else is already taken.", author: "Oscar Wilde" },
+    { text: "Why fit in when you were born to stand out?", author: "Dr. Seuss" },
+    { text: "Small daily improvements over time lead to stunning results.", author: "Robin Sharma" },
+    { text: "Whether you think you can or think you can't, you're right.", author: "Henry Ford" },
+  ];
+
+  function renderQuote() {
+    const now = new Date();
+    const dayOfSummer = Math.max(0, Math.floor((now - SUMMER_START) / (24 * 60 * 60 * 1000)));
+    const q = QUOTES[dayOfSummer % QUOTES.length];
+    document.getElementById('quote-text').textContent   = `"${q.text}"`;
+    document.getElementById('quote-author').textContent = `— ${q.author}`;
+  }
+
+  // ========== HEART RAIN ==========
+
+  const TREATS = ['💜','💖','💕','💗','💜','💖','✨'];
+
+  function launchCupcakes(size) {
+    const count = size === 'small' ? 12 : size === 'big' ? 50 : 90;
+    const baseDur = size === 'small' ? 1.4 : size === 'big' ? 2.2 : 2.8;
+    for (let i = 0; i < count; i++) {
+      const el = document.createElement('div');
+      el.className = 'cupcake-piece';
+      el.textContent = TREATS[Math.floor(Math.random() * TREATS.length)];
+      const fontSize = Math.random() * 14 + 18;
+      const dur = (baseDur + Math.random() * 0.8).toFixed(2);
+      const delay = (Math.random() * (size === 'small' ? 0.15 : 0.7)).toFixed(2);
+      el.style.cssText = `font-size:${fontSize}px;left:${Math.random()*100}vw;--dur:${dur}s;animation-delay:${delay}s;`;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), (parseFloat(dur) + parseFloat(delay) + 0.5) * 1000);
+    }
+  }
+
+  // ========== SOUNDS (real recordings from Mixkit + voice) ==========
+
+  // Real recordings, preloaded so they play instantly on click
+  const SFX_CLAP  = new Audio('https://assets.mixkit.co/active_storage/sfx/523/523-preview.mp3');  // animated small group applause, 4s
+  const SFX_CHEER = new Audio('https://assets.mixkit.co/active_storage/sfx/515/515-preview.mp3');  // girls crowd cheer, scream + applause, 6s
+  SFX_CLAP.preload  = 'auto';
+  SFX_CHEER.preload = 'auto';
+  SFX_CLAP.volume   = 0.9;
+  SFX_CHEER.volume  = 1.0;
+
+  // Single task done: real clapping
+  function playClap() {
+    try {
+      SFX_CLAP.currentTime = 0;
+      SFX_CLAP.play().catch(() => {});
+    } catch (e) { /* sound is a bonus — never break the page over it */ }
+  }
+
+  // All tasks done: real cheering crowd
+  function playCheer() {
+    try {
+      SFX_CHEER.currentTime = 0;
+      SFX_CHEER.play().catch(() => {});
+    } catch (e) { /* sound is a bonus */ }
+  }
+
+  // Party confetti: bright colored pieces + party emojis
+  const CONFETTI_COLORS = ['#5533FF','#1CA8FF','#84F6D5','#f59e0b','#ec4899','#a78bfa','#f97316','#84cc16','#ef4444'];
+  const PARTY_EMOJIS = ['🎉','🎊','⭐','💜','💖'];
+
+  function launchPartyConfetti() {
+    for (let i = 0; i < 140; i++) {
+      const el = document.createElement('div');
+      const dur = (2.0 + Math.random() * 1.2).toFixed(2);
+      const delay = (Math.random() * 0.8).toFixed(2);
+      if (i % 6 === 0) {
+        // every few pieces, an emoji
+        el.className = 'cupcake-piece';
+        el.textContent = PARTY_EMOJIS[Math.floor(Math.random() * PARTY_EMOJIS.length)];
+        el.style.cssText = `font-size:${Math.random()*12+16}px;left:${Math.random()*100}vw;--dur:${dur}s;animation-delay:${delay}s;`;
+      } else {
+        el.className = 'confetti-piece';
+        const color = CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)];
+        const w = Math.random() * 8 + 6;
+        const h = Math.random() * 6 + 4;
+        el.style.cssText = `background:${color};width:${w}px;height:${h}px;left:${Math.random()*100}vw;--dur:${dur}s;animation-delay:${delay}s;`;
+      }
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), (parseFloat(dur) + parseFloat(delay) + 0.5) * 1000);
+    }
+  }
+
+  // ========== TOAST ==========
+
+  let toastTimer = null;
+
+  function showToast(msg) {
+    const toast = document.getElementById('celebration-toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
+  }
+
+  function streakMessage(count) {
+    if (count >= 30) return `👑 ${count} day streak — absolute legend!`;
+    if (count >= 21) return `⚡ ${count} days straight — unstoppable!`;
+    if (count >= 14) return `🚀 2 week streak — you're on fire!`;
+    if (count >= 7)  return `🔥 One full week streak! Keep going!`;
+    if (count >= 3)  return `🔥 ${count} day streak — building momentum!`;
+    return null;
+  }
+
+  // ========== CELEBRATION ==========
+
+  function celebrate() {
+    allDoneThisSession = true;
+    launchPartyConfetti();
+    playCheer();
+    showToast('🎉 Ella, you go girl!!');
+    // re-show the banner (the re-render after saving hides it otherwise)
+    setTimeout(() => {
+      const el = document.getElementById('all-done-banner');
+      if (el) el.style.display = 'block';
+    }, 100);
+  }
+
+  // Tap the 🔥 streak chip in the header to preview the celebration anytime
+  window.testCelebration = celebrate;
+
+  // ========== TOGGLE (exposed to HTML) ==========
+
+  window.toggleItem = function(id) {
+    // Snapshot the old state and decide everything BEFORE saving —
+    // Firebase echoes the write back instantly and overwrites currentChecklist,
+    // which used to make "was it all done before?" always answer yes.
+    const prevState  = currentChecklist;
+    const wasChecked = !!prevState[id];
+    const newState   = { ...prevState, [id]: !wasChecked };
+
+    const schedule = getSchedule(getDayType(new Date()));
+    const coreIds  = schedule.filter(i => i.core).map(i => i.id);
+    const isNowAllDone = coreIds.every(cid => !!newState[cid]);
+
+    set(ref(db, `${BASE}/checklist/${todayStr()}`), newState);
+
+    if (!wasChecked) {
+      // The big party fires only the FIRST time all cores get done each day.
+      // Re-checking tasks after that just gets the small effect.
+      if (isNowAllDone && !celebratedToday) {
+        celebratedToday = true;
+        set(ref(db, `${BASE}/celebrated/${todayStr()}`), true);
+        celebrate();
+      } else {
+        launchCupcakes('small');
+        playClap();
+      }
+    } else {
+      allDoneThisSession = false;
+    }
+
+    handleStreakUpdate(newState);
+  };
+
+  window.dismissAllDone = function() {
+    allDoneThisSession = false;
+    const el = document.getElementById('all-done-banner');
+    if (el) el.style.display = 'none';
+  };
+
+  // ========== STREAK ==========
+
+  function handleStreakUpdate(state) {
+    const now = new Date();
+    const dayType = getDayType(now);
+    if (dayType === 'mexico' || dayType === 'missionsprings' || dayType === 'greatamerica') return;
+    const schedule = getSchedule(dayType);
+    const coreIds  = schedule.filter(i => i.core).map(i => i.id);
+    if (!coreIds.every(id => state[id])) return;
+    const today = todayStr();
+    if (currentStreak.lastDate === today) return;
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yStr = dateStrOf(yesterday);
+    const newCount = currentStreak.lastDate === yStr ? currentStreak.count + 1 : 1;
+    set(ref(db, `${BASE}/streak`), { count: newCount, lastDate: today });
+  }
+
+  // ========== TABS ==========
+
+  window.switchTab = function(name) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + name).classList.add('active');
+    document.getElementById('tab-' + name).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // ========== WEEKLY MILESTONES ==========
+
+  window.toggleWeek = function(n) {
+    set(ref(db, `${BASE}/weeks/${n}`), !currentWeeks[n]);
+  };
+
+  function renderWeeks(data) {
+    const list    = document.getElementById('weeks-list');
+    const current = getCurrentWeek();
+    list.innerHTML = '';
+    WEEKS.forEach(week => {
+      const done     = !!data[week.n];
+      const isCur    = week.n === current;
+      const isPast   = week.n < current;
+      const isVac    = week.type === 'vacation';
+      const isCamp   = week.type === 'camp';
+      let cls = 'week-row';
+      if (isVac)       cls += ' vacation-week';
+      else if (isCur)  cls += ' current';
+      else if (isCamp) cls += ' camp-week';
+      else if (done)   cls += ' complete';
+      else if (isPast) cls += ' past';
+      const row = document.createElement('div');
+      row.className = cls;
+      row.onclick   = () => window.toggleWeek(week.n);
+      const icon = isVac ? '🌴' : done ? '✅' : isCur ? '👉' : isCamp ? '⛺' : '○';
+      row.innerHTML = `
+        <div class="week-label">
+          <div class="week-num">Week ${week.n}</div>
+          <div class="week-dates">${week.dates}</div>
+        </div>
+        <div class="week-deliverable">${week.deliverable}</div>
+        <div class="week-icon">${icon}</div>
+      `;
+      list.appendChild(row);
+    });
+  }
+
+  // ========== FIREBASE LISTENERS ==========
+
+  onValue(ref(db, `${BASE}/checklist/${todayStr()}`), (snapshot) => {
+    currentChecklist = snapshot.val() || {};
+    renderTodayCard(currentChecklist);
+  });
+
+  onValue(ref(db, `${BASE}/weeks`), (snapshot) => {
+    currentWeeks = snapshot.val() || {};
+    renderWeeks(currentWeeks);
+  });
+
+  onValue(ref(db, `${BASE}/celebrated/${todayStr()}`), (snapshot) => {
+    celebratedToday = !!snapshot.val();
+  });
+
+  let prevStreakCount = null; // null = page just loaded, skip celebration
+
+  onValue(ref(db, `${BASE}/streak`), (snapshot) => {
+    const prev    = prevStreakCount;
+    currentStreak = snapshot.val() || { count: 0, lastDate: '' };
+    document.getElementById('stat-streak').textContent = `🔥 ${currentStreak.count} day streak`;
+    // Only celebrate if streak actually just increased in this session (not on page load)
+    if (prev !== null && currentStreak.count > prev && currentStreak.count >= 3) {
+      const msg = streakMessage(currentStreak.count);
+      if (msg) setTimeout(() => { launchCupcakes('streak'); showToast(msg); }, 800);
+    }
+    prevStreakCount = currentStreak.count;
+  });
+
+  // ========== INIT ==========
+  renderHeader();
+  renderQuote();
+</script>
+</body>
+</html>

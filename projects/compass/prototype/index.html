@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compass — AI Product Discovery</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --border: #2a2d3a;
+      --text: #e8eaf0;
+      --muted: #8b90a0;
+      --accent: #6c8ef5;
+      --accent-dim: #2a3458;
+      --green: #34d399;
+      --green-dim: #0d3326;
+      --yellow: #fbbf24;
+      --yellow-dim: #3a2d0a;
+      --red: #f87171;
+      --red-dim: #3a1212;
+      --radius: 10px;
+    }
+
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.6; }
+
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 32px; border-bottom: 1px solid var(--border);
+    }
+    .logo { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; color: var(--text); text-decoration: none; }
+    .logo-icon { width: 30px; height: 30px; background: linear-gradient(135deg, var(--accent), #a78bfa); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .header-badge { font-size: 12px; color: var(--muted); border: 1px solid var(--border); padding: 4px 10px; border-radius: 20px; }
+
+    #input-view, #clarification-view, #loading-view, #results-view { max-width: 820px; margin: 0 auto; padding: 48px 24px; }
+    #clarification-view, #loading-view, #results-view { display: none; }
+
+    /* Clarification view */
+    .clarify-headline { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+    .clarify-sub { font-size: 14px; color: var(--muted); margin-bottom: 28px; }
+
+    .interpretation-box {
+      background: var(--accent-dim); border: 1px solid var(--accent);
+      border-radius: var(--radius); padding: 20px 24px; margin-bottom: 28px;
+    }
+    .interpretation-label {
+      font-size: 11px; font-weight: 600; color: var(--accent);
+      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;
+    }
+    .interpretation-text { font-size: 15px; line-height: 1.7; }
+
+    .questions-list { display: flex; flex-direction: column; gap: 16px; margin-bottom: 28px; }
+
+    .question-block {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 18px 20px;
+    }
+    .question-text { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+    .question-why { font-size: 12px; color: var(--muted); margin-bottom: 12px; line-height: 1.5; }
+    .question-input {
+      width: 100%; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text); font-family: 'Inter', sans-serif;
+      font-size: 14px; padding: 10px 14px; outline: none; transition: border-color 0.2s;
+    }
+    .question-input:focus { border-color: var(--accent); }
+    .question-input::placeholder { color: var(--muted); }
+
+    .clarify-actions { display: flex; gap: 12px; }
+
+    .run-btn {
+      flex: 1; padding: 13px; background: var(--accent); color: white;
+      font-size: 15px; font-weight: 600; border: none; border-radius: var(--radius);
+      cursor: pointer; transition: opacity 0.2s;
+    }
+    .run-btn:hover { opacity: 0.88; }
+
+    .back-btn {
+      padding: 13px 20px; background: transparent; border: 1px solid var(--border);
+      border-radius: var(--radius); color: var(--muted); font-size: 14px;
+      cursor: pointer; transition: border-color 0.15s, color 0.15s; white-space: nowrap;
+    }
+    .back-btn:hover { border-color: var(--accent); color: var(--text); }
+
+    /* Input */
+    .input-headline { font-size: 32px; font-weight: 700; line-height: 1.2; margin-bottom: 10px; }
+    .input-sub { color: var(--muted); font-size: 15px; margin-bottom: 32px; }
+    .input-sub span { color: var(--accent); font-weight: 500; }
+
+    textarea#problem {
+      width: 100%; min-height: 140px; background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); color: var(--text); font-family: 'Inter', sans-serif;
+      font-size: 15px; padding: 16px; resize: vertical; outline: none; transition: border-color 0.2s; line-height: 1.6;
+    }
+    textarea#problem:focus { border-color: var(--accent); }
+    textarea#problem::placeholder { color: var(--muted); }
+
+    .input-meta { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; margin-bottom: 16px; }
+    .char-count { font-size: 12px; color: var(--muted); }
+    .char-count.warn { color: var(--yellow); }
+
+    #submit-btn {
+      width: 100%; padding: 14px; background: var(--accent); color: white;
+      font-size: 15px; font-weight: 600; border: none; border-radius: var(--radius);
+      cursor: pointer; transition: opacity 0.2s;
+    }
+    #submit-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    #submit-btn:not(:disabled):hover { opacity: 0.88; }
+
+    .examples-label { font-size: 12px; color: var(--muted); margin-top: 28px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .examples { display: flex; flex-direction: column; gap: 8px; }
+    .example-chip {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+      padding: 10px 14px; font-size: 13px; color: var(--muted); cursor: pointer;
+      text-align: left; transition: border-color 0.15s, color 0.15s; line-height: 1.5;
+    }
+    .example-chip:hover { border-color: var(--accent); color: var(--text); }
+
+    /* Loading */
+    .loading-headline { font-size: 22px; font-weight: 600; margin-bottom: 6px; }
+    .loading-sub { color: var(--muted); font-size: 14px; margin-bottom: 8px; }
+    .elapsed-timer { font-size: 13px; color: var(--accent); font-variant-numeric: tabular-nums; margin-bottom: 24px; }
+    .agent-panel { display: flex; flex-direction: column; }
+
+    /* Pipeline layout — shows which agents run in parallel vs sequentially */
+    .phase-label {
+      font-size: 10px; font-weight: 500; color: var(--muted); opacity: 0.75;
+      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .parallel-badge {
+      font-size: 9px; font-weight: 700; color: var(--accent); opacity: 0.9;
+      background: var(--accent-dim); padding: 2px 7px; border-radius: 10px;
+      letter-spacing: 0.05em;
+    }
+    .phase-row { display: flex; gap: 10px; }
+    .phase-row .agent-card { flex: 1; }
+    .pipe-connector {
+      width: 2px; height: 12px; background: var(--border);
+      margin: 3px auto;
+    }
+    @media (max-width: 600px) {
+      .phase-row { flex-direction: column; }
+    }
+    .agent-card {
+      display: flex; align-items: center; gap: 12px; background: var(--surface);
+      border: 1px solid var(--border); border-radius: var(--radius); padding: 11px 14px;
+      transition: border-color 0.3s, background 0.3s, opacity 0.4s;
+    }
+    /* Visual hierarchy: running dominates, done recedes, queued stays quiet */
+    .agent-card.running { border-color: var(--accent); background: rgba(108,142,245,0.08); }
+    .agent-card.done { opacity: 0.45; }
+    .agent-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border); flex-shrink: 0; transition: background 0.3s; }
+    .agent-card.running .agent-dot {
+      background: var(--accent); animation: pulse 1s infinite;
+      box-shadow: 0 0 0 4px rgba(108,142,245,0.25);
+    }
+    .agent-card.done .agent-dot { background: var(--green); box-shadow: none; animation: none; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+    .agent-info { flex: 1; }
+    .agent-name { font-size: 14px; font-weight: 500; }
+    .agent-task { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .agent-card.running .agent-task { color: var(--accent); }
+    .agent-card.done .agent-task { color: var(--green); }
+    .agent-time { font-size: 12px; color: var(--muted); }
+
+    /* Results */
+    .results-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; margin-bottom: 24px; flex-wrap: wrap; }
+    .results-title h2 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+    .results-title p { font-size: 14px; color: var(--muted); }
+    .overall-score-box {
+      display: flex; flex-direction: column; align-items: center;
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 16px 24px; min-width: 130px;
+    }
+    .overall-score-num { font-size: 36px; font-weight: 700; line-height: 1; }
+    .overall-score-label { font-size: 11px; color: var(--muted); margin-top: 4px; text-align: center; }
+    .confidence-badge { font-size: 11px; padding: 3px 8px; border-radius: 12px; margin-top: 8px; font-weight: 500; }
+
+    /* Recommendation box */
+    .recommendation-box {
+      border-radius: var(--radius); padding: 24px; margin-bottom: 24px; border: 2px solid;
+    }
+    .rec-proceed { background: var(--green-dim); border-color: var(--green); }
+    .rec-investigate { background: var(--yellow-dim); border-color: var(--yellow); }
+    .rec-stop { background: var(--red-dim); border-color: var(--red); }
+
+    .rec-header { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+    .rec-pill {
+      font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: 0.08em; flex-shrink: 0;
+    }
+    .rec-proceed .rec-pill { background: var(--green); color: #0a1a12; }
+    .rec-investigate .rec-pill { background: var(--yellow); color: #1a1000; }
+    .rec-stop .rec-pill { background: var(--red); color: #1a0808; }
+
+    .rec-label { font-size: 16px; font-weight: 600; }
+    .rec-rationale { font-size: 14px; line-height: 1.65; margin-bottom: 12px; }
+    .rec-conditions { margin-bottom: 12px; }
+    .rec-conditions-title { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .rec-condition { display: flex; gap: 8px; font-size: 13px; margin-bottom: 5px; }
+    .rec-condition-dot { color: var(--yellow); flex-shrink: 0; }
+    .rec-confidence { font-size: 12px; color: var(--muted); font-style: italic; }
+
+    /* Executive summary */
+    .exec-summary-box {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 24px; margin-bottom: 24px;
+    }
+    .exec-summary-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; }
+    .exec-summary-text { font-size: 14px; line-height: 1.75; white-space: pre-wrap; }
+
+    /* Next steps */
+    .next-steps-box {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 24px; margin-top: 20px;
+    }
+    .next-steps-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+    .next-step { display: flex; gap: 12px; margin-bottom: 12px; align-items: flex-start; }
+    .next-step-num {
+      width: 22px; height: 22px; border-radius: 50%; background: var(--accent-dim);
+      color: var(--accent); font-size: 12px; font-weight: 700; display: flex; align-items: center;
+      justify-content: center; flex-shrink: 0; margin-top: 1px;
+    }
+    .next-step-text { font-size: 14px; line-height: 1.6; }
+
+    /* Brief sections */
+    .brief-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; overflow: hidden; }
+    .brief-section-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; cursor: pointer; user-select: none; }
+    .brief-section-header:hover { background: rgba(255,255,255,0.02); }
+    .section-title { font-size: 15px; font-weight: 600; }
+    .section-header-right { display: flex; align-items: center; gap: 10px; }
+    .score-badge { font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+    .score-green { background: var(--green-dim); color: var(--green); }
+    .score-yellow { background: var(--yellow-dim); color: var(--yellow); }
+    .score-red { background: var(--red-dim); color: var(--red); }
+    .chevron { font-size: 12px; color: var(--muted); transition: transform 0.2s; }
+    .brief-section.open .chevron { transform: rotate(180deg); }
+    .brief-section-body { padding: 0 20px 20px; display: none; }
+    .brief-section.open .brief-section-body { display: block; }
+    .brief-divider { border: none; border-top: 1px solid var(--border); margin-bottom: 20px; }
+
+    /* Improve button */
+    .improve-btn {
+      display: flex; align-items: center; gap: 8px;
+      background: transparent; border: 1px solid var(--accent); border-radius: 8px;
+      color: var(--accent); font-size: 12px; font-weight: 500;
+      padding: 6px 12px; cursor: pointer; transition: background 0.15s; margin-top: 16px;
+    }
+    .improve-btn:hover { background: var(--accent-dim); }
+    .improve-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .improve-btn.improved { border-color: var(--green); color: var(--green); }
+    .score-delta { font-size: 11px; font-weight: 700; }
+    .delta-up { color: var(--green); }
+
+    .refined-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px;
+      background: var(--green-dim); color: var(--green);
+    }
+
+    /* Content fields */
+    .field { margin-bottom: 18px; }
+    .field:last-child { margin-bottom: 0; }
+    .field-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
+    .field-value { font-size: 14px; color: var(--text); line-height: 1.65; }
+    .jtbd-callout { background: var(--accent-dim); border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0; padding: 12px 14px; font-size: 14px; font-style: italic; line-height: 1.65; margin-bottom: 18px; }
+    .tag-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+    .tag { font-size: 12px; padding: 3px 10px; border-radius: 12px; background: var(--accent-dim); color: var(--accent); }
+    .tag.green { background: var(--green-dim); color: var(--green); }
+    .tag.yellow { background: var(--yellow-dim); color: var(--yellow); }
+    .tag.red { background: var(--red-dim); color: var(--red); }
+    .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 18px; }
+    .stat-box { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
+    .stat-box-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .stat-box-value { font-size: 20px; font-weight: 700; margin: 4px 0 2px; color: var(--accent); }
+    .stat-box-calc { font-size: 11px; color: var(--muted); line-height: 1.5; }
+    .competitor-card { border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 10px; background: var(--bg); }
+    .competitor-name { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+    .competitor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+    .competitor-item { font-size: 12px; }
+    .competitor-item-label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .risk-card { border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 10px; background: var(--bg); }
+    .risk-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .risk-title { font-size: 14px; font-weight: 600; }
+    .risk-meta { display: flex; gap: 6px; }
+    .risk-desc { font-size: 13px; color: var(--muted); line-height: 1.55; margin-bottom: 6px; }
+    .risk-mechanism { font-size: 12px; color: var(--muted); background: var(--surface); border-radius: 6px; padding: 8px 10px; line-height: 1.55; margin-bottom: 6px; }
+    .risk-mitigation { font-size: 12px; color: var(--green); line-height: 1.5; }
+    .trend-item { display: flex; gap: 10px; margin-bottom: 10px; font-size: 13px; line-height: 1.55; }
+    .trend-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 6px; }
+
+    /* Eval rubric */
+    .eval-rubric { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .eval-rubric-title { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+    .rubric-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; font-size: 12px; }
+    .rubric-score { font-weight: 700; min-width: 28px; text-align: right; }
+    .rubric-text { color: var(--muted); line-height: 1.5; flex: 1; }
+    .eval-footer { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+    .eval-footer-box { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; font-size: 12px; }
+    .eval-footer-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+
+    .new-search-btn {
+      display: block; width: 100%; padding: 13px; background: transparent;
+      border: 1px solid var(--border); border-radius: var(--radius); color: var(--muted);
+      font-size: 14px; font-weight: 500; cursor: pointer; text-align: center; margin-top: 24px;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .new-search-btn:hover { border-color: var(--accent); color: var(--text); }
+
+    /* ── Executive Readout deck ─────────────────────────────────────────── */
+    .readout-launch-btn {
+      display: none; width: 100%; margin-bottom: 24px; padding: 16px;
+      background: linear-gradient(135deg, var(--accent), #a78bfa); color: white;
+      font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600;
+      border: none; border-radius: var(--radius); cursor: pointer; transition: opacity 0.2s;
+    }
+    .readout-launch-btn:hover { opacity: 0.9; }
+    .readout-launch-btn:disabled { opacity: 0.5; cursor: wait; }
+
+    #deck-overlay { display: none; position: fixed; inset: 0; background: rgba(8,10,16,0.94); z-index: 100; overflow-y: auto; }
+    #deck-overlay.open { display: block; }
+
+    .deck-topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 28px; gap: 12px; flex-wrap: wrap; }
+    .deck-topbar-title { font-size: 14px; font-weight: 600; color: var(--text); }
+    .deck-topbar-actions { display: flex; align-items: center; gap: 10px; }
+    .deck-counter { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+    .deck-action-btn {
+      background: transparent; border: 1px solid var(--border); border-radius: 8px;
+      color: var(--text); font-family: 'Inter', sans-serif; font-size: 13px;
+      padding: 7px 14px; cursor: pointer; transition: border-color 0.15s;
+    }
+    .deck-action-btn:hover { border-color: var(--accent); }
+
+    .deck-stage { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 8px 24px 16px; }
+    .deck-arrow {
+      width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
+      background: transparent; border: 1px solid var(--border); color: var(--text);
+      font-size: 17px; cursor: pointer; transition: border-color 0.15s;
+    }
+    .deck-arrow:hover { border-color: var(--accent); }
+    .deck-arrow:disabled { opacity: 0.25; cursor: default; }
+
+    .deck-slide {
+      display: none; background: #ffffff; color: #1c1f2a;
+      width: 100%; max-width: 880px; min-height: 560px;
+      border-radius: 14px; padding: 48px 54px;
+    }
+    .deck-slide.active { display: flex; flex-direction: column; }
+
+    .ds-kicker { font-size: 11px; font-weight: 700; color: #4c6ef5; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
+    .ds-title { font-size: 26px; font-weight: 700; line-height: 1.25; margin-bottom: 18px; color: #14161f; }
+    .ds-headline { font-size: 17px; line-height: 1.5; color: #2a2e3d; margin-bottom: 22px; }
+    .ds-narrative { font-size: 15px; line-height: 1.7; color: #3a3f50; margin-bottom: 20px; }
+
+    .ds-rec-pill {
+      display: inline-block; font-size: 12px; font-weight: 700; padding: 5px 14px;
+      border-radius: 20px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px;
+    }
+    .ds-rec-proceed { background: #d8f5e8; color: #0b7a52; }
+    .ds-rec-investigate { background: #fdf0cf; color: #9a6b00; }
+    .ds-rec-stop { background: #fde2e2; color: #b42323; }
+
+    .ds-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; }
+    .ds-point { background: #f5f6fa; border-radius: 10px; padding: 16px 18px; }
+    .ds-point-label { font-size: 11px; font-weight: 700; color: #4c6ef5; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+    .ds-point-text { font-size: 14px; line-height: 1.55; color: #2a2e3d; }
+
+    .ds-ask {
+      background: #eef1fd; border-left: 4px solid #4c6ef5; border-radius: 0 10px 10px 0;
+      padding: 16px 20px; font-size: 15px; line-height: 1.6; color: #1c1f2a; margin-top: auto;
+    }
+    .ds-ask strong { color: #4c6ef5; }
+
+    .ds-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 22px; }
+    .ds-stat { background: #f5f6fa; border-radius: 10px; padding: 18px; text-align: left; }
+    .ds-stat-value { font-size: 26px; font-weight: 700; color: #4c6ef5; margin: 4px 0; }
+    .ds-stat-note { font-size: 12px; line-height: 1.5; color: #5a6072; }
+
+    .ds-comp-row { display: grid; grid-template-columns: 160px 1fr 1fr; gap: 12px; padding: 12px 0; border-bottom: 1px solid #e8eaf2; font-size: 13.5px; align-items: start; }
+    .ds-comp-head { font-size: 11px; font-weight: 700; color: #5a6072; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 2px solid #e8eaf2; }
+    .ds-comp-name { font-weight: 600; color: #14161f; }
+    .ds-comp-gap { color: #9a6b00; }
+
+    .ds-risk-row { display: flex; gap: 14px; align-items: flex-start; padding: 13px 0; border-bottom: 1px solid #e8eaf2; }
+    .ds-sev { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 12px; flex-shrink: 0; text-transform: uppercase; }
+    .ds-sev-high { background: #fde2e2; color: #b42323; }
+    .ds-sev-medium { background: #fdf0cf; color: #9a6b00; }
+    .ds-sev-low { background: #d8f5e8; color: #0b7a52; }
+    .ds-risk-text { font-size: 14px; line-height: 1.55; color: #2a2e3d; }
+    .ds-risk-text .mit { color: #0b7a52; font-size: 13px; }
+
+    .ds-kill {
+      background: #fdf3f3; border-left: 4px solid #b42323; border-radius: 0 10px 10px 0;
+      padding: 14px 18px; font-size: 14px; line-height: 1.6; color: #1c1f2a; margin-top: auto;
+    }
+    .ds-kill strong { color: #b42323; }
+
+    .ds-list { margin-bottom: 18px; }
+    .ds-list-item { display: flex; gap: 10px; font-size: 14px; line-height: 1.6; color: #2a2e3d; margin-bottom: 9px; }
+    .ds-list-dot { color: #4c6ef5; flex-shrink: 0; }
+    .ds-num {
+      width: 22px; height: 22px; border-radius: 50%; background: #eef1fd; color: #4c6ef5;
+      font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 2px;
+    }
+
+    .ds-footer { display: flex; justify-content: space-between; margin-top: 28px; padding-top: 14px; border-top: 1px solid #e8eaf2; font-size: 11px; color: #8b90a0; }
+
+    .deck-dots { display: flex; justify-content: center; gap: 8px; padding-bottom: 28px; }
+    .deck-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); cursor: pointer; transition: background 0.2s; }
+    .deck-dot.active { background: var(--accent); }
+
+    /* Print: each slide on its own landscape page, app chrome hidden,
+       colors preserved (browsers strip background colors by default) */
+    @media print {
+      @page { size: letter landscape; margin: 0; }
+
+      body.deck-open * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      body.deck-open { background: white; }
+      body.deck-open header, body.deck-open #input-view, body.deck-open #clarification-view,
+      body.deck-open #loading-view, body.deck-open #results-view { display: none !important; }
+      body.deck-open #deck-overlay { display: block; position: static; background: white; overflow: visible; }
+      body.deck-open .deck-topbar, body.deck-open .deck-arrow, body.deck-open .deck-dots { display: none !important; }
+      body.deck-open .deck-stage { display: block; padding: 0; }
+      body.deck-open #deck-slides { max-width: 100% !important; }
+      body.deck-open .deck-slide {
+        display: flex !important; flex-direction: column;
+        border-radius: 0; max-width: 100%; min-height: unset;
+        height: 97vh; padding: 44px 60px;
+        page-break-after: always; page-break-inside: avoid;
+      }
+      body.deck-open .deck-slide:last-child { page-break-after: auto; }
+    }
+
+    .internal-notice { background: var(--yellow-dim); border: 1px solid var(--yellow); border-radius: 8px; padding: 12px 16px; font-size: 13px; color: var(--yellow); margin-bottom: 20px; display: none; }
+    .error-banner { background: var(--red-dim); border: 1px solid var(--red); border-radius: 8px; padding: 14px 18px; font-size: 13px; color: var(--red); margin-bottom: 20px; display: none; }
+
+    @media (max-width: 600px) {
+      .stat-row { grid-template-columns: 1fr; }
+      .competitor-grid { grid-template-columns: 1fr; }
+      .eval-footer { grid-template-columns: 1fr; }
+      .results-header { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="#">
+    <div class="logo-icon">&#9685;</div>
+    Compass
+  </a>
+  <span class="header-badge">AI Product Discovery</span>
+</header>
+
+<!-- INPUT VIEW -->
+<div id="input-view">
+  <p class="input-headline">What are you discovering today?</p>
+  <p class="input-sub">
+    Describe the problem in plain language. Compass runs
+    <span>7 AI agents</span> to produce a structured discovery brief with a
+    <span>go/investigate/stop recommendation</span> in under 2 minutes.
+  </p>
+  <textarea id="problem" placeholder="Describe the problem — who has it, what they do today, what it costs them..."></textarea>
+  <div class="input-meta">
+    <span style="font-size:12px;color:var(--muted)" id="min-hint">Minimum 50 characters</span>
+    <span class="char-count" id="char-count">0 / 500</span>
+  </div>
+  <button id="submit-btn" disabled>Run Discovery</button>
+  <p class="examples-label">Try an example</p>
+  <div class="examples">
+    <button class="example-chip">Busy working parents spend 45 to 90 minutes every week deciding what to cook, then still order takeout 2 to 3 nights a week. Meal kits feel wasteful and rigid, and recipe apps have no idea what is already in the fridge.</button>
+    <button class="example-chip">Homeowners planning a renovation cannot tell which contractors to trust. Quotes for the same kitchen vary by 50 percent, online reviews are gamed, and most people end up relying on a single neighbor's recommendation.</button>
+    <button class="example-chip">Adult children coordinating care for an aging parent juggle medications, doctor visits, and daily check-ins across siblings, usually over group texts. Important tasks fall through the cracks and one sibling quietly absorbs most of the load.</button>
+  </div>
+</div>
+
+<!-- CLARIFICATION VIEW -->
+<div id="clarification-view">
+  <p class="clarify-headline">Before we run discovery...</p>
+  <p class="clarify-sub">Here is what I understood. Correct anything that is off, then answer the questions below to help the agents go in the right direction.</p>
+
+  <div class="interpretation-box">
+    <div class="interpretation-label">What I understood</div>
+    <div class="interpretation-text" id="interpretation-text"></div>
+  </div>
+
+  <div class="questions-list" id="questions-list"></div>
+
+  <div class="clarify-actions">
+    <button class="back-btn" id="back-to-input">Go back</button>
+    <button class="run-btn" id="run-with-context">This looks right — run discovery</button>
+  </div>
+</div>
+
+<!-- LOADING VIEW -->
+<div id="loading-view">
+  <p class="loading-headline">Running discovery...</p>
+  <p class="loading-sub">Some agents need another agent's output first. Others run side by side. Watch the pipeline below.</p>
+  <p class="elapsed-timer" id="elapsed-timer">0s elapsed · usually done in 30 to 60 seconds</p>
+  <div class="agent-panel" id="agent-panel">
+
+    <div class="phase-label">Step 1 · Check internal knowledge first</div>
+    <div class="phase-row">
+      <div class="agent-card" id="agent-internal"><div class="agent-dot"></div><div class="agent-info"><div class="agent-name">Internal Search</div><div class="agent-task" id="task-internal">Queued</div></div><div class="agent-time" id="time-internal"></div></div>
+    </div>
+    <div class="pipe-connector"></div>
+
+    <div class="phase-label">Step 2 · Frame the problem — every other agent builds on this</div>
+    <div class="phase-row">
+      <div class="agent-card" id="agent-framing"><div class="agent-dot"></div><div class="agent-info"><div class="agent-name">Problem Framing</div><div class="agent-task" id="task-framing">Queued</div></div><div class="agent-time" id="time-framing"></div></div>
+    </div>
+    <div class="pipe-connector"></div>
+
+    <div class="phase-label">Step 3 · Research <span class="parallel-badge">2 IN PARALLEL</span></div>
+    <div class="phase-row">
+      <div class="agent-card" id="agent-market"><div class="agent-dot"></div><div class="agent-info"><div class="agent-name">Market Research</div><div class="agent-task" id="task-market">Queued</div></div><div class="agent-time" id="time-market"></div></div>
+      <div class="agent-card" id="agent-competitive"><div class="agent-dot"></div><div class="agent-info"><div class="agent-name">Competitive Analysis</div><div class="agent-task" id="task-competitive">Queued</div></div><div class="agent-time" id="time-competitive"></div></div>
+    </div>
+    <div class="pipe-connector"></div>
+
+    <div class="phase-label">Step 4 · Sizing and risk — they need step 3's findings <span class="parallel-badge">2 IN PARALLEL</span></div>
+    <div class="phase-row">
+      <div class="agent-card" id="agent-sizing"><div class="agent-dot"></div><div class="agent-info"><div class="agent-name">Opportunity Sizing</div><div class="agent-task" id="task-sizing">Queued</div></div><div class="agent-time" id="time-sizing"></div></div>
+      <div class="agent-card" id="agent-risk"><div class="agent-dot"></div><div class="agent-info"><div class="agent-name">Risk Assessment</div><div class="agent-task" id="task-risk">Queued</div></div><div class="agent-time" id="time-risk"></div></div>
+    </div>
+    <div class="pipe-connector"></div>
+
+    <div class="phase-label">Step 5 · Grade every section, rewrite the weakest, make the call</div>
+    <div class="phase-row">
+      <div class="agent-card" id="agent-eval"><div class="agent-dot"></div><div class="agent-info"><div class="agent-name">Eval + Synthesis</div><div class="agent-task" id="task-eval">Queued</div></div><div class="agent-time" id="time-eval"></div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- RESULTS VIEW -->
+<div id="results-view">
+  <div id="error-banner" class="error-banner"></div>
+
+  <div id="brief-output">
+    <div class="results-header">
+      <div class="results-title">
+        <h2>Discovery Brief</h2>
+        <p id="results-sub"></p>
+      </div>
+      <div class="overall-score-box">
+        <div class="overall-score-num" id="overall-score-num">--</div>
+        <div class="overall-score-label">Brief Quality</div>
+        <div class="confidence-badge" id="confidence-badge"></div>
+      </div>
+    </div>
+
+    <!-- RECOMMENDATION -->
+    <div id="recommendation-box" class="recommendation-box" style="display:none">
+      <div class="rec-header">
+        <div class="rec-pill" id="rec-pill"></div>
+        <div class="rec-label" id="rec-label"></div>
+      </div>
+      <div class="rec-rationale" id="rec-rationale"></div>
+      <div id="rec-conditions-block" class="rec-conditions" style="display:none">
+        <div class="rec-conditions-title">Before proceeding, validate:</div>
+        <div id="rec-conditions-list"></div>
+      </div>
+      <div class="rec-confidence" id="rec-confidence"></div>
+    </div>
+
+    <!-- EXECUTIVE READOUT LAUNCH -->
+    <button class="readout-launch-btn" id="readout-btn">
+      &#9670;&nbsp; Generate Executive Readout — a 6-slide concept deck for leadership
+    </button>
+
+    <!-- EXEC SUMMARY -->
+    <div id="exec-summary-box" class="exec-summary-box" style="display:none">
+      <div class="exec-summary-label">Executive Summary</div>
+      <div class="exec-summary-text" id="exec-summary-text"></div>
+    </div>
+
+    <div id="internal-notice" class="internal-notice"></div>
+
+    <!-- BRIEF SECTIONS -->
+    <div id="sections-container"></div>
+
+    <!-- NEXT STEPS -->
+    <div id="next-steps-box" class="next-steps-box" style="display:none">
+      <div class="next-steps-label">Recommended next steps</div>
+      <div id="next-steps-list"></div>
+    </div>
+
+    <button class="new-search-btn" id="new-search-btn">Start a new discovery</button>
+  </div>
+</div>
+
+<!-- EXECUTIVE READOUT DECK OVERLAY -->
+<div id="deck-overlay">
+  <div class="deck-topbar">
+    <div class="deck-topbar-title" id="deck-topbar-title">Executive Readout</div>
+    <div class="deck-topbar-actions">
+      <span class="deck-counter" id="deck-counter">1 / 6</span>
+      <button class="deck-action-btn" id="deck-print-btn">Print / Save as PDF</button>
+      <button class="deck-action-btn" id="deck-close-btn">Close &#10005;</button>
+    </div>
+  </div>
+  <div class="deck-stage">
+    <button class="deck-arrow" id="deck-prev">&#8592;</button>
+    <div id="deck-slides" style="flex:1; max-width:880px;"></div>
+    <button class="deck-arrow" id="deck-next">&#8594;</button>
+  </div>
+  <div class="deck-dots" id="deck-dots"></div>
+</div>
+
+<script>
+  const BACKEND = "http://127.0.0.1:8000";
+
+  const problemEl         = document.getElementById("problem");
+  const submitBtn         = document.getElementById("submit-btn");
+  const charCount         = document.getElementById("char-count");
+  const inputView         = document.getElementById("input-view");
+  const clarificationView = document.getElementById("clarification-view");
+  const loadingView       = document.getElementById("loading-view");
+  const resultsView       = document.getElementById("results-view");
+
+  let currentProblem = "";
+  let currentBrief = {};
+  let currentEval = {};
+  let currentSynthesis = {};
+  let currentDeck = null;   // cached so reopening the deck is instant
+  let currentSlideIdx = 0;
+
+  // Input
+  problemEl.addEventListener("input", () => {
+    const len = problemEl.value.length;
+    charCount.textContent = `${len} / 500`;
+    charCount.className = len > 450 ? "char-count warn" : "char-count";
+    submitBtn.disabled = len < 50;
+  });
+
+  document.querySelectorAll(".example-chip").forEach(btn => {
+    btn.addEventListener("click", () => {
+      problemEl.value = btn.textContent.trim();
+      problemEl.dispatchEvent(new Event("input"));
+    });
+  });
+
+  // Agent animation. Format: [delay, agents that START, agents that FINISH]
+  // When a phase starts, the phase it depends on must be done — the diagram
+  // would be lying otherwise.
+  const agentSchedule = [
+    [0,     ["internal"],             []],
+    [1200,  ["framing"],              ["internal"]],
+    [5000,  ["market", "competitive"],["framing"]],
+    [13000, ["sizing", "risk"],       ["market", "competitive"]],
+    [21000, ["eval"],                 ["sizing", "risk"]],
+  ];
+  const agentTasks = {
+    internal:    "Searching internal knowledge base (RAG)",
+    framing:     "Applying JTBD framework to problem statement",
+    market:      "Researching market size and growth trends",
+    competitive: "Mapping competitors and identifying gaps",
+    sizing:      "Building bottom-up opportunity model",
+    risk:        "Identifying risks and mechanisms",
+    eval:        "Scoring sections + synthesizing recommendation",
+  };
+  let animTimers = [];
+  let elapsedInterval = null;
+
+  function startAgentAnimation() {
+    agentSchedule.forEach(([delay, startIds, doneIds]) => {
+      animTimers.push(setTimeout(() => {
+        doneIds.forEach(markAgentDone);
+        startIds.forEach(id => {
+          document.getElementById(`agent-${id}`).classList.add("running");
+          document.getElementById(`task-${id}`).textContent = agentTasks[id];
+        });
+      }, delay));
+    });
+
+    // Live elapsed counter — the screen should never feel frozen
+    const t0 = Date.now();
+    const timerEl = document.getElementById("elapsed-timer");
+    timerEl.textContent = "0s elapsed · usually done in 30 to 60 seconds";
+    elapsedInterval = setInterval(() => {
+      const s = Math.round((Date.now() - t0) / 1000);
+      timerEl.textContent = s < 75
+        ? `${s}s elapsed · usually done in 30 to 60 seconds`
+        : `${s}s elapsed · the AI service is busy right now, hang tight`;
+    }, 1000);
+  }
+
+  function clearAgentAnimation() {
+    animTimers.forEach(clearTimeout); animTimers = [];
+    if (elapsedInterval) { clearInterval(elapsedInterval); elapsedInterval = null; }
+  }
+
+  function markAgentDone(id) {
+    const card = document.getElementById(`agent-${id}`);
+    card.classList.remove("running"); card.classList.add("done");
+    document.getElementById(`task-${id}`).textContent = "Complete";
+  }
+
+  // Utilities
+  function scoreClass(n) { return n >= 75 ? "score-green" : n >= 50 ? "score-yellow" : "score-red"; }
+  function tagClass(s) { const l = (s||"").toLowerCase(); return l === "high" ? "red" : l === "medium" ? "yellow" : l === "low" ? "green" : ""; }
+  function esc(v) { return String(v ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function field(label, value) { if (!value) return ""; return `<div class="field"><div class="field-label">${label}</div><div class="field-value">${esc(value)}</div></div>`; }
+
+  // Section renderers
+  function renderProblemFraming(d) {
+    return `
+      <div class="jtbd-callout">${esc(d.jtbd_statement)}</div>
+      ${field("Primary user", d.primary_user)}
+      ${field("Functional outcome", d.functional_outcome)}
+      ${field("Emotional outcome", d.emotional_outcome)}
+      ${field("Social outcome", d.social_outcome)}
+      ${field("Current struggle", d.current_struggle)}
+      ${field("Reframed problem", d.reframed_problem)}
+      ${d.solution_reframe_note ? field("Reframe note", d.solution_reframe_note) : ""}
+    `;
+  }
+
+  function renderMarketResearch(d) {
+    const trends = Array.isArray(d.key_trends) ? d.key_trends : [];
+    return `
+      ${field("Market definition", d.market_definition)}
+      <div class="field"><div class="field-label">TAM estimate</div><div class="field-value">${esc(d.tam_estimate)}</div>${d.tam_source ? `<div style="color:var(--muted);font-size:12px;margin-top:4px">Source: ${esc(d.tam_source)}</div>` : ""}</div>
+      ${field("Growth rate", d.growth_rate + (d.growth_driver ? " — " + d.growth_driver : ""))}
+      ${d.market_maturity ? `<div class="field"><div class="field-label">Market maturity</div><div class="tag-row"><span class="tag">${esc(d.market_maturity)}</span></div></div>` : ""}
+      ${trends.length ? `<div class="field"><div class="field-label">Key trends</div>${trends.map(t => `<div class="trend-item"><div class="trend-dot"></div><div>${esc(t)}</div></div>`).join("")}</div>` : ""}
+      ${field("Analogous markets", d.analogous_markets)}
+    `;
+  }
+
+  function renderCompetitiveAnalysis(d) {
+    const comps = Array.isArray(d.competitors) ? d.competitors : [];
+    return `
+      ${comps.map(c => `<div class="competitor-card">
+        <div class="competitor-name">${esc(c.name)} <span style="color:var(--muted);font-weight:400;font-size:12px">by ${esc(c.company)}</span></div>
+        <div style="font-size:13px;color:var(--muted)">${esc(c.what_it_does)}</div>
+        <div class="competitor-grid">
+          <div class="competitor-item"><div class="competitor-item-label">Strength</div>${esc(c.primary_strength)}</div>
+          <div class="competitor-item"><div class="competitor-item-label">Gap</div><span style="color:var(--yellow)">${esc(c.critical_gap)}</span></div>
+          <div class="competitor-item"><div class="competitor-item-label">Target customer</div>${esc(c.target_customer)}</div>
+          <div class="competitor-item"><div class="competitor-item-label">Pricing</div>${esc(c.pricing_model)}</div>
+        </div>
+      </div>`).join("")}
+      ${field("Competitive pattern", d.competitive_pattern)}
+      ${field("Differentiation opportunity", d.differentiation_opportunity)}
+    `;
+  }
+
+  function renderOpportunitySizing(d) {
+    const tam = d.tam || {}, sam = d.sam || {}, som = d.som || {};
+    const assumptions = Array.isArray(tam.assumptions) ? tam.assumptions : [];
+    return `
+      <div class="stat-row">
+        <div class="stat-box"><div class="stat-box-label">TAM</div><div class="stat-box-value">${esc(tam.value||"")}</div><div class="stat-box-calc">${esc(tam.calculation||"")}</div></div>
+        <div class="stat-box"><div class="stat-box-label">SAM</div><div class="stat-box-value">${esc(sam.value||"")}</div><div class="stat-box-calc">${esc(sam.rationale||"")}</div></div>
+        <div class="stat-box"><div class="stat-box-label">SOM</div><div class="stat-box-value">${esc(som.value||"")}</div><div class="stat-box-calc">${esc(som.rationale||"")}</div></div>
+      </div>
+      ${field("Methodology", d.methodology)}
+      ${field("Beachhead segment", d.beachhead_segment)}
+      ${field("Revenue model fit", d.revenue_model_fit)}
+      ${assumptions.length ? `<div class="field"><div class="field-label">Assumptions</div>${assumptions.map(a=>`<div class="trend-item"><div class="trend-dot"></div><div>${esc(a)}</div></div>`).join("")}</div>` : ""}
+      ${d.confidence ? `<div class="field"><div class="field-label">Confidence</div><div class="tag-row"><span class="tag ${tagClass(d.confidence)}">${esc(d.confidence)}</span></div></div>` : ""}
+    `;
+  }
+
+  function renderRiskAssessment(d) {
+    const risks = Array.isArray(d.risks) ? d.risks : [];
+    return `
+      ${risks.map(r => `<div class="risk-card">
+        <div class="risk-header">
+          <div class="risk-title">${esc(r.title)}</div>
+          <div class="risk-meta">
+            <span class="tag ${tagClass(r.likelihood)}" style="font-size:11px">L: ${esc(r.likelihood)}</span>
+            <span class="tag ${tagClass(r.impact)}" style="font-size:11px">I: ${esc(r.impact)}</span>
+          </div>
+        </div>
+        <div class="risk-desc">${esc(r.description)}</div>
+        <div class="risk-mechanism">How it materializes: ${esc(r.mechanism)}</div>
+        ${r.mitigation ? `<div class="risk-mitigation">Mitigation: ${esc(r.mitigation)}</div>` : ""}
+      </div>`).join("")}
+      ${field("Biggest open question", d.biggest_open_question)}
+      ${field("Pre-mortem scenario", d.pre_mortem_scenario)}
+    `;
+  }
+
+  const SECTION_CONFIG = [
+    { key: "problem_framing",      label: "Problem Framing",      render: renderProblemFraming },
+    { key: "market_research",      label: "Market Research",      render: renderMarketResearch },
+    { key: "competitive_analysis", label: "Competitive Analysis", render: renderCompetitiveAnalysis },
+    { key: "opportunity_sizing",   label: "Opportunity Sizing",   render: renderOpportunitySizing },
+    { key: "risk_assessment",      label: "Risk Assessment",      render: renderRiskAssessment },
+  ];
+
+  function renderEvalRubric(evalSection) {
+    if (!evalSection) return "";
+    const scores = evalSection.criteria_scores || [];
+    return `
+      <div class="eval-rubric">
+        <div class="eval-rubric-title">Eval rubric</div>
+        ${scores.map(s => `<div class="rubric-row">
+          <div class="rubric-score" style="color:${s.score>=7?"var(--green)":s.score>=5?"var(--yellow)":"var(--red)"}">${s.score}/10</div>
+          <div class="rubric-text"><strong>${esc(s.criterion)}</strong> — ${esc(s.reason)}</div>
+        </div>`).join("")}
+        <div class="eval-footer">
+          <div class="eval-footer-box"><div class="eval-footer-label">Strongest element</div>${esc(evalSection.strongest_element||"")}</div>
+          <div class="eval-footer-box"><div class="eval-footer-label">Suggested action</div>${esc(evalSection.suggested_action||"")}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  function buildSections(brief, evalData) {
+    const container = document.getElementById("sections-container");
+    container.innerHTML = "";
+
+    SECTION_CONFIG.forEach(({ key, label, render }) => {
+      const data = brief[key] || {};
+      const sectionFailed = data._failed === true;
+      const evalSection = sectionFailed ? null : evalData?.section_scores?.[key];
+      const score = evalSection?.section_score ?? null;
+      const canImprove = score !== null && score < 75;
+
+      // Graceful degradation: a failed section shows a friendly notice
+      // instead of an empty shell, and gets no score badge or rubric.
+      const failedNotice = `
+        <div class="field-value" style="color:var(--muted)">
+          This section could not be completed because the AI service was busy.
+          The rest of the brief is unaffected. Start a new discovery to retry this section.
+        </div>`;
+
+      const iterations = evalSection?.iterations || null;
+      const wasRefined = iterations && iterations.length > 1;
+      const refinedBadge = wasRefined
+        ? `<span class="refined-badge">&#8593; ${iterations[0]} → ${iterations[iterations.length-1]} auto-refined</span>`
+        : "";
+
+      const el = document.createElement("div");
+      el.className = "brief-section";
+      el.id = `section-${key}`;
+
+      el.innerHTML = `
+        <div class="brief-section-header">
+          <div class="section-title">${label}</div>
+          <div class="section-header-right">
+            ${refinedBadge}
+            ${sectionFailed ? `<span class="score-badge score-yellow">incomplete</span>` : ""}
+            ${score !== null ? `<span class="score-badge ${scoreClass(score)}" id="score-badge-${key}">${score}</span>` : ""}
+            <span class="chevron">&#9660;</span>
+          </div>
+        </div>
+        <div class="brief-section-body">
+          <hr class="brief-divider" />
+          <div id="content-${key}">${sectionFailed ? failedNotice : render(data)}</div>
+          ${renderEvalRubric(evalSection)}
+          ${canImprove ? `<button class="improve-btn" id="improve-btn-${key}" onclick="improveSection('${key}')">
+            &#10024; Improve this section (scored ${score}/100)
+          </button>` : ""}
+        </div>
+      `;
+
+      el.querySelector(".brief-section-header").addEventListener("click", () => el.classList.toggle("open"));
+      container.appendChild(el);
+      if (key === "problem_framing") el.classList.add("open");
+    });
+  }
+
+  async function improveSection(key) {
+    const btn = document.getElementById(`improve-btn-${key}`);
+    btn.disabled = true;
+    btn.textContent = "Improving...";
+
+    const originalContent = currentBrief[key] || {};
+    const evalResult = currentEval?.section_scores?.[key] || {};
+    const oldScore = evalResult.section_score || 0;
+
+    try {
+      const res = await fetch(`${BACKEND}/api/improve`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          section_key: key,
+          original_content: originalContent,
+          eval_result: evalResult,
+          problem_statement: currentProblem,
+        }),
+      });
+      const data = await res.json();
+
+      const improved = data.improved_content || {};
+      const newEval = data.new_eval || {};
+      const newScore = newEval.section_score || 0;
+      const delta = newScore - oldScore;
+
+      // Update the section renderer
+      const cfg = SECTION_CONFIG.find(s => s.key === key);
+      if (cfg) {
+        document.getElementById(`content-${key}`).innerHTML = cfg.render(improved);
+        currentBrief[key] = improved;
+      }
+
+      // Update score badge
+      const badge = document.getElementById(`score-badge-${key}`);
+      if (badge) {
+        badge.textContent = newScore;
+        badge.className = `score-badge ${scoreClass(newScore)}`;
+      }
+
+      // Update button
+      btn.className = "improve-btn improved";
+      btn.innerHTML = delta > 0
+        ? `&#10003; Improved: ${oldScore} → ${newScore} <span class="score-delta delta-up">(+${delta})</span>`
+        : `&#10003; Rewritten — score: ${newScore}`;
+      btn.disabled = true;
+
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = `Improve this section (scored ${currentEval?.section_scores?.[key]?.section_score || "?"}/100)`;
+      alert("Improvement failed: " + err.message);
+    }
+  }
+
+  function showRecommendation(synthesis) {
+    if (!synthesis || !synthesis.recommendation) return;
+    const box = document.getElementById("recommendation-box");
+    const rec = (synthesis.recommendation || "INVESTIGATE").toUpperCase();
+    box.className = `recommendation-box ${rec === "PROCEED" ? "rec-proceed" : rec === "STOP" ? "rec-stop" : "rec-investigate"}`;
+    box.style.display = "block";
+    document.getElementById("rec-pill").textContent = rec;
+    document.getElementById("rec-label").textContent = synthesis.recommendation_label || "";
+    document.getElementById("rec-rationale").textContent = synthesis.recommendation_rationale || "";
+    document.getElementById("rec-confidence").textContent = synthesis.confidence_note || "";
+
+    const conditions = synthesis.proceed_conditions || [];
+    if (conditions.length > 0 && rec !== "PROCEED") {
+      document.getElementById("rec-conditions-block").style.display = "block";
+      document.getElementById("rec-conditions-list").innerHTML = conditions.map(c =>
+        `<div class="rec-condition"><div class="rec-condition-dot">&#9670;</div><div>${esc(c)}</div></div>`
+      ).join("");
+    }
+  }
+
+  function showExecSummary(synthesis) {
+    if (!synthesis?.executive_summary) return;
+    document.getElementById("exec-summary-box").style.display = "block";
+    document.getElementById("exec-summary-text").textContent = synthesis.executive_summary;
+  }
+
+  function showNextSteps(synthesis) {
+    const steps = synthesis?.next_steps || [];
+    if (!steps.length) return;
+    document.getElementById("next-steps-box").style.display = "block";
+    document.getElementById("next-steps-list").innerHTML = steps.map((s, i) =>
+      `<div class="next-step"><div class="next-step-num">${i+1}</div><div class="next-step-text">${esc(s)}</div></div>`
+    ).join("");
+  }
+
+  // Step 1: Submit triggers clarification
+  submitBtn.addEventListener("click", async () => {
+    const problem = problemEl.value.trim();
+    if (problem.length < 50) return;
+    currentProblem = problem;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Reading your problem...";
+
+    try {
+      const res = await fetch(`${BACKEND}/api/clarify`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ problem_statement: problem }),
+      });
+      const data = await res.json();
+
+      // Show clarification view
+      document.getElementById("interpretation-text").textContent = data.interpretation || problem;
+
+      const questionsList = document.getElementById("questions-list");
+      questionsList.innerHTML = "";
+      const questions = data.questions || [];
+      questions.forEach((q, i) => {
+        const block = document.createElement("div");
+        block.className = "question-block";
+        block.innerHTML = `
+          <div class="question-text">${i + 1}. ${esc(q.question)}</div>
+          <div class="question-why">Why this matters: ${esc(q.why_it_matters)}</div>
+          <input class="question-input" id="answer-${i}" type="text" placeholder="Optional — leave blank to skip" />
+        `;
+        questionsList.appendChild(block);
+      });
+
+      inputView.style.display = "none";
+      clarificationView.style.display = "block";
+
+    } catch (err) {
+      // If clarification fails, skip it and go straight to discovery
+      inputView.style.display = "none";
+      runDiscovery([]);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Run Discovery";
+    }
+  });
+
+  // Back button
+  document.getElementById("back-to-input").addEventListener("click", () => {
+    clarificationView.style.display = "none";
+    inputView.style.display = "block";
+  });
+
+  // Step 2: Run discovery with clarification answers
+  document.getElementById("run-with-context").addEventListener("click", () => {
+    const answers = Array.from(document.querySelectorAll(".question-input"))
+      .map(el => el.value.trim())
+      .filter(a => a.length > 0);
+    clarificationView.style.display = "none";
+    runDiscovery(answers);
+  });
+
+  async function runDiscovery(clarifications) {
+    loadingView.style.display = "block";
+    startAgentAnimation();
+
+    const startTime = Date.now();
+
+    try {
+      const res = await fetch(`${BACKEND}/api/discover`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ problem_statement: currentProblem, clarifications }),
+      });
+      const data = await res.json();
+      const elapsed = Math.round((Date.now() - startTime) / 1000);
+
+      clearAgentAnimation();
+      ["internal","framing","market","competitive","sizing","risk","eval"].forEach(markAgentDone);
+      await new Promise(r => setTimeout(r, 600));
+
+      loadingView.style.display = "none";
+      resultsView.style.display = "block";
+
+      if (!res.ok || data.phase !== "complete") {
+        const banner = document.getElementById("error-banner");
+        banner.style.display = "block";
+        banner.textContent = data.detail || data.message || "Something went wrong.";
+        return;
+      }
+
+      currentBrief = data.brief || {};
+      currentEval = data.eval || {};
+      const synthesis = data.synthesis || {};
+      currentSynthesis = synthesis;
+      currentDeck = null;
+      document.getElementById("readout-btn").style.display = synthesis.recommendation ? "block" : "none";
+
+      const overallScore = currentEval.overall_score ?? "--";
+      document.getElementById("overall-score-num").textContent = overallScore;
+      document.getElementById("overall-score-num").style.color =
+        overallScore >= 75 ? "var(--green)" : overallScore >= 50 ? "var(--yellow)" : "var(--red)";
+
+      const badge = document.getElementById("confidence-badge");
+      badge.textContent = overallScore >= 75 ? "High" : overallScore >= 50 ? "Medium" : "Low";
+      badge.className = `confidence-badge ${scoreClass(overallScore)}`;
+
+      document.getElementById("results-sub").textContent = `Completed in ${elapsed}s · 7 agents`;
+
+      const internal = data.internal || {};
+      if (internal.status === "prior_work_found") {
+        const n = document.getElementById("internal-notice");
+        n.style.display = "block";
+        n.textContent = `Internal knowledge base: ${internal.message}`;
+      }
+
+      showRecommendation(synthesis);
+      showExecSummary(synthesis);
+      buildSections(currentBrief, currentEval);
+      showNextSteps(synthesis);
+
+    } catch (err) {
+      clearAgentAnimation();
+      loadingView.style.display = "none";
+      resultsView.style.display = "block";
+      const banner = document.getElementById("error-banner");
+      banner.style.display = "block";
+      banner.textContent = `The AI backend could not be reached. If this is your first try, wait 10 seconds and try again — the server may be waking up. If the problem persists, the AI model is experiencing high demand.`;
+    }
+  }
+
+  // ── Executive Readout deck ──────────────────────────────────────────────
+  function recPillClass(rec) {
+    const r = (rec || "").toUpperCase();
+    return r === "PROCEED" ? "ds-rec-proceed" : r === "STOP" ? "ds-rec-stop" : "ds-rec-investigate";
+  }
+
+  const SLIDE_RENDERERS = {
+    exec_summary: (s) => `
+      <div class="ds-kicker">Executive Summary</div>
+      <div class="ds-title">${esc(s.title)}</div>
+      <span class="ds-rec-pill ${recPillClass(s.recommendation)}">${esc(s.recommendation)}</span>
+      <div class="ds-headline">${esc(s.headline)}</div>
+      <div class="ds-grid">
+        ${(s.summary_points || []).map(p => `
+          <div class="ds-point">
+            <div class="ds-point-label">${esc(p.label)}</div>
+            <div class="ds-point-text">${esc(p.text)}</div>
+          </div>`).join("")}
+      </div>
+      <div class="ds-ask"><strong>The ask:</strong> ${esc(s.the_ask)}</div>`,
+
+    problem: (s) => `
+      <div class="ds-kicker">The Problem</div>
+      <div class="ds-title">${esc(s.title)}</div>
+      <div class="ds-narrative">${esc(s.narrative)}</div>
+      <div class="ds-grid">
+        <div class="ds-point"><div class="ds-point-label">Who hurts</div><div class="ds-point-text">${esc(s.who_hurts)}</div></div>
+        <div class="ds-point"><div class="ds-point-label">Cost of doing nothing</div><div class="ds-point-text">${esc(s.cost_of_inaction)}</div></div>
+      </div>`,
+
+    market: (s) => `
+      <div class="ds-kicker">The Market</div>
+      <div class="ds-title">${esc(s.title)}</div>
+      <div class="ds-stats">
+        ${(s.stats || []).map(st => `
+          <div class="ds-stat">
+            <div class="ds-point-label">${esc(st.label)}</div>
+            <div class="ds-stat-value">${esc(st.value)}</div>
+            <div class="ds-stat-note">${esc(st.note)}</div>
+          </div>`).join("")}
+      </div>
+      <div class="ds-narrative">${esc(s.narrative)}</div>`,
+
+    competition: (s) => `
+      <div class="ds-kicker">The Competition</div>
+      <div class="ds-title">${esc(s.title)}</div>
+      <div class="ds-comp-row ds-comp-head"><div>Product</div><div>Their strength</div><div>Their gap</div></div>
+      ${(s.competitors || []).map(c => `
+        <div class="ds-comp-row">
+          <div class="ds-comp-name">${esc(c.name)}</div>
+          <div>${esc(c.strength)}</div>
+          <div class="ds-comp-gap">${esc(c.gap)}</div>
+        </div>`).join("")}
+      <div class="ds-ask" style="margin-top:24px"><strong>The opening:</strong> ${esc(s.takeaway)}</div>`,
+
+    risks: (s) => `
+      <div class="ds-kicker">The Risks</div>
+      <div class="ds-title">${esc(s.title)}</div>
+      ${(s.risks || []).map(r => `
+        <div class="ds-risk-row">
+          <span class="ds-sev ds-sev-${esc((r.severity || "medium").toLowerCase())}">${esc(r.severity)}</span>
+          <div class="ds-risk-text"><strong>${esc(r.title)}.</strong> ${esc(r.one_liner)}<br/><span class="mit">De-risk: ${esc(r.mitigation)}</span></div>
+        </div>`).join("")}
+      <div class="ds-kill"><strong>We stop if:</strong> ${esc(s.kill_condition)}</div>`,
+
+    recommendation: (s) => `
+      <div class="ds-kicker">The Recommendation</div>
+      <div class="ds-title">${esc(s.title)}</div>
+      <span class="ds-rec-pill ${recPillClass(s.recommendation)}">${esc(s.recommendation)}</span>
+      <div class="ds-narrative">${esc(s.rationale)}</div>
+      ${(s.conditions || []).length ? `
+        <div class="ds-point-label" style="margin-bottom:10px">What we must validate first</div>
+        <div class="ds-list">
+          ${s.conditions.map(c => `<div class="ds-list-item"><span class="ds-list-dot">&#9670;</span><span>${esc(c)}</span></div>`).join("")}
+        </div>` : ""}
+      ${(s.next_steps || []).length ? `
+        <div class="ds-point-label" style="margin-bottom:10px">Next steps</div>
+        <div class="ds-list">
+          ${s.next_steps.map((n, i) => `<div class="ds-list-item"><span class="ds-num">${i + 1}</span><span>${esc(n)}</span></div>`).join("")}
+        </div>` : ""}`,
+  };
+
+  function renderDeck(deck) {
+    const slides = deck.slides || [];
+    const container = document.getElementById("deck-slides");
+    const today = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+
+    container.innerHTML = slides.map((s, i) => `
+      <div class="deck-slide" data-idx="${i}">
+        ${(SLIDE_RENDERERS[s.type] || (() => ""))(s)}
+        <div class="ds-footer">
+          <span>${esc(deck.deck_title)} &middot; Generated by Compass &middot; ${today}</span>
+          <span>${i + 1} / ${slides.length}</span>
+        </div>
+      </div>`).join("");
+
+    document.getElementById("deck-topbar-title").textContent = deck.deck_title || "Executive Readout";
+    document.getElementById("deck-dots").innerHTML = slides.map((_, i) =>
+      `<div class="deck-dot" data-idx="${i}"></div>`).join("");
+    document.querySelectorAll(".deck-dot").forEach(d =>
+      d.addEventListener("click", () => showSlide(parseInt(d.dataset.idx))));
+
+    document.getElementById("deck-overlay").classList.add("open");
+    document.body.classList.add("deck-open");
+    showSlide(0);
+  }
+
+  function showSlide(idx) {
+    const slides = document.querySelectorAll(".deck-slide");
+    if (!slides.length) return;
+    currentSlideIdx = Math.max(0, Math.min(idx, slides.length - 1));
+    slides.forEach(s => s.classList.toggle("active", parseInt(s.dataset.idx) === currentSlideIdx));
+    document.querySelectorAll(".deck-dot").forEach(d =>
+      d.classList.toggle("active", parseInt(d.dataset.idx) === currentSlideIdx));
+    document.getElementById("deck-counter").textContent = `${currentSlideIdx + 1} / ${slides.length}`;
+    document.getElementById("deck-prev").disabled = currentSlideIdx === 0;
+    document.getElementById("deck-next").disabled = currentSlideIdx === slides.length - 1;
+  }
+
+  function closeDeck() {
+    document.getElementById("deck-overlay").classList.remove("open");
+    document.body.classList.remove("deck-open");
+  }
+
+  document.getElementById("readout-btn").addEventListener("click", async () => {
+    // Cached: reopening is instant, no second AI call
+    if (currentDeck) { renderDeck(currentDeck); return; }
+
+    const btn = document.getElementById("readout-btn");
+    btn.disabled = true;
+    btn.innerHTML = "Building your deck... about 15 seconds";
+
+    try {
+      const res = await fetch(`${BACKEND}/api/readout`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ brief: currentBrief, synthesis: currentSynthesis, eval_scores: currentEval }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || "The deck could not be generated.");
+      currentDeck = data.deck;
+      renderDeck(currentDeck);
+      btn.innerHTML = "&#9670;&nbsp; Reopen Executive Readout";
+    } catch (err) {
+      btn.innerHTML = "&#9670;&nbsp; Generate Executive Readout — a 6-slide concept deck for leadership";
+      alert("Deck generation failed: " + err.message);
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  document.getElementById("deck-prev").addEventListener("click", () => showSlide(currentSlideIdx - 1));
+  document.getElementById("deck-next").addEventListener("click", () => showSlide(currentSlideIdx + 1));
+  document.getElementById("deck-close-btn").addEventListener("click", closeDeck);
+  document.getElementById("deck-print-btn").addEventListener("click", () => window.print());
+
+  document.addEventListener("keydown", (e) => {
+    if (!document.getElementById("deck-overlay").classList.contains("open")) return;
+    if (e.key === "ArrowRight") showSlide(currentSlideIdx + 1);
+    if (e.key === "ArrowLeft")  showSlide(currentSlideIdx - 1);
+    if (e.key === "Escape")    closeDeck();
+  });
+
+  document.getElementById("new-search-btn").addEventListener("click", () => {
+    resultsView.style.display = "none";
+    clarificationView.style.display = "none";
+    inputView.style.display = "block";
+    problemEl.value = "";
+    problemEl.dispatchEvent(new Event("input"));
+    currentBrief = {}; currentEval = {}; currentProblem = "";
+    currentSynthesis = {}; currentDeck = null;
+    closeDeck();
+    const rb = document.getElementById("readout-btn");
+    rb.style.display = "none";
+    rb.innerHTML = "&#9670;&nbsp; Generate Executive Readout — a 6-slide concept deck for leadership";
+    document.getElementById("questions-list").innerHTML = "";
+    document.getElementById("interpretation-text").textContent = "";
+    document.getElementById("sections-container").innerHTML = "";
+    document.getElementById("recommendation-box").style.display = "none";
+    document.getElementById("exec-summary-box").style.display = "none";
+    document.getElementById("next-steps-box").style.display = "none";
+    document.getElementById("internal-notice").style.display = "none";
+    document.getElementById("error-banner").style.display = "none";
+    ["internal","framing","market","competitive","sizing","risk","eval"].forEach(id => {
+      document.getElementById(`agent-${id}`).classList.remove("running","done");
+      document.getElementById(`task-${id}`).textContent = "Queued";
+    });
+  });
+</script>
+</body>
+</html>

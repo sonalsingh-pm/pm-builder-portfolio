@@ -115,6 +115,11 @@ nav{
 
 /* PROJECTS */
 .plist{display:flex;flex-direction:column;gap:20px}
+.sec-guide{font-size:1rem;color:var(--mid);max-width:720px;margin:-2rem 0 2.5rem;line-height:1.65}
+.sec-guide strong{color:var(--navy)}
+.pcard.featured{border-color:#b9b9f9;box-shadow:rgba(99,91,255,0.12) 0 4px 16px}
+.b-featured{background:#f0effe;color:var(--purple-dark);border:1px solid #b9b9f9}
+.badge-group{display:flex;gap:0.5rem}
 .pcard{display:block;text-decoration:none;background:white;border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:box-shadow 0.2s,transform 0.2s;box-shadow:rgba(15,23,42,0.04) 0 2px 8px}
 .pcard:hover{box-shadow:rgba(15,23,42,0.1) 0 8px 24px;transform:translateY(-2px)}
 .pcard-accent{height:4px;background:linear-gradient(90deg,#635bff,#818cf8)}
@@ -334,8 +339,9 @@ footer{padding:1.75rem 4rem;border-top:1px solid var(--border);display:flex;just
 <div class="page-section alt reveal" id="projects">
   <div class="sec-wrap">
     <h2 class="sec-title">Case Studies</h2>
+    <p class="sec-guide">Short on time? Start with the <strong>Sparky teardown</strong>, a 16-test eval of a live AI product. The rest show range: AI growth strategy, enterprise platforms, and a zero-to-one solo build.</p>
     <div class="plist">
-      <div class="pcard">
+      <div class="pcard featured">
         <div class="pcard-accent" style="background:linear-gradient(90deg,#0071ce,#FFC220)"></div>
         <div class="pcard-body">
           <div class="pcard-ico" style="background:#FFC220">
@@ -343,7 +349,7 @@ footer{padding:1.75rem 4rem;border-top:1px solid var(--border);display:flex;just
           </div>
           <div class="pcard-header">
             <div class="pname">Sparky Product Teardown</div>
-            <span class="badge b-personal">Product Evaluation</span>
+            <div class="badge-group"><span class="badge b-featured">&#9733; Featured</span><span class="badge b-personal">Product Evaluation</span></div>
           </div>
           <div class="pdesc">A structured stress test and product teardown of Walmart's Sparky AI shopping assistant, covering ambiguity handling, context retention, trust and accuracy, competitive positioning, and personalization. Includes competitive analysis against Amazon Rufus and Google AI Mode, a success metrics framework, prioritized PM recommendations, and the full eval behind the verdicts: 16 scripted tests with exact prompts and pass criteria.</div>
           <div class="ptags"><span class="tag">AI Shopping</span><span class="tag">AI Evals</span><span class="tag">Product Evaluation</span><span class="tag">Competitive Analysis</span></div>

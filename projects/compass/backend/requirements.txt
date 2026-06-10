@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+google-genai
+pinecone
+python-dotenv
+notion-client
+httpx
+pydantic
