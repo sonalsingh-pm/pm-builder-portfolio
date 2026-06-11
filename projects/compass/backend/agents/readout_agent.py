@@ -26,8 +26,10 @@ LANGUAGE RULES — follow these exactly:
 
 SLIDE DISCIPLINE:
 - Headlines are full sentences that carry the message. "Competitors all require daily manual counts" — not "Competitive Landscape".
-- Bullets are one line each, maximum 15 words.
+- Bullets are 15 to 25 words. Short, but dense: every bullet should earn a nod, not a shrug.
+- Use a concrete number in every bullet where the research provides one. "Owners lose 15-25% of inventory monthly" beats "owners lose significant inventory".
 - No bullet may restate another bullet.
+- A slide with thin content is a failure. Pull the strongest specifics from the research: named competitors, dollar figures, percentages, named segments.
 
 Always output valid JSON only — no markdown, no explanation outside the JSON."""
 
@@ -90,19 +92,19 @@ Return a JSON object with exactly this structure:
       "headline": "One bold sentence: the single most important takeaway of the entire research.",
       "recommendation": "{synthesis.get("recommendation", "INVESTIGATE")}",
       "summary_points": [
-        {{"label": "Problem", "text": "One line, max 15 words"}},
-        {{"label": "Market", "text": "One line with the key number"}},
-        {{"label": "Competition", "text": "One line: the pattern and the opening"}},
-        {{"label": "Biggest risk", "text": "One line: the risk that decides everything"}}
+        {{"label": "Problem", "text": "15-25 words with the cost to the user, quantified"}},
+        {{"label": "Market", "text": "15-25 words with TAM, growth rate, and the beachhead segment"}},
+        {{"label": "Competition", "text": "15-25 words naming the dominant pattern and the specific opening it creates"}},
+        {{"label": "Biggest risk", "text": "15-25 words: the risk that decides everything and how we test it"}}
       ],
       "the_ask": "One sentence: exactly what you want from this executive (a decision, budget, or time-boxed validation)."
     }},
     {{
       "type": "problem",
       "title": "Full-sentence headline carrying the problem message",
-      "narrative": "2-3 short sentences making the exec FEEL the problem. Open with the human reality.",
-      "who_hurts": "One line naming the user precisely",
-      "cost_of_inaction": "One line: what it costs them today, with a number if available"
+      "narrative": "3-4 short sentences making the exec FEEL the problem. Open with the human reality, then ground it with the strongest specifics from the research.",
+      "who_hurts": "One full sentence naming the user precisely, with context on their situation",
+      "cost_of_inaction": "One full sentence: what it costs them today, quantified wherever the research allows"
     }},
     {{
       "type": "market",
@@ -112,13 +114,13 @@ Return a JSON object with exactly this structure:
         {{"label": "SAM", "value": "$X", "note": "..."}},
         {{"label": "SOM (3yr)", "value": "$X", "note": "..."}}
       ],
-      "narrative": "1-2 sentences on growth and the beachhead segment. Label estimates as estimates."
+      "narrative": "2-3 sentences covering the growth rate, what is driving it, and why the beachhead segment adopts first. Include numbers. Label estimates as estimates."
     }},
     {{
       "type": "competition",
       "title": "Full-sentence headline carrying the competitive insight",
       "competitors": [
-        {{"name": "Product name", "strength": "max 10 words", "gap": "max 10 words"}}
+        {{"name": "Product name", "strength": "10-16 words, specific", "gap": "10-16 words: the specific thing it cannot do that this problem requires"}}
       ],
       "takeaway": "One sentence: the specific opening this creates for us."
     }},
@@ -126,7 +128,7 @@ Return a JSON object with exactly this structure:
       "type": "risks",
       "title": "Full-sentence headline that is honest about the biggest threat",
       "risks": [
-        {{"title": "Risk name", "severity": "high/medium/low", "one_liner": "the risk in max 15 words", "mitigation": "the de-risking action in max 12 words"}}
+        {{"title": "Risk name", "severity": "high/medium/low", "one_liner": "the risk and how it materializes, 15-22 words", "mitigation": "the de-risking action, 10-16 words, concrete enough to execute"}}
       ],
       "kill_condition": "One sentence: the specific finding that would mean we should stop."
     }},
@@ -134,7 +136,7 @@ Return a JSON object with exactly this structure:
       "type": "recommendation",
       "title": "Full-sentence headline stating the call",
       "recommendation": "{synthesis.get("recommendation", "INVESTIGATE")}",
-      "rationale": "2 sentences max: why this call.",
+      "rationale": "2-3 sentences: why this call, naming the specific findings that drove it.",
       "conditions": ["Each condition in one line, max 18 words"],
       "next_steps": ["Step with owner and timeframe, one line each, max 3 steps"]
     }}

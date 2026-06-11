@@ -108,6 +108,14 @@
     }
     #submit-btn:disabled { opacity: 0.35; cursor: not-allowed; }
     #submit-btn:not(:disabled):hover { opacity: 0.88; }
+    #submit-btn.working { opacity: 0.85; }
+
+    .btn-spinner {
+      display: inline-block; width: 14px; height: 14px; vertical-align: -2px;
+      border: 2px solid rgba(255,255,255,0.35); border-top-color: white;
+      border-radius: 50%; margin-right: 8px; animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     .examples-label { font-size: 12px; color: var(--muted); margin-top: 28px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
     .examples { display: flex; flex-direction: column; gap: 8px; }
@@ -347,10 +355,20 @@
       display: none; background: #ffffff; color: #1c1f2a;
       width: 100%; max-width: 880px; min-height: 560px;
       border-radius: 14px; padding: 48px 54px;
+      position: relative; overflow: hidden;
+    }
+    .deck-slide::before {
+      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+      background: linear-gradient(90deg, #4c6ef5, #a78bfa);
     }
     .deck-slide.active { display: flex; flex-direction: column; }
 
-    .ds-kicker { font-size: 11px; font-weight: 700; color: #4c6ef5; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
+    .ds-kicker {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 11px; font-weight: 700; color: #4c6ef5;
+      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px;
+    }
+    .ds-kicker::before { content: ""; width: 18px; height: 3px; background: #4c6ef5; border-radius: 2px; }
     .ds-title { font-size: 26px; font-weight: 700; line-height: 1.25; margin-bottom: 18px; color: #14161f; }
     .ds-headline { font-size: 17px; line-height: 1.5; color: #2a2e3d; margin-bottom: 22px; }
     .ds-narrative { font-size: 15px; line-height: 1.7; color: #3a3f50; margin-bottom: 20px; }
@@ -407,7 +425,9 @@
       flex-shrink: 0; margin-top: 2px;
     }
 
-    .ds-footer { display: flex; justify-content: space-between; margin-top: 28px; padding-top: 14px; border-top: 1px solid #e8eaf2; font-size: 11px; color: #8b90a0; }
+    /* margin-top auto pins the footer to the bottom so slide content spreads naturally */
+    .ds-footer { display: flex; justify-content: space-between; margin-top: auto; padding-top: 20px; border-top: 1px solid #e8eaf2; font-size: 11px; color: #8b90a0; }
+    .deck-print-hint { font-size: 11px; color: var(--muted); }
 
     .deck-dots { display: flex; justify-content: center; gap: 8px; padding-bottom: 28px; }
     .deck-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); cursor: pointer; transition: background 0.2s; }
@@ -602,6 +622,7 @@
   <div class="deck-topbar">
     <div class="deck-topbar-title" id="deck-topbar-title">Executive Readout</div>
     <div class="deck-topbar-actions">
+      <span class="deck-print-hint">For a color PDF, keep "Background graphics" checked in the print dialog</span>
       <span class="deck-counter" id="deck-counter">1 / 6</span>
       <button class="deck-action-btn" id="deck-print-btn">Print / Save as PDF</button>
       <button class="deck-action-btn" id="deck-close-btn">Close &#10005;</button>
@@ -980,7 +1001,21 @@
     currentProblem = problem;
 
     submitBtn.disabled = true;
-    submitBtn.textContent = "Reading your problem...";
+    submitBtn.classList.add("working");
+
+    // Honest, evolving status: a static label on a slow request reads as frozen.
+    const stages = [
+      [0,     "Reading your problem..."],
+      [6000,  "Still reading... the free server may be waking up"],
+      [20000, "Waking the server can take up to a minute on the first visit. Hang tight..."],
+      [45000, "Almost there... free-tier servers are slow to wake but they do wake"],
+    ];
+    const stageTimers = stages.map(([delay, msg]) =>
+      setTimeout(() => { submitBtn.innerHTML = `<span class="btn-spinner"></span>${msg}`; }, delay));
+    const clearStages = () => {
+      stageTimers.forEach(clearTimeout);
+      submitBtn.classList.remove("working");
+    };
 
     try {
       const res = await fetch(`${BACKEND}/api/clarify`, {
@@ -1015,6 +1050,7 @@
       inputView.style.display = "none";
       runDiscovery([]);
     } finally {
+      clearStages();
       submitBtn.disabled = false;
       submitBtn.textContent = "Run Discovery";
     }

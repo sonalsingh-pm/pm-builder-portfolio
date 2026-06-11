@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compass: I Built an AI Product Discovery Team | Sonal Singh</title>
+  <meta name="description" content="How I built Compass, a multi-agent AI product discovery tool with its own eval and self-improvement loop, as a PM learning AI engineering on the go." />
+  <meta property="og:title" content="Compass: I Built an AI Product Discovery Team" />
+  <meta property="og:description" content="A multi-agent AI system that turns a raw problem statement into a scored discovery brief with a go/investigate/stop recommendation." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #ffffff; color: #374151; -webkit-font-smoothing: antialiased; }
+    .page { max-width: 760px; margin: 0 auto; padding: 60px 40px 80px; }
+    @media (max-width: 600px) { .page { padding: 40px 20px 60px; } }
+
+    .label { font-size: 12px; font-weight: 500; color: #4c6ef5; text-transform: uppercase; letter-spacing: 0.08em; }
+    .title { font-size: 36px; font-weight: 700; color: #111827; line-height: 1.2; margin-top: 12px; }
+    @media (max-width: 600px) { .title { font-size: 26px; } }
+    .subtitle { font-size: 18px; color: #6b7280; margin-top: 12px; line-height: 1.5; }
+    .meta-row { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; font-size: 13px; color: #9ca3af; flex-wrap: wrap; gap: 8px; }
+    .divider { border: none; border-top: 1px solid #e5e7eb; margin: 20px 0; }
+
+    .cta-row { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+    .cta { display: inline-block; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; }
+    .cta-primary { background: #4c6ef5; color: white; }
+    .cta-secondary { border: 1px solid #d1d5db; color: #374151; }
+
+    .section-heading { font-size: 22px; font-weight: 700; color: #111827; margin-top: 52px; margin-bottom: 16px; }
+    p { font-size: 16px; line-height: 1.75; color: #374151; margin-bottom: 18px; }
+
+    .pull-quote { border-left: 3px solid #4c6ef5; background: #f0f3ff; padding: 20px 24px; font-size: 17px; font-style: italic; color: #374151; border-radius: 0 8px 8px 0; margin: 28px 0; line-height: 1.6; }
+
+    /* Diagram shared styles */
+    .diagram { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; margin: 24px 0; }
+    .diagram-title { font-size: 11px; font-weight: 700; color: #4c6ef5; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 18px; }
+    .d-node { background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 10px 14px; font-size: 13px; font-weight: 500; color: #111827; text-align: center; }
+    .d-node .d-sub { display: block; font-size: 11px; font-weight: 400; color: #6b7280; margin-top: 2px; }
+    .d-node.accent { border-color: #4c6ef5; background: #f0f3ff; }
+    .d-node.green { border-color: #10b981; background: #ecfdf5; }
+    .d-node.yellow { border-color: #f59e0b; background: #fffbeb; }
+    .d-node.red { border-color: #ef4444; background: #fef2f2; }
+    .d-node.planned { border-style: dashed; color: #6b7280; background: #fafafa; }
+    .d-arrow { text-align: center; color: #9ca3af; font-size: 14px; line-height: 1; padding: 6px 0; }
+    .d-row { display: flex; gap: 10px; }
+    .d-row .d-node { flex: 1; }
+    .d-phase { font-size: 10px; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .d-badge { display: inline-block; font-size: 9px; font-weight: 700; color: #4c6ef5; background: #e6ebff; padding: 2px 7px; border-radius: 10px; margin-left: 6px; letter-spacing: 0.04em; }
+    .d-badge.planned-badge { color: #92400e; background: #fef3c7; }
+    .d-note { font-size: 12px; color: #6b7280; line-height: 1.6; margin-top: 14px; }
+    @media (max-width: 600px) { .d-row { flex-direction: column; } }
+
+    /* Loop diagram */
+    .loop-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: center; }
+    @media (max-width: 600px) { .loop-grid { grid-template-columns: 1fr; } }
+
+    /* Decision engine */
+    .verdict-row { display: flex; gap: 10px; margin-top: 10px; }
+    @media (max-width: 600px) { .verdict-row { flex-direction: column; } }
+    .verdict-row .d-node { flex: 1; }
+
+    /* Agent table */
+    .agent-row { display: flex; gap: 14px; align-items: flex-start; padding: 14px 0; border-bottom: 1px solid #f3f4f6; }
+    .agent-icon { width: 34px; height: 34px; border-radius: 8px; background: #f0f3ff; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .agent-name { font-size: 14px; font-weight: 600; color: #111827; }
+    .agent-desc { font-size: 14px; color: #6b7280; line-height: 1.6; margin-top: 2px; }
+
+    /* Decisions */
+    .decision-block { margin-bottom: 18px; padding: 18px 20px; border: 1px solid #e5e7eb; border-radius: 8px; }
+    .decision-label { font-size: 11px; font-weight: 600; color: #4c6ef5; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 5px; }
+    .decision-heading { font-size: 15px; font-weight: 600; color: #111827; margin-bottom: 8px; }
+    .decision-block p { margin-bottom: 0; font-size: 14px; }
+
+    /* Tech stack */
+    .stack-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+    @media (max-width: 600px) { .stack-grid { grid-template-columns: 1fr; } }
+    .stack-card { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 14px 16px; }
+    .stack-name { font-size: 13px; font-weight: 600; color: #111827; margin-bottom: 4px; }
+    .stack-why { font-size: 13px; color: #6b7280; line-height: 1.55; }
+
+    .footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid #e5e7eb; font-size: 13px; color: #6b7280; line-height: 1.9; }
+    .footer a { color: #4c6ef5; text-decoration: none; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <span class="label">Case Study</span>
+  <h1 class="title">Compass: I Built an AI Product Discovery Team</h1>
+  <p class="subtitle">A multi-agent AI system that turns a raw problem statement into a scored discovery brief, an executive deck, and a clear go/investigate/stop call in about a minute.</p>
+  <div class="meta-row">
+    <span>Sonal Singh, Principal Product Manager</span>
+    <span>June 2026</span>
+  </div>
+  <div class="cta-row">
+    <a class="cta cta-primary" href="https://sonalsingh-pm.netlify.app/projects/compass/prototype/index.html">Try the live app</a>
+    <a class="cta cta-secondary" href="https://sonalsingh-pm.netlify.app/">Back to portfolio</a>
+  </div>
+  <hr class="divider" style="margin-top:28px" />
+
+  <h2 class="section-heading">The Problem</h2>
+  <p>Early product discovery is where good ideas go to wait. When a PM gets a promising problem, the first two weeks disappear into the same ritual: framing the problem, sizing the market, mapping competitors, listing risks, and packaging it all for leadership. The work is real, but most of it is assembly, not judgment.</p>
+  <p>I have lived this for 15 years across SAP, Dell, Cornerstone, and Walmart. The worst part is not the time. It is that the quality of a discovery brief depends entirely on who wrote it and how much energy they had that week. There is no rubric, no consistency, and no honest verdict at the end. Most briefs conclude with "promising, needs more research," which is a way of deciding nothing.</p>
+  <p>I wanted to know: if AI agents did the assembly, could the PM spend their time on the part that matters, judging whether the opportunity is real?</p>
+
+  <h2 class="section-heading">What I Built</h2>
+  <p>Compass is a working web application. You describe a problem in plain language. Compass first reads it back to you and asks two or three sharpening questions, the way a good colleague would in a five-minute scoping chat. Then it dispatches a team of AI agents that research the problem in parallel and return a structured discovery brief: problem framing, market research, competitive analysis, opportunity sizing, and risk assessment.</p>
+  <p>Two things make it more than a prompt wrapper. First, every section is scored against a PM quality rubric I wrote, and the weakest section is automatically rewritten using the grader's specific feedback. Second, the output ends with a decision: PROCEED, INVESTIGATE, or STOP, with the exact conditions that would change the call. One more click turns the whole thing into a six-slide executive deck you can save as a PDF.</p>
+  <div class="pull-quote">The goal was never "AI writes my brief." It was "AI does the assembly so the PM can interrogate the evidence."</div>
+
+  <h2 class="section-heading">How It Works</h2>
+  <p>The orchestration is a dependency graph, not a queue. Problem framing runs first because every other agent builds on it. Then market research and competitive analysis run side by side, because neither needs the other. Sizing and risk run next, in parallel, because each needs the research results. Running it this way cut the total time from sequential minutes to about 35 seconds.</p>
+
+  <div class="diagram">
+    <div class="diagram-title">Diagram 1 · The agent pipeline</div>
+    <div class="d-phase">Step 1 · Check what we already know</div>
+    <div class="d-node">&#128269; Internal Search <span class="d-sub">queries the knowledge base for prior work</span></div>
+    <div class="d-arrow">&#8595;</div>
+    <div class="d-phase">Step 2 · Everything depends on this</div>
+    <div class="d-node accent">&#127919; Problem Framing <span class="d-sub">Jobs-To-Be-Done analysis, reframes the problem</span></div>
+    <div class="d-arrow">&#8595;</div>
+    <div class="d-phase">Step 3 · Research <span class="d-badge">runs in parallel</span></div>
+    <div class="d-row">
+      <div class="d-node">&#128202; Market Research</div>
+      <div class="d-node">&#9876;&#65039; Competitive Analysis</div>
+    </div>
+    <div class="d-arrow">&#8595;</div>
+    <div class="d-phase">Step 4 · Needs step 3's findings <span class="d-badge">runs in parallel</span></div>
+    <div class="d-row">
+      <div class="d-node">&#128176; Opportunity Sizing</div>
+      <div class="d-node">&#9888;&#65039; Risk Assessment</div>
+    </div>
+    <div class="d-arrow">&#8595;</div>
+    <div class="d-phase">Step 5 · Quality control and the verdict</div>
+    <div class="d-row">
+      <div class="d-node green">&#9989; Eval scores all 5 sections</div>
+      <div class="d-node accent">&#129504; Synthesis makes the call</div>
+    </div>
+    <div class="d-note">Every agent call is wrapped in a safety layer: if one agent fails, the run degrades gracefully and shows four good sections plus one honest "could not complete" notice, never a blank screen.</div>
+  </div>
+
+  <p>Before any research starts, Compass checks its internal knowledge base. This is the RAG pattern, retrieval-augmented generation: instead of researching from scratch, first retrieve what the organization already knows. If an active project already covers the problem, Compass says so and stops, because the right move is to talk to that project's owner, not duplicate their work.</p>
+
+  <div class="diagram">
+    <div class="diagram-title">Diagram 2 · The internal knowledge flow (RAG)</div>
+    <div class="d-row">
+      <div class="d-node planned">&#128221; Notion docs <span class="d-sub">sync script</span><span class="d-badge planned-badge">PLANNED</span></div>
+      <div class="d-node">&#128290; Embeddings <span class="d-sub">text becomes meaning-vectors</span></div>
+      <div class="d-node">&#128451;&#65039; Pinecone <span class="d-sub">vector database</span></div>
+    </div>
+    <div class="d-arrow">&#8595;</div>
+    <div class="d-node accent">&#128269; Internal Search agent embeds the new problem and asks: anything similar?</div>
+    <div class="d-arrow">&#8595;</div>
+    <div class="d-row">
+      <div class="d-node green">Nothing found <span class="d-sub">proceed with research</span></div>
+      <div class="d-node yellow">Prior work found <span class="d-sub">surface it in the brief</span></div>
+      <div class="d-node red">Active project exists <span class="d-sub">stop, name the owner</span></div>
+    </div>
+    <div class="d-note">Honest status: the query side is built and running against Pinecone. The Notion sync that populates the knowledge base is the next milestone, and I have documented it as such rather than claiming it.</div>
+  </div>
+
+  <p>The part I am proudest of is the eval loop, because it is the part most AI features skip. Every section is graded against four written criteria by a separate evaluation call running at temperature zero, which means the grader gives the same score for the same work every time. If the weakest section scores below 75, Compass feeds the grader's specific complaints back to a rewriter and re-scores the result. The user sees the improvement happen: a badge that says, for example, "62 to 90, auto-refined."</p>
+
+  <div class="diagram">
+    <div class="diagram-title">Diagram 3 · The eval and auto-refinement loop</div>
+    <div class="loop-grid">
+      <div class="d-node">&#9997;&#65039; Agent writes a section</div>
+      <div class="d-arrow">&#8594;</div>
+      <div class="d-node green">&#9878;&#65039; Eval grades it against a 4-criteria rubric <span class="d-sub">temperature 0, so scores are repeatable</span></div>
+    </div>
+    <div class="d-arrow">&#8595; lowest section under 75?</div>
+    <div class="loop-grid">
+      <div class="d-node yellow">&#128260; Rewriter gets the section plus the grader's specific complaints</div>
+      <div class="d-arrow">&#8594;</div>
+      <div class="d-node green">&#9878;&#65039; Re-scored by the same rubric <span class="d-sub">user sees "62 &#8594; 90 auto-refined"</span></div>
+    </div>
+    <div class="d-note">Write, get specific feedback, revise, get re-graded. The same loop a good editor runs on a writer, automated. Any section can also be improved on demand with one click.</div>
+  </div>
+
+  <p>Finally, the synthesis agent reads everything and makes a call. I forced it to choose one of three verdicts because "needs more research" is not a decision. An INVESTIGATE verdict must name the exact assumptions to test and the finding that would mean stop.</p>
+
+  <div class="diagram">
+    <div class="diagram-title">Diagram 4 · The decision engine</div>
+    <div class="d-row">
+      <div class="d-node">5 scored sections</div>
+      <div class="d-node">High-likelihood, high-impact risks</div>
+      <div class="d-node">The biggest open question</div>
+    </div>
+    <div class="d-arrow">&#8595;</div>
+    <div class="d-node accent">&#129504; Synthesis agent weighs the evidence and must pick one verdict</div>
+    <div class="d-arrow">&#8595;</div>
+    <div class="verdict-row">
+      <div class="d-node green">PROCEED <span class="d-sub">evidence is strong, start validation</span></div>
+      <div class="d-node yellow">INVESTIGATE <span class="d-sub">promising, but test these named assumptions first</span></div>
+      <div class="d-node red">STOP <span class="d-sub">a structural flaw makes this not worth pursuing</span></div>
+    </div>
+    <div class="d-note">Every INVESTIGATE ships with proceed-conditions and a kill condition: the specific user finding that would collapse the case. A recommendation you cannot falsify is an opinion.</div>
+  </div>
+
+  <h2 class="section-heading">The Agents, In Plain English</h2>
+  <p>An agent is not magic. It is one AI call with a job description, an input, and a strict output contract. The core pipeline runs seven; three more support the experience around it.</p>
+
+  <div class="agent-row"><div class="agent-icon">&#128269;</div><div><div class="agent-name">Internal Search</div><div class="agent-desc">Checks the knowledge base before any research: has someone here already studied this?</div></div></div>
+  <div class="agent-row"><div class="agent-icon">&#127919;</div><div><div class="agent-name">Problem Framing</div><div class="agent-desc">Applies Jobs-To-Be-Done: who is the user, what are they really trying to get done, and is this a solution disguised as a problem?</div></div></div>
+  <div class="agent-row"><div class="agent-icon">&#128202;</div><div><div class="agent-name">Market Research</div><div class="agent-desc">Sizes and characterizes the market, with every number labeled as established, estimated, or assumed. It is forbidden from inventing citations.</div></div></div>
+  <div class="agent-row"><div class="agent-icon">&#9876;&#65039;</div><div><div class="agent-name">Competitive Analysis</div><div class="agent-desc">Names real products, what each does well, and the one specific gap that matters for this problem.</div></div></div>
+  <div class="agent-row"><div class="agent-icon">&#128176;</div><div><div class="agent-name">Opportunity Sizing</div><div class="agent-desc">Builds a bottom-up TAM, SAM, SOM model with visible math and labeled assumptions.</div></div></div>
+  <div class="agent-row"><div class="agent-icon">&#9888;&#65039;</div><div><div class="agent-name">Risk Assessment</div><div class="agent-desc">Writes the pre-mortem: five specific risks, the mechanism by which each one materializes, and a concrete mitigation.</div></div></div>
+  <div class="agent-row"><div class="agent-icon">&#129504;</div><div><div class="agent-name">Synthesis</div><div class="agent-desc">Reads everything and makes the go/investigate/stop call with falsifiable conditions.</div></div></div>
+  <div class="agent-row"><div class="agent-icon">&#9878;&#65039;</div><div><div class="agent-name">Eval + Improve (the quality loop)</div><div class="agent-desc">A deterministic grader scores each section against my rubric; a rewriter fixes the weakest one using the grader's feedback.</div></div></div>
+  <div class="agent-row" style="border-bottom:none"><div class="agent-icon">&#128172;</div><div><div class="agent-name">Clarification + Executive Readout (the bookends)</div><div class="agent-desc">One sharpens your input before the run; one turns the finished brief into a six-slide concept deck whose first slide works alone.</div></div></div>
+
+  <h2 class="section-heading">Key Decisions and Tradeoffs</h2>
+
+  <div class="decision-block">
+    <span class="decision-label">Decision 1</span>
+    <div class="decision-heading">Built with Claude Code, powered by Gemini</div>
+    <p>I used Claude Code as my AI engineering partner to build the system, and Google's Gemini as the engine inside it, because Gemini's free tier means Compass costs nothing to run while I job-search. The tradeoff is throttling: I cap concurrent calls at two, which costs some speed under load. Two AI systems, chosen deliberately for different jobs.</p>
+  </div>
+
+  <div class="decision-block">
+    <span class="decision-label">Decision 2</span>
+    <div class="decision-heading">Auto-refine only the weakest section, once</div>
+    <p>The eval loop could rewrite every weak section repeatedly until everything scored 90+. I capped it at one section, one pass, to keep the total run under two minutes. The tradeoff is that other mediocre sections stay mediocre unless the user clicks improve. Latency is a feature; a discovery tool nobody waits for is a discovery tool nobody uses.</p>
+  </div>
+
+  <div class="decision-block">
+    <span class="decision-label">Decision 3</span>
+    <div class="decision-heading">A forced verdict instead of a summary</div>
+    <p>I required the synthesis agent to pick PROCEED, INVESTIGATE, or STOP, and to name the conditions that would change the call. The tradeoff is that the tool is sometimes confidently wrong, which feels worse than vague. I accepted that because a falsifiable wrong call teaches you something; a hedge teaches you nothing.</p>
+  </div>
+
+  <div class="decision-block">
+    <span class="decision-label">Decision 4</span>
+    <div class="decision-heading">An HTML executive deck instead of a slides API</div>
+    <p>For the executive readout I considered integrating a deck-generation service, and chose instead to render slides in plain HTML with print-to-PDF. Zero new dependencies, zero new costs, nothing that can be down when a hiring manager clicks. The tradeoff is less visual razzle-dazzle than a dedicated design tool would produce.</p>
+  </div>
+
+  <h2 class="section-heading">What I Learned</h2>
+  <p>This was my first agentic system and my first eval, and I learned the field's lessons by hitting them personally. The one that changed how I think: I was my own first user test. Compass's recommendation referenced a "burn rate model" that nothing in the brief had explained, and I sat there confused at my own product. The cause was a missing instruction: nothing told the synthesis agent that the reader might not have read the sections. One added rule, "define any concept before you reference it," fixed it. Almost every strange AI behavior I debugged traced back to the same question: what exactly was in the prompt?</p>
+  <p>Two more lessons earned the hard way. A demo can rely on luck; a product cannot, so I moved from politely asking the model for JSON to structurally forcing it, and gave the grader a temperature of zero so the same brief gets the same score twice. And my first loading animation lied: it showed agents blinking in an order that contradicted the real dependency graph, and I only caught it because the visualization made the lie visible. The honest version, streaming real agent status, is now at the top of my list.</p>
+
+  <h2 class="section-heading">What's Next</h2>
+  <p>Three things, in order. First, real-time agent status using server-sent events, so the pipeline view shows facts instead of simulated timing. Second, the Notion sync that populates the internal knowledge base, turning the RAG demo into a genuinely useful organizational memory. Third, a seeded demo mode with pre-computed briefs for the example prompts, so the first-visit experience is instant even when the free-tier backend is cold.</p>
+  <p>Compass started as a portfolio piece. It became the project where I learned what evals, orchestration, and graceful degradation actually mean, by building them, breaking them, and fixing them. That is the version of AI fluency I want to bring to a product team.</p>
+
+  <div class="footer">
+    <strong>Author:</strong> Sonal Singh, Principal Product Manager<br/>
+    <strong>Built with:</strong> Python, FastAPI, Gemini, Pinecone, Claude Code · Frontend in plain HTML/CSS/JS<br/>
+    <strong>Live app:</strong> <a href="https://sonalsingh-pm.netlify.app/projects/compass/prototype/index.html">sonalsingh-pm.netlify.app/projects/compass</a><br/>
+    <strong>Contact:</strong> sonalsingh.email@gmail.com · <a href="https://linkedin.com/in/sonalsingh444">linkedin.com/in/sonalsingh444</a>
+  </div>
+
+</div>
+</body>
+</html>
