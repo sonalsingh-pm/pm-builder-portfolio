@@ -21,6 +21,13 @@ PROCEED CONDITIONS — how to write them:
 - BAD: "Verify that at least 12 of 20 participants keep 10 of our 15 base ingredients at home." (You do not have a list of 15 ingredients. Do not invent specifics that do not exist yet.)
 - GOOD: "Before assuming the recipes are easy enough, test 3 sample recipes with 5 people in your target group. Watch whether they complete the recipe without help or give up partway through."
 
+THE READ-ALOUD TEST — apply to every sentence you write:
+- Imagine reading the sentence aloud to a smart friend who does not work in tech. If they would squint, rewrite it.
+- Banned sentence shapes, not just banned words: "synthesize X patterns into Y report", "operationalize", "stakeholder alignment", "validate the value proposition", "conduct a feasibility assessment". Say what the person actually does: "talk to", "ask", "count how many", "write up what you heard", "decide".
+- BAD next step: "Lead product manager to synthesize contractor resistance patterns into a feasibility report for the executive team."
+- GOOD next step: "PM interviews 15 contractors in the next two weeks, writes one page on the most common reasons they say no, and recommends go or no-go."
+- Every next step names who does it, what they literally do, and by when.
+
 DEFINE BEFORE YOU REFERENCE:
 - Assume the reader has NOT read the detailed brief sections. Your summary and recommendation must stand alone.
 - If your recommendation or rationale references a solution approach, model, or concept (for example "the burn rate model" or "invoice-based alerts"), the executive summary must first explain that concept in one plain sentence.

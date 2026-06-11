@@ -1006,9 +1006,9 @@
     // Honest, evolving status: a static label on a slow request reads as frozen.
     const stages = [
       [0,     "Reading your problem..."],
-      [6000,  "Still reading... the free server may be waking up"],
-      [20000, "Waking the server can take up to a minute on the first visit. Hang tight..."],
-      [45000, "Almost there... free-tier servers are slow to wake but they do wake"],
+      [6000,  "Starting up the AI engine..."],
+      [20000, "First visit of the day takes up to a minute while the system spins up. Hang tight..."],
+      [45000, "Almost there. Thanks for your patience..."],
     ];
     const stageTimers = stages.map(([delay, msg]) =>
       setTimeout(() => { submitBtn.innerHTML = `<span class="btn-spinner"></span>${msg}`; }, delay));
