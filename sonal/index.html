@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sonal — Job Search Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --primary: #1d4ed8;
+      --primary-light: #eff6ff;
+      --success: #059669;
+      --success-light: #ecfdf5;
+      --warning: #d97706;
+      --warning-light: #fffbeb;
+      --text: #0f172a;
+      --muted: #64748b;
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    /* HEADER */
+    .header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 45%, #1d4ed8 100%);
+      color: white;
+      padding: 52px 32px 76px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 25% 50%, rgba(255,255,255,0.06) 0%, transparent 60%),
+                  radial-gradient(ellipse 50% 70% at 80% 20%, rgba(255,255,255,0.04) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 0; right: 0;
+      height: 44px;
+      background: var(--bg);
+      border-radius: 50% 50% 0 0 / 22px 22px 0 0;
+    }
+    .header-tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 100px;
+      padding: 5px 16px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      color: rgba(255,255,255,0.85);
+    }
+    .header h1 {
+      font-size: 42px;
+      font-weight: 900;
+      letter-spacing: -2px;
+      margin-bottom: 8px;
+    }
+    .header-sub {
+      font-size: 15px;
+      color: rgba(255,255,255,0.6);
+      font-weight: 400;
+    }
+
+    /* STATS BAR */
+    .stats {
+      display: flex;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+    }
+    .stat {
+      flex: 1;
+      min-width: 110px;
+      padding: 20px 24px;
+      border-right: 1px solid var(--border);
+      text-align: center;
+    }
+    .stat:last-child { border-right: none; }
+    .stat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 4px; }
+    .stat-value { font-size: 30px; font-weight: 800; letter-spacing: -1px; color: var(--text); }
+    .stat-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    /* TODAY BANNER */
+    .today-banner {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .today-date { font-size: 15px; font-weight: 700; color: var(--text); }
+    .today-sub  { font-size: 13px; color: var(--muted); margin-top: 1px; }
+    .today-progress {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 5px 14px;
+      border-radius: 100px;
+    }
+    .today-progress.done-all {
+      color: var(--success);
+      background: var(--success-light);
+    }
+
+    /* MAIN */
+    .main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 32px 20px 80px;
+      display: grid;
+      gap: 24px;
+    }
+
+    /* CARDS */
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 18px 24px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-title {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--primary);
+    }
+    .card-meta { font-size: 12px; color: var(--muted); font-weight: 500; }
+
+    /* SCHEDULE */
+    .sched-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sched-row:last-child { border-bottom: none; }
+    .sched-row.checkable { cursor: pointer; transition: background 0.1s; }
+    .sched-row.checkable:hover { background: #f8fafc; }
+    .sched-time {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      min-width: 78px;
+      flex-shrink: 0;
+      font-variant-numeric: tabular-nums;
+    }
+    .sched-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--primary);
+      flex-shrink: 0;
+    }
+    .sched-dot.green { background: var(--success); }
+    .sched-dot.amber { background: var(--warning); }
+    .sched-dot.gray  { background: #cbd5e1; }
+    .sched-content { flex: 1; }
+    .sched-label { font-size: 14px; font-weight: 600; color: var(--text); }
+    .sched-note  { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+    /* Schedule checkbox */
+    .sched-check {
+      width: 22px;
+      height: 22px;
+      border: 2px solid #cbd5e1;
+      border-radius: 6px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .sched-row.done .sched-check {
+      background: var(--success);
+      border-color: var(--success);
+    }
+    .sched-row.done .sched-check::after {
+      content: '✓';
+      color: white;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .sched-row.done .sched-label {
+      color: var(--muted);
+      text-decoration: line-through;
+    }
+
+    /* PROGRESS BAR */
+    .progress-wrap {
+      padding: 14px 24px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--border);
+    }
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 7px;
+    }
+    .progress-bg { height: 6px; background: var(--border); border-radius: 100px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--primary); border-radius: 100px; transition: width 0.3s ease; }
+    .progress-fill.green { background: var(--success); }
+
+    /* PHASE HEADER */
+    .phase-hdr {
+      padding: 9px 24px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--border);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* CHECKLIST */
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+      padding: 13px 24px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.1s;
+      user-select: none;
+    }
+    .check-item:last-child { border-bottom: none; }
+    .check-item:hover { background: #f8fafc; }
+    .check-box {
+      width: 19px;
+      height: 19px;
+      border: 2px solid #cbd5e1;
+      border-radius: 5px;
+      flex-shrink: 0;
+      margin-top: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .check-item.done .check-box {
+      background: var(--success);
+      border-color: var(--success);
+    }
+    .check-item.done .check-box::after {
+      content: '✓';
+      color: white;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .check-item.done .check-label {
+      text-decoration: line-through;
+      color: var(--muted);
+    }
+    .check-label { font-size: 14px; font-weight: 600; color: var(--text); flex: 1; }
+    .check-note  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .check-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 9px;
+      border-radius: 100px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    /* OUTREACH TABLE */
+    .otable { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .otable th {
+      padding: 10px 20px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--muted);
+      background: #f8fafc;
+      border-bottom: 1px solid var(--border);
+    }
+    .otable td {
+      padding: 13px 20px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .otable tr:last-child td { border-bottom: none; }
+    .o-name { font-weight: 600; }
+    .o-role { font-size: 12px; color: var(--muted); margin-top: 1px; }
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .badge-wait  { background: #fef3c7; color: #92400e; }
+    .badge-send  { background: #dcfce7; color: #166534; }
+    .o-next { font-size: 13px; color: var(--text); }
+
+    /* TARGET COMPANIES */
+    .company-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 20px 24px;
+    }
+    .co-tag {
+      font-size: 13px;
+      font-weight: 500;
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 5px 12px;
+      color: var(--text);
+    }
+    .co-tag.active {
+      background: #eff6ff;
+      border-color: #bfdbfe;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* SYNC STATUS */
+    .sync-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #cbd5e1;
+      display: inline-block;
+      margin-right: 5px;
+      transition: background 0.3s;
+    }
+    .sync-dot.ok { background: var(--success); }
+    .sync-status {
+      font-size: 11px;
+      color: var(--muted);
+      padding: 8px 24px;
+      text-align: right;
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 640px) {
+      .header { padding: 36px 20px 60px; }
+      .header h1 { font-size: 30px; }
+      .stat { padding: 14px 16px; }
+      .stat-value { font-size: 24px; }
+      .sched-row, .check-item { padding: 12px 16px; }
+      .card-header, .phase-hdr, .progress-wrap { padding-left: 16px; padding-right: 16px; }
+      .otable th, .otable td { padding: 10px 12px; }
+      .company-grid { padding: 16px; }
+      .sched-time { min-width: 66px; }
+      .today-banner { padding: 12px 16px; }
+    }
+
+    @media print {
+      body { background: white; }
+      .header::after { display: none; }
+      .main { padding: 16px 0; max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-tag">Job Search Command Center</div>
+  <h1>Sonal Singh</h1>
+  <div class="header-sub">Principal AI PM &nbsp;·&nbsp; Target $350K+ TC &nbsp;·&nbsp; Remote or South Bay</div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat">
+    <div class="stat-label">Search Week</div>
+    <div class="stat-value" id="search-week">—</div>
+    <div class="stat-sub">of your search</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Stories Prepped</div>
+    <div class="stat-value" id="stories-done">0</div>
+    <div class="stat-sub">of 15</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Courses Done</div>
+    <div class="stat-value" id="courses-done">0</div>
+    <div class="stat-sub">of 16</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Active Threads</div>
+    <div class="stat-value">5</div>
+    <div class="stat-sub">outreach</div>
+  </div>
+</div>
+
+<!-- TODAY BANNER -->
+<div class="today-banner">
+  <div>
+    <div class="today-date" id="today-date">—</div>
+    <div class="today-sub">Today's blocks reset at midnight</div>
+  </div>
+  <div class="today-progress" id="today-progress">0 of 6 done today</div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- DAILY SCHEDULE -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Daily Schedule</div>
+      <div class="card-meta">Every day &nbsp;·&nbsp; No exceptions</div>
+    </div>
+
+    <!-- Non-checkable: Wake up -->
+    <div class="sched-row">
+      <div class="sched-time">6:00 AM</div>
+      <div class="sched-dot green"></div>
+      <div class="sched-content">
+        <div class="sched-label">Wake up</div>
+        <div class="sched-note">Water immediately. No phone.</div>
+      </div>
+    </div>
+
+    <!-- Checkable: Exercise -->
+    <div class="sched-row checkable" data-skey="exercise" onclick="toggleSchedule(this)">
+      <div class="sched-time">6:10 AM</div>
+      <div class="sched-dot green"></div>
+      <div class="sched-content">
+        <div class="sched-label">Exercise — 1 full hour</div>
+        <div class="sched-note">Walk, run, yoga, or strength. Non-negotiable. Done by 7:10.</div>
+      </div>
+      <div class="sched-check"></div>
+    </div>
+
+    <!-- Non-checkable: Shower -->
+    <div class="sched-row">
+      <div class="sched-time">7:10 AM</div>
+      <div class="sched-dot gray"></div>
+      <div class="sched-content">
+        <div class="sched-label">Shower and breakfast</div>
+        <div class="sched-note">30 minutes.</div>
+      </div>
+    </div>
+
+    <!-- Checkable: Story prep -->
+    <div class="sched-row checkable" data-skey="story" onclick="toggleSchedule(this)">
+      <div class="sched-time">7:40 AM</div>
+      <div class="sched-dot"></div>
+      <div class="sched-content">
+        <div class="sched-label">Interview story prep — 1 hour</div>
+        <div class="sched-note">One story per day. Write STAR 5 levels deep. Drill with Claude.</div>
+      </div>
+      <div class="sched-check"></div>
+    </div>
+
+    <!-- Checkable: deeplearning.ai (morning slot) -->
+    <div class="sched-row checkable" data-skey="course" onclick="toggleSchedule(this)">
+      <div class="sched-time">8:40 AM</div>
+      <div class="sched-dot"></div>
+      <div class="sched-content">
+        <div class="sched-label">deeplearning.ai — 2 hrs total</div>
+        <div class="sched-note">20 min now, finish 1.5 hrs after lunch. Check when both blocks are done.</div>
+      </div>
+      <div class="sched-check"></div>
+    </div>
+
+    <!-- Non-checkable: Drop-off -->
+    <div class="sched-row">
+      <div class="sched-time">9:00 AM</div>
+      <div class="sched-dot amber"></div>
+      <div class="sched-content">
+        <div class="sched-label">Leave — Aiden drop-off</div>
+        <div class="sched-note">Spanish class. 30 min commute. Back home ~10 AM.</div>
+      </div>
+    </div>
+
+    <!-- Checkable: Outreach -->
+    <div class="sched-row checkable" data-skey="outreach" onclick="toggleSchedule(this)">
+      <div class="sched-time">10:00 AM</div>
+      <div class="sched-dot"></div>
+      <div class="sched-content">
+        <div class="sched-label">Outreach and job research — 1 hour</div>
+        <div class="sched-note">Draft or send one email. Research one target company.</div>
+      </div>
+      <div class="sched-check"></div>
+    </div>
+
+    <!-- Non-checkable: Pick-up -->
+    <div class="sched-row">
+      <div class="sched-time">11:00 AM</div>
+      <div class="sched-dot amber"></div>
+      <div class="sched-content">
+        <div class="sched-label">Leave — Aiden pick-up</div>
+        <div class="sched-note">Back home by 12 PM.</div>
+      </div>
+    </div>
+
+    <!-- Non-checkable: Lunch -->
+    <div class="sched-row">
+      <div class="sched-time">12:00 PM</div>
+      <div class="sched-dot green"></div>
+      <div class="sched-content">
+        <div class="sched-label">Lunch — real break</div>
+        <div class="sched-note">No screens. Full hour.</div>
+      </div>
+    </div>
+
+    <!-- Checkable: Applications -->
+    <div class="sched-row checkable" data-skey="apps" onclick="toggleSchedule(this)">
+      <div class="sched-time">2:30 PM</div>
+      <div class="sched-dot"></div>
+      <div class="sched-content">
+        <div class="sched-label">Job applications — 2 hours</div>
+        <div class="sched-note">2–3 targeted applications. Tailored resume for each one.</div>
+      </div>
+      <div class="sched-check"></div>
+    </div>
+
+    <!-- Checkable: Build -->
+    <div class="sched-row checkable" data-skey="build" onclick="toggleSchedule(this)">
+      <div class="sched-time">4:30 PM</div>
+      <div class="sched-dot"></div>
+      <div class="sched-content">
+        <div class="sched-label">Build / portfolio work — 1 hour</div>
+        <div class="sched-note">Apply what you learned in the morning's course.</div>
+      </div>
+      <div class="sched-check"></div>
+    </div>
+
+    <!-- Non-checkable: Done -->
+    <div class="sched-row">
+      <div class="sched-time">5:30 PM</div>
+      <div class="sched-dot green"></div>
+      <div class="sched-content">
+        <div class="sched-label">Done</div>
+        <div class="sched-note">Family time.</div>
+      </div>
+    </div>
+
+    <div class="sync-status"><span class="sync-dot" id="sched-sync-dot"></span><span id="sched-sync-text">Connecting…</span></div>
+  </div>
+
+  <!-- DEEPLEARNING.AI COURSES -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">deeplearning.ai Course Track</div>
+      <div class="card-meta">Pro subscription &nbsp;·&nbsp; 2 hrs/day &nbsp;·&nbsp; ~8 weeks</div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>Overall progress</span>
+        <span id="courses-label">0 of 16 complete</span>
+      </div>
+      <div class="progress-bg">
+        <div class="progress-fill" id="courses-bar" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div class="phase-hdr"><span>Tier 1 — Before Any Interview</span><span>Days 1-7 &nbsp;·&nbsp; Finish these first</span></div>
+    <div class="check-item" data-key="c1" onclick="togglePermanent(this, 'courses')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">Generative AI for Everyone — Andrew Ng</div><div class="check-note">6 hrs &nbsp;·&nbsp; Start here. How LLMs work, hallucination, responsible AI, business context. Designed for non-engineers.</div></div>
+      <div class="check-badge">Day 1-3</div>
+    </div>
+    <div class="check-item" data-key="c2" onclick="togglePermanent(this, 'courses')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">ChatGPT Prompt Engineering for Developers</div><div class="check-note">1.5 hrs &nbsp;·&nbsp; Prompting fundamentals. Zero-shot, few-shot, chain-of-thought, output formatting.</div></div>
+      <div class="check-badge">Day 4</div>
+    </div>
+    <div class="check-item" data-key="c3" onclick="togglePermanent(this, 'courses')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">Building and Evaluating Advanced RAG Applications</div><div class="check-note">3 hrs &nbsp;·&nbsp; Highest-value course on the list. RAG architecture + eval metrics together. Chunking, reranking, faithfulness scores.</div></div>
+      <div class="check-badge">Day 4-5</div>
+    </div>
+    <div class="check-item" data-key="c4" onclick="togglePermanent(this, 'courses')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">AI Agentic Design Patterns with AutoGen</div><div class="check-note">2 hrs &nbsp;·&nbsp; The four agent patterns: reflection, tool use, planning, multi-agent. Vocabulary for what you built in Compass.</div></div>
+      <div class="check-badge">Day 6</div>
+    </div>
+    <div class="check-item" data-key="c5" onclick="togglePermanent(this, 'courses')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">Evaluating and Debugging Generative AI Models</div><div class="check-note">2 hrs &nbsp;·&nbsp; Your sharpest edge. Evals depth, LLM-as-judge, rubric design, debugging output failures.</div></div>
+      <div class="check-badge">Day 7</div>
+    </div>
+
+    <div class="phase-hdr"><span>Tier 2 — Depth Rounds</span><span>Days 8-14 &nbsp;·&nbsp; Technical screens and panels</span></div>
+    <div class="check-item" data-key="c6" onclick="togglePermanent(this, 'courses')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">Red Teaming LLM Applications</div><div class="check-note">2 hrs &nbsp;·&nbsp; Safety, adversarial attacks, jailbreaks, prompt injection, bias testing. How to build products that don't fail publicly.</div></div>
+      <div class="check-badge">Day 8</div>
+    </div>
+    <div class="check-item" data-key="c7" onclick="togglePermanent(this, 'courses')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">Finetuning Large Language Models</div><div class="check-note">2 hrs &nbsp;·&nbsp; When to fine-tune vs. prompt, what data you need, what it costs. PM decision-making, not implementation.</div></div>
+      <div class="check-badge">Day 9</div>
+    </div>
+    <div class="check-item" data-key="c8" onclick="togglePermanent(this, 'courses')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">AI Agents in LangGraph</div><div class="check-note">4 hrs &nbsp;·&nbsp; State machines, memory patterns, cycles, human-in-the-loop. Follow along for intuition, not to become a LangGraph developer.</div></div>
+      <div class="check-badge">Day 10-11</div>
+    </div>
+    <div class="check-item" data-key="c9" onclick="togglePermanent(this, 'courses')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">LLMOps</div><div class="check-note">2 hrs &nbsp;·&nbsp; Deployment, monitoring, cost and latency tradeoffs, feedback loops. What your engineering team needs to operate AI in production.</div></div>
+      <div class="check-badge">Day 12</div>
+    </div>
+    <div class="check-item" data-key="c10" onclick="togglePermanent(this, 'courses')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">Automated Testing for LLMOps</div><div class="check-note">2 hrs &nbsp;·&nbsp; CI/CD for AI outputs. How to catch regressions when your model changes.</div></div>
+      <div class="check-badge">Day 13-14</div>
+    </div>
+
+    <div class="phase-hdr"><span>Tier 3 — Breadth and Company-Specific Depth</span><span>Days 15-21 &nbsp;·&nbsp; Pull based on who's interviewing you</span></div>
+    <div class="check-item" data-key="c11" onclick="togglePermanent(this, 'courses')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">LangChain: Chat with Your Data</div><div class="check-note">2 hrs &nbsp;·&nbsp; Embeddings, vector stores, retrieval. How RAG actually works under the hood.</div></div>
+      <div class="check-badge">Day 15</div>
+    </div>
+    <div class="check-item" data-key="c12" onclick="togglePermanent(this, 'courses')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">Knowledge Graphs for RAG</div><div class="check-note">2 hrs &nbsp;·&nbsp; Structured enterprise data as AI context. Highly relevant for SAP, Salesforce, ServiceNow interviews.</div></div>
+      <div class="check-badge">Day 16</div>
+    </div>
+    <div class="check-item" data-key="c13" onclick="togglePermanent(this, 'courses')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">Building Systems with the ChatGPT API</div><div class="check-note">1.5 hrs &nbsp;·&nbsp; Multi-step AI pipelines, classifiers, moderation. How production AI systems are chained together.</div></div>
+      <div class="check-badge">Day 17</div>
+    </div>
+    <div class="check-item" data-key="c14" onclick="togglePermanent(this, 'courses')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">Multi AI Agent Systems with crewAI</div><div class="check-note">2 hrs &nbsp;·&nbsp; Role-based agent teams, task delegation, orchestration patterns.</div></div>
+      <div class="check-badge">Day 18</div>
+    </div>
+    <div class="check-item" data-key="c15" onclick="togglePermanent(this, 'courses')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">Building Multimodal Search and RAG</div><div class="check-note">2 hrs &nbsp;·&nbsp; Image, video, and text combined retrieval. Priority if interviewing at NVIDIA or Databricks.</div></div>
+      <div class="check-badge">Day 19-20</div>
+    </div>
+    <div class="check-item" data-key="c16" onclick="togglePermanent(this, 'courses')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">Reasoning with o1</div><div class="check-note">2 hrs &nbsp;·&nbsp; How reasoning models differ from standard LLMs. Cost, latency, and when to use them. Relevant everywhere.</div></div>
+      <div class="check-badge">Day 21</div>
+    </div>
+
+    <div class="sync-status"><span class="sync-dot" id="courses-sync-dot"></span><span id="courses-sync-text">Connecting…</span></div>
+  </div>
+
+  <!-- INTERVIEW STORIES -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Interview Stories</div>
+      <div class="card-meta">5 levels deep &nbsp;·&nbsp; 1 per day at 7:40 AM</div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>Overall progress</span>
+        <span id="stories-label">0 of 15 complete</span>
+      </div>
+      <div class="progress-bg">
+        <div class="progress-fill" id="stories-bar" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div class="phase-hdr"><span>Week 1 — Highest-frequency stories</span><span>Asked in every interview</span></div>
+    <div class="check-item" data-key="s1" onclick="togglePermanent(this, 'stories')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">Compass — multi-agent AI product</div><div class="check-note">10 agents, dependency graph, eval loop, Gemini. Always the first question in any AI PM interview.</div></div>
+      <div class="check-badge">Day 1</div>
+    </div>
+    <div class="check-item" data-key="s2" onclick="togglePermanent(this, 'stories')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">Smart Profile — SAP Business Network</div><div class="check-note">Behavioral intelligence, A/B testing, personalization at $6T B2B scale.</div></div>
+      <div class="check-badge">Day 2</div>
+    </div>
+    <div class="check-item" data-key="s3" onclick="togglePermanent(this, 'stories')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">APEX PC as a Service — Dell</div><div class="check-note">Zero to one. First recurring revenue stream. 6-week launch, 20 pilot customers.</div></div>
+      <div class="check-badge">Day 3</div>
+    </div>
+    <div class="check-item" data-key="s4" onclick="togglePermanent(this, 'stories')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">Supplier onboarding redesign — SAP</div><div class="check-note">Design thinking, user research, beta program. Your B2B moat story.</div></div>
+      <div class="check-badge">Day 4</div>
+    </div>
+    <div class="check-item" data-key="s5" onclick="togglePermanent(this, 'stories')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">API platform transformation — Cornerstone</div><div class="check-note">Inherited no roadmap. 40% adoption growth. Google and Nestle as customers.</div></div>
+      <div class="check-badge">Day 5</div>
+    </div>
+    <div class="check-item" data-key="s6" onclick="togglePermanent(this, 'stories')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">Direct material sourcing with Microsoft — SAP</div><div class="check-note">Founding customer. Net-new product line. Expanded Ariba beyond indirect.</div></div>
+      <div class="check-badge">Day 6</div>
+    </div>
+    <div class="check-item" data-key="s7" onclick="togglePermanent(this, 'stories')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">WFS multi-box shipments — Walmart</div><div class="check-note">Unlocked previously unsupported product category. $5M projected GMV.</div></div>
+      <div class="check-badge">Day 7</div>
+    </div>
+
+    <div class="phase-hdr"><span>Week 2 — Supporting stories</span><span>Depth and range</span></div>
+    <div class="check-item" data-key="s8" onclick="togglePermanent(this, 'stories')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">WFS AI inventory allocation — Walmart</div><div class="check-note">Replaced static rules with dynamic AI model. 2-day delivery improvement.</div></div>
+      <div class="check-badge">Day 8</div>
+    </div>
+    <div class="check-item" data-key="s9" onclick="togglePermanent(this, 'stories')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">WFS sole PM through org restructuring — Walmart</div><div class="check-note">Sustained 3-market operation above IC level. Leadership under ambiguity.</div></div>
+      <div class="check-badge">Day 9</div>
+    </div>
+    <div class="check-item" data-key="s10" onclick="togglePermanent(this, 'stories')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">Dell Smart Console</div><div class="check-note">Unified disparate systems into one view. 40% manual effort reduction. Improved NPS.</div></div>
+      <div class="check-badge">Day 10</div>
+    </div>
+    <div class="check-item" data-key="s11" onclick="togglePermanent(this, 'stories')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">API roadmap from zero — Cornerstone</div><div class="check-note">Sequenced by adoption analytics, customer escalations, and usage data.</div></div>
+      <div class="check-badge">Day 11</div>
+    </div>
+    <div class="check-item" data-key="s12" onclick="togglePermanent(this, 'stories')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">API governance and developer portal — Cornerstone</div><div class="check-note">Design standards, versioning, error handling. Overhauled the developer portal.</div></div>
+      <div class="check-badge">Day 12</div>
+    </div>
+    <div class="check-item" data-key="s13" onclick="togglePermanent(this, 'stories')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">Self-serve analytics dashboard — Cornerstone</div><div class="check-note">Customer-facing data product. Real-time usage visibility. Reduced escalations.</div></div>
+      <div class="check-badge">Day 13</div>
+    </div>
+    <div class="check-item" data-key="s14" onclick="togglePermanent(this, 'stories')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">Monolith to microservices — SAP</div><div class="check-note">Engineering background story. Delivery velocity. Globally distributed teams.</div></div>
+      <div class="check-badge">Day 14</div>
+    </div>
+    <div class="check-item" data-key="s15" onclick="togglePermanent(this, 'stories')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">Sparky teardown — evaluation methodology</div><div class="check-note">16-test rubric. Published eval framework. AI product judgment on a live product.</div></div>
+      <div class="check-badge">Day 15</div>
+    </div>
+
+    <div class="sync-status"><span class="sync-dot" id="stories-sync-dot"></span><span id="stories-sync-text">Connecting…</span></div>
+  </div>
+
+  <!-- ACTIVE OUTREACH -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Active Outreach</div>
+      <div class="card-meta">Follow-ups due ~Jun 18</div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="otable">
+        <thead>
+          <tr><th>Contact</th><th>Company</th><th>Sent</th><th>Status</th><th>Next move</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="o-name">Sudhir Bhojwani</div><div class="o-role">CEO, ex-SAP colleague</div></td>
+            <td>ORO Labs</td><td>Jun 11</td>
+            <td><span class="badge badge-wait">Waiting</span></td>
+            <td class="o-next">Follow-up ~Jun 18. Lead with Compass link. Best-fit company.</td>
+          </tr>
+          <tr>
+            <td><div class="o-name">Mayank</div><div class="o-role">Hiring Manager</div></td>
+            <td>Walmart Velocity Pods</td><td>Jun 11</td>
+            <td><span class="badge badge-wait">Waiting</span></td>
+            <td class="o-next">No third email before ~Jun 18.</td>
+          </tr>
+          <tr>
+            <td><div class="o-name">Maggie McDowell</div><div class="o-role">Group Dir PM, AI Shopping</div></td>
+            <td>Walmart Sparky</td><td>Jun 11</td>
+            <td><span class="badge badge-wait">Waiting</span></td>
+            <td class="o-next">No third email before ~Jun 18. Gemini partnership is her mandate.</td>
+          </tr>
+          <tr>
+            <td><div class="o-name">Juergen Eisele</div><div class="o-role">Industry Product Team HM</div></td>
+            <td>SAP</td><td>Jun 5</td>
+            <td><span class="badge badge-wait">Waiting</span></td>
+            <td class="o-next">OOO with no return date. Backstop send Jun 17. Watch LinkedIn.</td>
+          </tr>
+          <tr>
+            <td><div class="o-name">Fred Laluyaux</div><div class="o-role">CEO, ex-SAP</div></td>
+            <td>Aera Technology</td><td>—</td>
+            <td><span class="badge badge-send">Ready to send</span></td>
+            <td class="o-next">Draft written. Gartner MQ Leader hook. Send when ready.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TARGET COMPANIES -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Target Companies</div>
+      <div class="card-meta">$350K+ TC &nbsp;·&nbsp; Principal AI PM &nbsp;·&nbsp; Remote or South Bay</div>
+    </div>
+    <div class="company-grid">
+      <span class="co-tag active">ORO Labs</span>
+      <span class="co-tag active">Aera Technology</span>
+      <span class="co-tag active">SAP</span>
+      <span class="co-tag active">Walmart</span>
+      <span class="co-tag">NVIDIA</span>
+      <span class="co-tag">Databricks</span>
+      <span class="co-tag">Google</span>
+      <span class="co-tag">Salesforce</span>
+      <span class="co-tag">Snowflake</span>
+      <span class="co-tag">ServiceNow</span>
+      <span class="co-tag">Adobe</span>
+      <span class="co-tag">Microsoft</span>
+      <span class="co-tag">Workday</span>
+      <span class="co-tag">Apple</span>
+      <span class="co-tag">Intuit</span>
+      <span class="co-tag">Confluent</span>
+      <span class="co-tag">Zoom</span>
+      <span class="co-tag">Expedia</span>
+      <span class="co-tag">eBay</span>
+      <span class="co-tag">Workato</span>
+    </div>
+  </div>
+
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+  import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyANXyGjMK7uHCEhvYrgprmvWlgQoekitoo",
+    authDomain: "aiden-summer-2026.firebaseapp.com",
+    databaseURL: "https://aiden-summer-2026-default-rtdb.firebaseio.com",
+    projectId: "aiden-summer-2026",
+    storageBucket: "aiden-summer-2026.firebasestorage.app",
+    messagingSenderId: "801653156367",
+    appId: "1:801653156367:web:02576bb6a4469e4a02517a"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getDatabase(app);
+
+  // ── Helpers ──────────────────────────────────────────
+  const todayStr = () => {
+    const d = new Date();
+    return [d.getFullYear(), String(d.getMonth()+1).padStart(2,'0'), String(d.getDate()).padStart(2,'0')].join('-');
+  };
+
+  function syncDot(dotId, textId, ok) {
+    document.getElementById(dotId).className = 'sync-dot' + (ok ? ' ok' : '');
+    document.getElementById(textId).textContent = ok ? 'Saved to Firebase' : 'Connecting…';
+  }
+
+  // ── Today's date display ──────────────────────────────
+  const dateEl = document.getElementById('today-date');
+  dateEl.textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+
+  // ── Search week counter ───────────────────────────────
+  const SEARCH_START = new Date('2026-06-11T00:00:00');
+  const weekNum = Math.max(1, Math.ceil((new Date() - SEARCH_START) / (7 * 86400000)));
+  document.getElementById('search-week').textContent = weekNum;
+
+  // ── Daily schedule (resets each day) ─────────────────
+  let scheduleState = {};
+  const SCHED_KEYS = ['exercise','story','course','outreach','apps','build'];
+
+  function updateTodayBanner() {
+    const done = SCHED_KEYS.filter(k => scheduleState[k]).length;
+    const total = SCHED_KEYS.length;
+    const el = document.getElementById('today-progress');
+    el.textContent = done + ' of ' + total + ' done today';
+    el.className = 'today-progress' + (done === total ? ' done-all' : '');
+  }
+
+  function applyScheduleState() {
+    document.querySelectorAll('.sched-row.checkable').forEach(row => {
+      const key = row.dataset.skey;
+      row.classList.toggle('done', !!scheduleState[key]);
+    });
+    updateTodayBanner();
+  }
+
+  // Expose to global for onclick
+  window.toggleSchedule = function(el) {
+    const key = el.dataset.skey;
+    scheduleState[key] = !scheduleState[key];
+    applyScheduleState();
+    set(ref(db, 'sonal/schedule/' + todayStr()), scheduleState)
+      .then(() => syncDot('sched-sync-dot', 'sched-sync-text', true))
+      .catch(() => syncDot('sched-sync-dot', 'sched-sync-text', false));
+  };
+
+  onValue(ref(db, 'sonal/schedule/' + todayStr()), snap => {
+    scheduleState = snap.val() || {};
+    applyScheduleState();
+    syncDot('sched-sync-dot', 'sched-sync-text', true);
+  });
+
+  // ── Permanent checkboxes (courses + stories) ──────────
+  let coursesState = {};
+  let storiesState = {};
+
+  function updateCourseStats() {
+    const items = document.querySelectorAll('.check-item[data-key^="c"]');
+    const done = [...items].filter(e => e.classList.contains('done')).length;
+    document.getElementById('courses-done').textContent = done;
+    document.getElementById('courses-label').textContent = done + ' of ' + items.length + ' complete';
+    document.getElementById('courses-bar').style.width = (done / items.length * 100).toFixed(1) + '%';
+  }
+
+  function updateStoryStats() {
+    const items = document.querySelectorAll('.check-item[data-key^="s"]');
+    const done = [...items].filter(e => e.classList.contains('done')).length;
+    document.getElementById('stories-done').textContent = done;
+    document.getElementById('stories-label').textContent = done + ' of ' + items.length + ' complete';
+    document.getElementById('stories-bar').style.width = (done / items.length * 100).toFixed(1) + '%';
+  }
+
+  window.togglePermanent = function(el, bucket) {
+    const key = el.dataset.key;
+    el.classList.toggle('done');
+    const isDone = el.classList.contains('done');
+
+    if (bucket === 'courses') {
+      coursesState[key] = isDone || null;
+      set(ref(db, 'sonal/courses'), coursesState)
+        .then(() => syncDot('courses-sync-dot', 'courses-sync-text', true));
+      updateCourseStats();
+    } else {
+      storiesState[key] = isDone || null;
+      set(ref(db, 'sonal/stories'), storiesState)
+        .then(() => syncDot('stories-sync-dot', 'stories-sync-text', true));
+      updateStoryStats();
+    }
+  };
+
+  onValue(ref(db, 'sonal/courses'), snap => {
+    coursesState = snap.val() || {};
+    document.querySelectorAll('.check-item[data-key^="c"]').forEach(el => {
+      el.classList.toggle('done', !!coursesState[el.dataset.key]);
+    });
+    updateCourseStats();
+    syncDot('courses-sync-dot', 'courses-sync-text', true);
+  });
+
+  onValue(ref(db, 'sonal/stories'), snap => {
+    storiesState = snap.val() || {};
+    document.querySelectorAll('.check-item[data-key^="s"]').forEach(el => {
+      el.classList.toggle('done', !!storiesState[el.dataset.key]);
+    });
+    updateStoryStats();
+    syncDot('stories-sync-dot', 'stories-sync-text', true);
+  });
+</script>
+</body>
+</html>
