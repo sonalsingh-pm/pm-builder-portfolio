@@ -592,90 +592,94 @@
       </div>
     </div>
 
-    <div class="phase-hdr"><span>Tier 1 — Before Any Interview</span><span>Days 1-7 &nbsp;·&nbsp; Finish these first</span></div>
+    <div class="phase-hdr"><span>Foundation</span><span>Completed or optional</span></div>
     <div class="check-item" data-key="c1" onclick="togglePermanent(this, 'courses')">
       <div class="check-box"></div>
-      <div style="flex:1"><div class="check-label">Generative AI for Everyone — Andrew Ng</div><div class="check-note">6 hrs &nbsp;·&nbsp; Start here. How LLMs work, hallucination, responsible AI, business context. Designed for non-engineers.</div></div>
-      <div class="check-badge">Day 1-3</div>
+      <div style="flex:1"><div class="check-label">Generative AI for Everyone — Andrew Ng</div><div class="check-note">6 hrs &nbsp;·&nbsp; How LLMs work, hallucination, responsible AI, business context. Optional if you already have the concepts from building Compass.</div></div>
+      <div class="check-badge">Optional</div>
     </div>
     <div class="check-item" data-key="c2" onclick="togglePermanent(this, 'courses')">
       <div class="check-box"></div>
-      <div style="flex:1"><div class="check-label">ChatGPT Prompt Engineering for Developers</div><div class="check-note">1.5 hrs &nbsp;·&nbsp; Prompting fundamentals. Zero-shot, few-shot, chain-of-thought, output formatting.</div></div>
-      <div class="check-badge">Day 4</div>
+      <div style="flex:1"><div class="check-label">ChatGPT Prompt Engineering for Developers</div><div class="check-note">1.5 hrs &nbsp;·&nbsp; Prompting fundamentals. Zero-shot, few-shot, chain-of-thought, output formatting. Completed Jun 2026.</div></div>
+      <div class="check-badge">Done</div>
     </div>
+
+    <div class="phase-hdr"><span>Phase 1 — Build on what you already know</span><span>Days 1-4 &nbsp;·&nbsp; Start here next</span></div>
     <div class="check-item" data-key="c3" onclick="togglePermanent(this, 'courses')">
       <div class="check-box"></div>
-      <div style="flex:1"><div class="check-label">Building and Evaluating Advanced RAG Applications</div><div class="check-note">3 hrs &nbsp;·&nbsp; Highest-value course on the list. RAG architecture + eval metrics together. Chunking, reranking, faithfulness scores.</div></div>
-      <div class="check-badge">Day 4-5</div>
+      <div style="flex:1"><div class="check-label">AI Agentic Design Patterns with AutoGen</div><div class="check-note">2 hrs &nbsp;·&nbsp; You built a multi-agent dependency graph in Compass. This puts formal names to what you already did. The four patterns: reflection, tool use, planning, multi-agent. Will feel familiar.</div></div>
+      <div class="check-badge">Day 1-2</div>
     </div>
     <div class="check-item" data-key="c4" onclick="togglePermanent(this, 'courses')">
       <div class="check-box"></div>
-      <div style="flex:1"><div class="check-label">AI Agentic Design Patterns with AutoGen</div><div class="check-note">2 hrs &nbsp;·&nbsp; The four agent patterns: reflection, tool use, planning, multi-agent. Vocabulary for what you built in Compass.</div></div>
-      <div class="check-badge">Day 6</div>
-    </div>
-    <div class="check-item" data-key="c5" onclick="togglePermanent(this, 'courses')">
-      <div class="check-box"></div>
-      <div style="flex:1"><div class="check-label">Evaluating and Debugging Generative AI Models</div><div class="check-note">2 hrs &nbsp;·&nbsp; Your sharpest edge. Evals depth, LLM-as-judge, rubric design, debugging output failures.</div></div>
-      <div class="check-badge">Day 7</div>
+      <div style="flex:1"><div class="check-label">Evaluating and Debugging Generative AI Models</div><div class="check-note">2 hrs &nbsp;·&nbsp; You built an eval loop in Compass scoring sections 0-100 at temperature zero. This course is the formal vocabulary for exactly what you did. Your sharpest interview edge.</div></div>
+      <div class="check-badge">Day 3-4</div>
     </div>
 
-    <div class="phase-hdr"><span>Tier 2 — Depth Rounds</span><span>Days 8-14 &nbsp;·&nbsp; Technical screens and panels</span></div>
+    <div class="phase-hdr"><span>Phase 2 — RAG from simple to advanced</span><span>Days 5-9 &nbsp;·&nbsp; Simple first, then depth</span></div>
+    <div class="check-item" data-key="c5" onclick="togglePermanent(this, 'courses')">
+      <div class="check-box"></div>
+      <div style="flex:1"><div class="check-label">LangChain: Chat with Your Data</div><div class="check-note">2 hrs &nbsp;·&nbsp; Simple RAG first. You ask a question, it retrieves from your documents and answers. Do this before the advanced course. Fills the gap Compass's Notion sync left open.</div></div>
+      <div class="check-badge">Day 5-6</div>
+    </div>
     <div class="check-item" data-key="c6" onclick="togglePermanent(this, 'courses')">
       <div class="check-box"></div>
-      <div style="flex:1"><div class="check-label">Red Teaming LLM Applications</div><div class="check-note">2 hrs &nbsp;·&nbsp; Safety, adversarial attacks, jailbreaks, prompt injection, bias testing. How to build products that don't fail publicly.</div></div>
-      <div class="check-badge">Day 8</div>
+      <div style="flex:1"><div class="check-label">Building and Evaluating Advanced RAG Applications</div><div class="check-note">3 hrs &nbsp;·&nbsp; Now that you have the foundation this makes sense. RAG architecture plus eval metrics: chunking, reranking, faithfulness scores.</div></div>
+      <div class="check-badge">Day 7-9</div>
     </div>
+
+    <div class="phase-hdr"><span>Phase 3 — Depth</span><span>Days 10-17 &nbsp;·&nbsp; Technical screens and panels</span></div>
     <div class="check-item" data-key="c7" onclick="togglePermanent(this, 'courses')">
       <div class="check-box"></div>
-      <div style="flex:1"><div class="check-label">Finetuning Large Language Models</div><div class="check-note">2 hrs &nbsp;·&nbsp; When to fine-tune vs. prompt, what data you need, what it costs. PM decision-making, not implementation.</div></div>
-      <div class="check-badge">Day 9</div>
+      <div style="flex:1"><div class="check-label">AI Agents in LangGraph</div><div class="check-note">4 hrs &nbsp;·&nbsp; Multi-step agents with state, memory, and human-in-the-loop. Goes deeper than the AutoGen course.</div></div>
+      <div class="check-badge">Day 10-12</div>
     </div>
     <div class="check-item" data-key="c8" onclick="togglePermanent(this, 'courses')">
       <div class="check-box"></div>
-      <div style="flex:1"><div class="check-label">AI Agents in LangGraph</div><div class="check-note">4 hrs &nbsp;·&nbsp; State machines, memory patterns, cycles, human-in-the-loop. Follow along for intuition, not to become a LangGraph developer.</div></div>
-      <div class="check-badge">Day 10-11</div>
+      <div style="flex:1"><div class="check-label">Red Teaming LLM Applications</div><div class="check-note">2 hrs &nbsp;·&nbsp; Safety, adversarial attacks, jailbreaks, prompt injection, bias testing. How to build products that do not fail publicly.</div></div>
+      <div class="check-badge">Day 13</div>
     </div>
     <div class="check-item" data-key="c9" onclick="togglePermanent(this, 'courses')">
       <div class="check-box"></div>
       <div style="flex:1"><div class="check-label">LLMOps</div><div class="check-note">2 hrs &nbsp;·&nbsp; Deployment, monitoring, cost and latency tradeoffs, feedback loops. What your engineering team needs to operate AI in production.</div></div>
-      <div class="check-badge">Day 12</div>
+      <div class="check-badge">Day 14-15</div>
     </div>
     <div class="check-item" data-key="c10" onclick="togglePermanent(this, 'courses')">
       <div class="check-box"></div>
       <div style="flex:1"><div class="check-label">Automated Testing for LLMOps</div><div class="check-note">2 hrs &nbsp;·&nbsp; CI/CD for AI outputs. How to catch regressions when your model changes.</div></div>
-      <div class="check-badge">Day 13-14</div>
+      <div class="check-badge">Day 16-17</div>
     </div>
 
-    <div class="phase-hdr"><span>Tier 3 — Breadth and Company-Specific Depth</span><span>Days 15-21 &nbsp;·&nbsp; Pull based on who's interviewing you</span></div>
+    <div class="phase-hdr"><span>Phase 4 — Breadth</span><span>Days 18-25 &nbsp;·&nbsp; Pull based on who's interviewing you</span></div>
     <div class="check-item" data-key="c11" onclick="togglePermanent(this, 'courses')">
       <div class="check-box"></div>
-      <div style="flex:1"><div class="check-label">LangChain: Chat with Your Data</div><div class="check-note">2 hrs &nbsp;·&nbsp; Embeddings, vector stores, retrieval. How RAG actually works under the hood.</div></div>
-      <div class="check-badge">Day 15</div>
+      <div style="flex:1"><div class="check-label">Finetuning Large Language Models</div><div class="check-note">2 hrs &nbsp;·&nbsp; When to fine-tune vs. prompt, what data you need, what it costs. PM decision-making, not implementation.</div></div>
+      <div class="check-badge">Day 18-19</div>
     </div>
     <div class="check-item" data-key="c12" onclick="togglePermanent(this, 'courses')">
       <div class="check-box"></div>
-      <div style="flex:1"><div class="check-label">Knowledge Graphs for RAG</div><div class="check-note">2 hrs &nbsp;·&nbsp; Structured enterprise data as AI context. Highly relevant for SAP, Salesforce, ServiceNow interviews.</div></div>
-      <div class="check-badge">Day 16</div>
+      <div style="flex:1"><div class="check-label">Knowledge Graphs for RAG</div><div class="check-note">2 hrs &nbsp;·&nbsp; Structured enterprise data as AI context. Highly relevant for Glean and SAP interviews.</div></div>
+      <div class="check-badge">Day 20</div>
     </div>
     <div class="check-item" data-key="c13" onclick="togglePermanent(this, 'courses')">
       <div class="check-box"></div>
       <div style="flex:1"><div class="check-label">Building Systems with the ChatGPT API</div><div class="check-note">1.5 hrs &nbsp;·&nbsp; Multi-step AI pipelines, classifiers, moderation. How production AI systems are chained together.</div></div>
-      <div class="check-badge">Day 17</div>
+      <div class="check-badge">Day 21</div>
     </div>
     <div class="check-item" data-key="c14" onclick="togglePermanent(this, 'courses')">
       <div class="check-box"></div>
       <div style="flex:1"><div class="check-label">Multi AI Agent Systems with crewAI</div><div class="check-note">2 hrs &nbsp;·&nbsp; Role-based agent teams, task delegation, orchestration patterns.</div></div>
-      <div class="check-badge">Day 18</div>
+      <div class="check-badge">Day 22-23</div>
     </div>
     <div class="check-item" data-key="c15" onclick="togglePermanent(this, 'courses')">
       <div class="check-box"></div>
       <div style="flex:1"><div class="check-label">Building Multimodal Search and RAG</div><div class="check-note">2 hrs &nbsp;·&nbsp; Image, video, and text combined retrieval. Priority if interviewing at NVIDIA or Databricks.</div></div>
-      <div class="check-badge">Day 19-20</div>
+      <div class="check-badge">Day 24</div>
     </div>
     <div class="check-item" data-key="c16" onclick="togglePermanent(this, 'courses')">
       <div class="check-box"></div>
       <div style="flex:1"><div class="check-label">Reasoning with o1</div><div class="check-note">2 hrs &nbsp;·&nbsp; How reasoning models differ from standard LLMs. Cost, latency, and when to use them. Relevant everywhere.</div></div>
-      <div class="check-badge">Day 21</div>
+      <div class="check-badge">Day 25</div>
     </div>
 
     <div class="sync-status"><span class="sync-dot" id="courses-sync-dot"></span><span id="courses-sync-text">Connecting…</span></div>
@@ -811,10 +815,10 @@
             <td class="o-next">No third email before ~Jun 18. Gemini partnership is her mandate.</td>
           </tr>
           <tr>
-            <td><div class="o-name">Juergen Eisele</div><div class="o-role">Industry Product Team HM</div></td>
-            <td>SAP</td><td>Jun 5</td>
+            <td><div class="o-name">Emrecan Dogan</div><div class="o-role">Head of Product</div></td>
+            <td>Glean</td><td>Jun 15</td>
             <td><span class="badge badge-wait">Waiting</span></td>
-            <td class="o-next">OOO with no return date. Backstop send Jun 17. Watch LinkedIn.</td>
+            <td class="o-next">Follow-up ~Jun 22 if silent.</td>
           </tr>
           <tr>
             <td><div class="o-name">Fred Laluyaux</div><div class="o-role">CEO, ex-SAP</div></td>
@@ -834,7 +838,9 @@
       <div class="card-meta">$350K+ TC &nbsp;·&nbsp; Principal AI PM &nbsp;·&nbsp; Remote or South Bay</div>
     </div>
     <div class="company-grid">
+      <span class="co-tag active">Glean</span>
       <span class="co-tag active">ORO Labs</span>
+      <span class="co-tag active">Eightfold</span>
       <span class="co-tag active">Aera Technology</span>
       <span class="co-tag active">SAP</span>
       <span class="co-tag active">Walmart</span>
