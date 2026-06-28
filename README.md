@@ -3,7 +3,7 @@
 A system for building end-to-end PM portfolio projects — from problem brief through working prototype and published case study.
 
 Built by **Sonal Singh** | Principal Product Manager
-[LinkedIn](https://linkedin.com/in/sonalsingh444) · [sonalsingh.email@gmail.com](mailto:sonalsingh.email@gmail.com) · [Live Portfolio](https://sonalsingh-pm.netlify.app)
+[LinkedIn](https://linkedin.com/in/sonalsingh444) · [Live Portfolio](https://sonalsingh-pm.netlify.app)
 
 ---
 
@@ -19,6 +19,7 @@ The system uses Claude Code with a set of AI workflow skills that produce consis
 
 | Project | Type | Status | Links |
 |---|---|---|---|
+| [Compass](projects/compass/) | AI Counselor, Consumer | Case study + Prototype live | [Case Study](projects/compass/case-study.html) · [Prototype](projects/compass/prototype/index.html) |
 | [Lumen](projects/lumen/) | AI Decisioning, Lifecycle Growth | Case study + Prototype live | [Case Study](projects/lumen/case-study.html) · [Prototype](projects/lumen/prototype/index.html) |
 | [Sparky Teardown](projects/sparky/) | Product Evaluation, AI Shopping | Teardown live | [Teardown](projects/sparky/teardown.html) |
 | [Dropbox Teams](projects/dropbox/) | B2B Platform, Enterprise Growth | Case study + Prototype live | [Case Study](projects/dropbox/prototype/index.html) |
@@ -34,6 +35,13 @@ pm-builder-portfolio/
 │   └── index.html               ← deployed portfolio website (do not move)
 │
 ├── projects/                    ← one folder per project, everything inside
+│   ├── compass/
+│   │   ├── brief.md
+│   │   ├── prd.md
+│   │   ├── user-stories.md
+│   │   ├── prototype/
+│   │   │   └── index.html
+│   │   └── case-study.html
 │   ├── campspark/
 │   │   ├── prd.md
 │   │   ├── user-stories.md
@@ -52,22 +60,18 @@ pm-builder-portfolio/
 │       └── prototype/
 │           └── index.html
 │
-├── ai-workflow/                 ← Claude AI skill files and templates
-│   ├── skills/                  ← how Claude produces each artifact type
-│   │   ├── skill_brief.md
-│   │   ├── skill_discovery.md
-│   │   ├── skill_prd.md
-│   │   ├── skill_prototype.md
-│   │   ├── skill_user_stories.md
-│   │   ├── skill_test_cases.md
-│   │   ├── skill_research_sync.md
-│   │   └── skill_case_study.md
-│   └── templates/
-│       └── prd-template.md      ← reusable PRD skeleton
-│
-└── resources/                   ← reference PRDs (sample projects, not active)
-    ├── prd-shiftswap.md         ← sample: consumer/SMB mobile workforce tool
-    └── prd-vendoriq.md          ← sample: B2B enterprise vendor evaluation SaaS
+└── ai-workflow/                 ← Claude AI skill files and templates
+    ├── skills/                  ← how Claude produces each artifact type
+    │   ├── skill_brief.md
+    │   ├── skill_discovery.md
+    │   ├── skill_prd.md
+    │   ├── skill_prototype.md
+    │   ├── skill_user_stories.md
+    │   ├── skill_test_cases.md
+    │   ├── skill_research_sync.md
+    │   └── skill_case_study.md
+    └── templates/
+        └── prd-template.md      ← reusable PRD skeleton
 ```
 
 ---
@@ -120,8 +124,6 @@ When you run a command, Claude:
 1. Reads the relevant skill file to learn the quality standard
 2. Reads the project's existing files for context
 3. Produces output that meets the skill's checklist
-
-Reference PRDs in `resources/` give Claude calibration examples for specific product domains (consumer mobile, B2B enterprise SaaS) without being tied to any active project.
 
 ---
 
