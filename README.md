@@ -24,6 +24,7 @@ The system uses Claude Code with a set of AI workflow skills that produce consis
 | [Sparky Teardown](projects/sparky/) | Product Evaluation, AI Shopping | Teardown live | [Teardown](projects/sparky/teardown.html) |
 | [Dropbox Teams](projects/dropbox/) | B2B Platform, Enterprise Growth | Case study + Prototype live | [Case Study](projects/dropbox/prototype/index.html) |
 | [CampSpark](projects/campspark/) | Consumer, Zero-to-One | Case study + Prototype live | [Case Study](projects/campspark/case-study.html) · [Prototype](projects/campspark/prototype/index.html) |
+| [Missed-Call Rescue](projects/missed-call-rescue/) | AI Agent, SMB Automation | Prototype live | [Prototype](projects/missed-call-rescue/prototype/index.html) |
 
 ---
 

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Missed-Call Rescue, AI Agent Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface-2: #20232f;
+    --border: #2a2d3a;
+    --text: #e8eaf0;
+    --muted: #8b90a0;
+    --accent: #6c8ef5;
+    --accent-dim: #2a3458;
+    --green: #34d399;
+    --green-dim: #0d3326;
+    --yellow: #fbbf24;
+    --yellow-dim: #3a2d0a;
+    --red: #f87171;
+    --red-dim: #3a1212;
+    --radius: 10px;
+  }
+
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.6; }
+
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 32px; border-bottom: 1px solid var(--border);
+  }
+  .logo { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; color: var(--text); text-decoration: none; }
+  .logo-icon { width: 30px; height: 30px; background: linear-gradient(135deg, var(--accent), #a78bfa); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .header-badge { font-size: 12px; color: var(--muted); border: 1px solid var(--border); padding: 4px 10px; border-radius: 20px; }
+
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  .page-headline { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+  .page-sub { color: var(--muted); font-size: 15px; margin-bottom: 32px; max-width: 640px; }
+
+  /* Scenario tabs */
+  .tabs { display: flex; gap: 10px; margin-bottom: 32px; }
+  .tab {
+    padding: 10px 18px; border-radius: 999px; border: 1px solid var(--border);
+    background: var(--surface); color: var(--muted); font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .tab.active { background: var(--accent); border-color: var(--accent); color: white; }
+  .tab:hover:not(.active) { border-color: var(--accent); color: var(--text); }
+
+  /* Layout: two phones side by side + timeline below */
+  .stage { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 36px; }
+  @media (max-width: 760px) { .stage { grid-template-columns: 1fr; } }
+
+  .phone-col { display: flex; flex-direction: column; gap: 12px; }
+  .phone-label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; display: flex; align-items: center; gap: 8px; }
+  .phone-label .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+  .phone-label.owner .dot { background: var(--yellow); }
+
+  .phone {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+    padding: 18px 16px; min-height: 480px; display: flex; flex-direction: column; gap: 10px;
+    position: relative; overflow: hidden;
+  }
+  .phone-top { font-size: 11px; color: var(--muted); text-align: center; margin-bottom: 4px; }
+
+  .thread { flex: 1; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+
+  .bubble {
+    max-width: 82%; padding: 10px 14px; border-radius: 14px; font-size: 13.5px; line-height: 1.5;
+    opacity: 0; transform: translateY(6px); animation: pop 0.35s forwards;
+  }
+  @keyframes pop { to { opacity: 1; transform: translateY(0); } }
+
+  .bubble.in { align-self: flex-start; background: var(--surface-2); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
+  .bubble.out { align-self: flex-end; background: var(--accent); color: white; border-bottom-right-radius: 4px; }
+  .bubble.system {
+    align-self: center; background: transparent; color: var(--muted); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.05em; padding: 4px 0;
+  }
+  .bubble.card { align-self: stretch; max-width: 100%; }
+
+  .outcome-card {
+    border-radius: 12px; padding: 14px 16px; font-size: 13px; line-height: 1.55;
+  }
+  .outcome-card.booked { background: var(--green-dim); border: 1px solid var(--green); color: #c9f7e5; }
+  .outcome-card.escalated { background: var(--yellow-dim); border: 1px solid var(--yellow); color: #ffe8b3; }
+  .outcome-card .oc-title { font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .oc-field { display: flex; gap: 6px; margin-bottom: 5px; }
+  .oc-field .oc-label { font-weight: 700; flex-shrink: 0; min-width: 44px; }
+  .oc-photo { display: inline-flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 6px 10px; margin: 4px 0; font-size: 12px; }
+  .oc-note { margin-top: 6px; opacity: 0.9; }
+  .oc-steps { margin: 2px 0 0; padding-left: 16px; }
+  .oc-steps li { margin-bottom: 3px; }
+
+  .typing { align-self: flex-start; display: flex; gap: 4px; padding: 10px 14px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 14px; border-bottom-left-radius: 4px; }
+  .typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); animation: blink 1.2s infinite; }
+  .typing span:nth-child(2) { animation-delay: 0.2s; }
+  .typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink { 0%, 80%, 100% { opacity: 0.2; } 40% { opacity: 1; } }
+
+  .replay-row { display: flex; justify-content: center; margin-top: 6px; }
+  .replay-btn {
+    padding: 11px 22px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); color: var(--text); font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: border-color 0.15s;
+  }
+  .replay-btn:hover { border-color: var(--accent); }
+
+  /* Why this matters strip */
+  .why-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 36px; }
+  @media (max-width: 760px) { .why-strip { grid-template-columns: 1fr; } }
+  .why-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; }
+  .why-card .wc-num { font-size: 22px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+  .why-card .wc-label { font-size: 13px; color: var(--muted); }
+
+  footer { text-align: center; padding: 28px 24px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--border); }
+  footer a { color: var(--accent); text-decoration: none; }
+
+  .back-link { font-size: 13px; color: var(--muted); text-decoration: none; }
+  .back-link:hover { color: var(--text); }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="#" class="logo">
+    <div class="logo-icon">📞</div>
+    Missed-Call Rescue
+  </a>
+  <span class="header-badge">Interactive Prototype</span>
+</header>
+
+<div class="wrap">
+  <div class="page-headline">Watch the agent handle a missed call, live</div>
+  <p class="page-sub">This is the mechanism behind the concept brief, not a mockup of what it would do, but an interactive walkthrough of what it actually says and decides. Pick a scenario below.</p>
+
+  <div class="tabs">
+    <button class="tab active" data-scenario="routine">Routine, books itself</button>
+    <button class="tab" data-scenario="escalation">Complex, escalates with context</button>
+  </div>
+
+  <div class="stage">
+    <div class="phone-col">
+      <div class="phone-label"><span class="dot"></span> Caller's phone</div>
+      <div class="phone"><div class="phone-top">Bayshore Heating &amp; Air</div><div class="thread" id="callerThread"></div></div>
+    </div>
+    <div class="phone-col">
+      <div class="phone-label owner"><span class="dot"></span> Owner's phone</div>
+      <div class="phone"><div class="phone-top">Missed-Call Rescue Agent</div><div class="thread" id="ownerThread"></div></div>
+    </div>
+  </div>
+
+  <div class="replay-row"><button class="replay-btn" id="replayBtn">▶ Replay this scenario</button></div>
+
+  <div class="why-strip">
+    <div class="why-card"><div class="wc-num">&lt;10 sec</div><div class="wc-label">Time from missed call to first text-back</div></div>
+    <div class="why-card"><div class="wc-num">2 paths</div><div class="wc-label">Routine booking, or escalation with full context, never a guess</div></div>
+    <div class="why-card"><div class="wc-num">0 silent</div><div class="wc-label">Outcomes, every call ends in a booking or a notified owner</div></div>
+  </div>
+
+  <p style="font-size:13px;color:var(--muted);max-width:640px;">
+    This is a sample built to illustrate the agent design from the Missed-Call Rescue concept brief. Scenario and business name are fictional. The pattern, instant response, triage, escalate with context, never a silent outcome, is the one I apply to real client builds.
+  </p>
+</div>
+
+<footer>
+  Sample by Sonal S., AI Product Consultant · Part of the <a href="../../" >Missed-Call Rescue</a> case sample
+</footer>
+
+<script>
+const SCENARIOS = {
+  routine: {
+    caller: [
+      { side: 'system', text: 'Incoming call to (408) 555-0142, not answered' },
+      { side: 'out', text: "Sorry we missed you! This is Bayshore Heating & Air. How can we help?", delay: 400 },
+      { side: 'in', text: "Hi, our AC stopped cooling today. Can someone come look at it?", delay: 1400 },
+      { side: 'out', text: "Sorry to hear that! I can get a technician out for a diagnostic visit. Are you free tomorrow between 1–3pm or would Thursday morning work better?", delay: 1600 },
+      { side: 'in', text: "Tomorrow 1-3 works great", delay: 1300 },
+      { side: 'out', text: "You're booked for tomorrow, 1–3pm, AC diagnostic at your address on file. We'll text a reminder 1 hour before. Anything else?", delay: 1500 },
+      { side: 'in', text: "Nope that's it, thank you!", delay: 1100 },
+    ],
+    owner: [
+      { side: 'system', text: 'Agent notification' },
+      { side: 'card-booked', title: '✅ Booked automatically', body: 'AC diagnostic, tomorrow 1–3pm. Returning customer, (408) 555-0142, address on file. No action needed.', delay: 2200 },
+      { side: 'system', text: '3 min later' },
+      { side: 'card-booked', title: '📅 Added to schedule', body: 'Synced to tomorrow\'s calendar. Reminder text scheduled 1hr before visit.', delay: 1800 },
+    ]
+  },
+  escalation: {
+    caller: [
+      { side: 'system', text: 'Incoming call to (408) 555-0142, not answered' },
+      { side: 'out', text: "Sorry we missed you! This is Bayshore Heating & Air. How can we help?", delay: 400 },
+      { side: 'in', text: "There's water leaking from the ceiling near our vent and a weird burning smell", delay: 1500 },
+      { side: 'out', text: "Your safety comes first. If you see smoke or sparks, please leave the area now and call 911. Are you safe right now?", delay: 1600 },
+      { side: 'in', text: "Yes, no smoke, just a faint smell, we're okay", delay: 1400 },
+      { side: 'out', text: "Good to hear. I want to get this to the owner right away rather than guess over text. Can you send a photo of the leak and vent, and confirm your address?", delay: 1700 },
+      { side: 'in', text: "[photo attached] 142 Willow Creek Dr, San Jose", delay: 1300 },
+      { side: 'out', text: "Got it, thank you. I've flagged this as urgent. Our team is currently on a job until 2:00pm today, you'll hear back the moment they're free, sooner if anything changes.", delay: 1700 },
+    ],
+    owner: [
+      { side: 'system', text: 'Agent notification, URGENT' },
+      { side: 'card-escalated', title: '🚨 Escalated, needs you', body: '<div class="oc-field"><span class="oc-label">Issue</span><span>Water leaking near the vent, faint burning smell, caller confirmed no immediate danger</span></div><div class="oc-field"><span class="oc-label">From</span><span>(408) 555-0142</span></div><div class="oc-field"><span class="oc-label">Where</span><span>142 Willow Creek Dr, San Jose, 3.2 miles away</span></div><div class="oc-photo">📷 1 photo received, tap to view</div><div class="oc-note">You\'re shown as on a job until 2:00pm, so the caller was told that honestly instead of a promise you couldn\'t keep.</div>', delay: 2400 },
+      { side: 'system', text: 'Full context attached' },
+      { side: 'card-escalated', title: '📎 What led here', body: '<ol class="oc-steps"><li>Caller described the issue</li><li>Agent checked for immediate danger first, confirmed safe</li><li>Agent asked for a photo and address</li><li>Checked your calendar, told caller honestly you\'re free after 2:00pm</li></ol>', delay: 2000 },
+    ]
+  }
+};
+
+const callerEl = document.getElementById('callerThread');
+const ownerEl = document.getElementById('ownerThread');
+let running = false;
+
+function clearThreads() {
+  callerEl.innerHTML = '';
+  ownerEl.innerHTML = '';
+}
+
+function appendBubble(container, item) {
+  if (item.side === 'system') {
+    const d = document.createElement('div');
+    d.className = 'bubble system';
+    d.textContent = item.text;
+    container.appendChild(d);
+    return;
+  }
+  if (item.side === 'card-booked' || item.side === 'card-escalated') {
+    const wrap = document.createElement('div');
+    wrap.className = 'bubble card';
+    const cls = item.side === 'card-booked' ? 'booked' : 'escalated';
+    wrap.innerHTML = `<div class="outcome-card ${cls}"><div class="oc-title">${item.title}</div><div>${item.body}</div></div>`;
+    container.appendChild(wrap);
+    return;
+  }
+  const d = document.createElement('div');
+  d.className = 'bubble ' + item.side;
+  d.textContent = item.text;
+  container.appendChild(d);
+  container.scrollTop = container.scrollHeight;
+}
+
+function showTyping(container) {
+  const t = document.createElement('div');
+  t.className = 'typing';
+  t.id = 'typingIndicator';
+  t.innerHTML = '<span></span><span></span><span></span>';
+  container.appendChild(t);
+  container.scrollTop = container.scrollHeight;
+}
+function removeTyping(container) {
+  const t = container.querySelector('#typingIndicator');
+  if (t) t.remove();
+}
+
+async function playThread(container, items, isOutGoingSide) {
+  for (const item of items) {
+    await new Promise(r => setTimeout(r, item.delay || 300));
+    if (item.side === 'out' || item.side === 'card-booked' || item.side === 'card-escalated') {
+      showTyping(container);
+      await new Promise(r => setTimeout(r, 500));
+      removeTyping(container);
+    }
+    appendBubble(container, item);
+  }
+}
+
+async function playScenario(name) {
+  if (running) return;
+  running = true;
+  clearThreads();
+  const data = SCENARIOS[name];
+  // Owner only gets notified once the caller-side outcome is actually known
+  await playThread(callerEl, data.caller);
+  await new Promise(r => setTimeout(r, 600));
+  await playThread(ownerEl, data.owner);
+  running = false;
+}
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    playScenario(tab.dataset.scenario);
+  });
+});
+
+document.getElementById('replayBtn').addEventListener('click', () => {
+  const active = document.querySelector('.tab.active').dataset.scenario;
+  playScenario(active);
+});
+
+playScenario('routine');
+</script>
+
+</body>
+</html>
